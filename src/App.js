@@ -11,6 +11,7 @@ import appChat from "./screens/App/Chat";
 import appCalendar from "./screens/App/Calendar";
 import appContact from "./screens/App/Contact";
 import appTaskbar from "./screens/App/Taskbar";
+import scanner from "./screens/Scanner/Scanner";
 import filemanagerdashboard from "./screens/FileManager/Dashboard";
 import filedocuments from "./screens/FileManager/Documents";
 import filemedia from "./screens/FileManager/Media";
@@ -191,6 +192,11 @@ class App extends React.Component {
                     exact
                     path={`${process.env.PUBLIC_URL}/apptaskbar`}
                     component={appTaskbar}
+                  />
+                  <Route
+                    exact
+                    path={`${process.env.PUBLIC_URL}/scanner`}
+                    component={scanner}
                   />
                   <Route
                     exact

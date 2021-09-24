@@ -1,0 +1,64 @@
+.scanner-workpanel-header {
+
+    display: flex;
+    // justify-content: space-between;
+}
+
+.scanner-name {
+
+    // min-width: 15rem;
+    width: 20rem;
+    padding: 1rem 1rem;
+}
+
+.scanner-description {
+    
+    // min-width: 15rem;
+    width: 35rem;
+    padding: 1rem 1rem;
+}
+
+.scanner-header-options {
+    
+    display: flex;
+    padding: 3rem 1rem;
+}
+
+.scanner-alert-button > label {
+
+    padding: 0 1rem; 
+}
+
+.scanner-alert-button > input[type="radio"] {
+    
+    display: none;
+}
+
+.scanner-alert-button > input[type="radio"] + *::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.3rem;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 0.1rem;
+    border-color: gray;
+}
+
+.scanner-alert-button > input[type="radio"]:checked + *::before {
+
+    background: radial-gradient(#28A745 0%, #28A745 40%, transparent 50%, transparent);
+    border-color: teal;
+}
+
+.scanner-alert-button > input[type="radio"]:checked + * {
+
+    color: teal;
+}
+
+input[type='radio']:checked:after {
+
+    color: #28A745 ;
+}

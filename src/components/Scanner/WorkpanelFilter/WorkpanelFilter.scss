@@ -1,0 +1,70 @@
+.scanner-filter-component {
+    
+    display: flex;
+}
+
+.scanner-indicator-component {
+
+    width: 25%;
+    padding: 1rem 0;
+    border: 2px solid #D5D5D5;
+    border-radius: 16px;
+}
+
+.scanner-indicator-search {
+
+    border: transparent !important;
+}
+
+.scanner-indicator-name {
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    background: #E2749810 0% 0% no-repeat padding-box;
+    border: 2px solid #E27498;
+    border-radius: 7px;
+}
+
+.scanner-filter {
+
+    padding: 1rem;
+    width: 50%;
+}
+
+.scanner-custom-filter {
+    
+    height: 500px;
+    border: 2px solid #D5D5D5;
+    border-radius: 16px;    
+}
+
+.scanner-filter-operation {
+
+    padding: 1rem;
+    width: 25%;
+}
+
+.scanner-math-operation {
+    padding: 1rem;
+}
+
+.scanner-math-operation-icons {
+    
+    margin: 1rem;
+    padding: 6px 14px;
+    vertical-align: middle;
+    background: #E2749810 0% 0% no-repeat padding-box;
+    border: 2px solid #E27498;
+    border-radius: 7px;
+    font-size: larger;
+}
+
+.scanner-binary-operation-icons {
+    
+    margin: 0 0.7rem;
+    padding: 6px 14px;
+    vertical-align: middle;
+    background: #E2749810 0% 0% no-repeat padding-box;
+    border: 2px solid #E27498;
+    border-radius: 7px; 
+    display: inline-block;
+}

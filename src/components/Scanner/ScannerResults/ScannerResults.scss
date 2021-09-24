@@ -1,0 +1,25 @@
+.scanner-result-component {
+
+    width: 97% !important;
+    margin: auto;
+    margin-top: 4rem;
+}
+
+.scanner-result-heading {
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.scanner-results-tabel {
+
+    box-shadow: 0px 3px 6px #00000029;
+}
+
+.download-historical-scanner-results {
+    height: max-content;
+    width: max-content !important;
+    padding: 0.5rem;
+    border: 2px solid #E27498;
+    color: #E27498 !important;
+}
