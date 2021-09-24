@@ -2,6 +2,7 @@ import React from 'react'
 import './WorkpanelFilter.scss'
 
 const WorkpanelFilter = () => {
+
     return (
 
         <div className="scanner-filter-component">
@@ -50,6 +51,52 @@ const WorkpanelFilter = () => {
 
                 <div className="scanner-custom-filter">
 
+                    <div className="scanner-time-and-lot-size">
+
+                        <div className="scanner-time-input">
+                            <h6>Start Time</h6>
+                            <input 
+                                className="form-control" 
+                                id="scanner-start-time"
+                                type="text" 
+                                min="09:00" 
+                                max="15:00" 
+                                placeholder="HH:MM" 
+                                onFocus={e => e.target.type = 'time'}
+                                onBlur={e => e.target.type = 'text'}
+                                required 
+                            />
+                        </div>
+
+                        <div className="scanner-time-input">
+                            <h6>End Time</h6>
+                            <input 
+                                className="form-control" 
+                                id="scanner-end-time"
+                                type="text" 
+                                min="09:00" 
+                                max="15:00" 
+                                placeholder="HH:MM" 
+                                onFocus={e => e.target.type = 'time'}
+                                onBlur={e => e.target.type = 'text'}
+                                required 
+                            />
+                        </div>
+
+                        <div className="scanner-time-input">
+                            <h6>FnO Lot Size</h6>
+                            <select 
+                                className="form-control scanner-fno-select" 
+                                name="fno-lot-size" 
+                                id="scanner-fno-lot-size"
+                            >
+                                <option value="FnO Lot Size">FnO Lot Size</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
                 </div>
 
             </div>
@@ -63,13 +110,13 @@ const WorkpanelFilter = () => {
                         
                         <h6 style={{marginBottom: '2rem'}}>Math Operation</h6>
 
-                        <span className="scanner-math-operation-icons" style={{marginLeft: '0'}}>
+                        <span className="scanner-math-operation-icons" >
                             <strong>+</strong>
                         </span>
                         <span className="scanner-math-operation-icons">
                             <strong>-</strong>
                         </span>
-                        <span className="scanner-math-operation-icons" style={{marginRight: '0'}}>
+                        <span className="scanner-math-operation-icons" >
                             <strong>*</strong>
                         </span>
                         
@@ -78,28 +125,30 @@ const WorkpanelFilter = () => {
 
                         <h6 style={{marginBottom: '2rem'}}>Comparison</h6>
 
-                        <span className="scanner-math-operation-icons" style={{marginLeft: '0'}}>
+                        <div className="scanner-math-operation-icons" >
                             <strong>&gt;</strong>
-                        </span>
-                        <span className="scanner-math-operation-icons" style={{marginRight: '0'}}>
+                        </div>
+
+                        <div className="scanner-math-operation-icons" >
                             <strong>&lt;</strong>
-                        </span>
+                        </div>
                         
                     </div>
                     <div className="scanner-math-operation">
 
                         <h6 style={{marginBottom: '2rem'}}>Binary Operation</h6>
 
-                        <span className="scanner-binary-operation-icons" style={{marginLeft: '0'}}>
+                        <div className="scanner-binary-operation-icons" >
                             <strong>OR</strong>
-                        </span>
-                        <span className="scanner-binary-operation-icons">
+                        </div>
+
+                        <div className="scanner-binary-operation-icons">
                             <strong>ADD</strong>
-                        </span>
-                        <br />
-                        <span className="scanner-binary-operation-icons" style={{marginLeft: '0', marginTop: '10px'}}>
+                        </div>
+
+                        <div className="scanner-binary-operation-icons">
                             <strong>SUBSTRACT</strong>
-                        </span>
+                        </div>
                         
                     </div>
 

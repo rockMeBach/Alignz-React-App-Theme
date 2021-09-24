@@ -1,11 +1,14 @@
 .scanner-filter-component {
     
     display: flex;
+    // display: inline-block;
 }
 
 .scanner-indicator-component {
 
-    width: 25%;
+    // width: max-content;
+    min-width: 15rem;
+    display: inline-block;
     padding: 1rem 0;
     border: 2px solid #D5D5D5;
     border-radius: 16px;
@@ -27,12 +30,13 @@
 .scanner-filter {
 
     padding: 1rem;
-    width: 50%;
+    // width: max-content;
+    display: inline-block;
 }
 
 .scanner-custom-filter {
     
-    height: 500px;
+    height: max-content;
     border: 2px solid #D5D5D5;
     border-radius: 16px;    
 }
@@ -40,7 +44,9 @@
 .scanner-filter-operation {
 
     padding: 1rem;
-    width: 25%;
+    // width: max-content;
+    min-width: 15rem;
+    display: inline-block;   
 }
 
 .scanner-math-operation {
@@ -49,22 +55,45 @@
 
 .scanner-math-operation-icons {
     
-    margin: 1rem;
+    margin: 0.2rem 0.7rem;
     padding: 6px 14px;
     vertical-align: middle;
     background: #E2749810 0% 0% no-repeat padding-box;
     border: 2px solid #E27498;
     border-radius: 7px;
     font-size: larger;
+    display: inline-block;
 }
 
 .scanner-binary-operation-icons {
     
-    margin: 0 0.7rem;
+    margin: 0.2rem 0.7rem;
     padding: 6px 14px;
     vertical-align: middle;
     background: #E2749810 0% 0% no-repeat padding-box;
     border: 2px solid #E27498;
     border-radius: 7px; 
     display: inline-block;
+}
+
+.scanner-time-and-lot-size {
+
+    padding: 1rem;
+    display: flex;
+}
+
+.scanner-time-input-box {
+    
+    border: 1px solid #707070;
+    border-radius: 4px;
+}
+
+.scanner-time-input {
+
+    margin: 0.5rem 1rem;
+}
+
+.scanner-fno-select {
+
+    min-width: 10rem;
 }
