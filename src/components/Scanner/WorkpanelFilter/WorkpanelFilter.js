@@ -94,8 +94,60 @@ const WorkpanelFilter = () => {
                             </select>
                         </div>
 
+                    </div>
+
+                    <div className="scanner-segments">
+                        <span style={{width: '8rem', marginTop: '6px'}}>List of </span>
+
+                        <select 
+                            className="form-control scanner-segment-select" 
+                            name="fno-lot-size" 
+                            id="scanner-fno-lot-size"
+                        >
+                            <option value="FnO Lot Size">Segment</option>
+                        </select>
+                        
+                        <select 
+                            className="form-control scanner-segment-select" 
+                            name="fno-lot-size" 
+                            id="scanner-fno-lot-size"
+                        >
+                            <option value="FnO Lot Size">Segment 1(a)</option>
+                        </select>
+                        
+                    </div>
+
+                    <div className="scanner-satisfy">
+
+                        <span style={{width: '6rem', marginTop: '10px'}}>which satisfy </span>
+
+                        <div className="scanner-satisfy-not-satisfy">
+                            <div className="scanner-alert-button">
+                                <input type="radio" id="satisfy" name="satisfy" value="Satisfy" checked />
+                                <label for="satisfy">Satisfy</label>
+                            </div>
+
+                            <div className="scanner-alert-button">
+                                <input type="radio" id="not-satisfy" name="not_satisfy" value="Not Satisfy" />
+                                <label for="not-satisfy">Not Satisfy</label>
+                            </div>
+                        </div>
+
+                        <div className="scanner-satisfy-not-satisfy">
+                            <div className="scanner-alert-button">
+                                <input type="radio" id="all" name="all" value="all" checked />
+                                <label for="all">All</label>
+                            </div>
+
+                            <div className="scanner-alert-button">
+                                <input type="radio" id="not-all" name="not_all" value="Not All" />
+                                <label for="not-all">Not All</label>
+                            </div>
+                        </div>
 
                     </div>
+
+                    <hr />
 
                 </div>
 

@@ -89,11 +89,37 @@
 }
 
 .scanner-time-input {
-
-    margin: 0.5rem 1rem;
+    
+    margin: 0rem 1rem;
 }
 
 .scanner-fno-select {
-
+    
     min-width: 10rem;
+}
+
+.scanner-segments {
+    
+    padding: 1rem;
+    display: flex;
+}
+
+.scanner-segment-select {
+    
+    margin: 0 1rem;
+}
+
+.scanner-satisfy {
+    
+    padding: 1rem;
+    display: flex;
+}
+
+.scanner-satisfy-not-satisfy {
+
+    display: flex;
+    background: #f3f3f3 0% 0% no-repeat padding-box;
+    border-radius: 7px;
+    padding: 0.5rem 0;
+    margin: 0 0.5rem;
 }
