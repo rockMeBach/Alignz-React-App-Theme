@@ -1,5 +1,6 @@
 import React from 'react'
 import './WorkpanelFilter.scss'
+import ScannerConditions from '../ScannerConditions/ScannerConditions'
 
 const WorkpanelFilter = () => {
 
@@ -148,6 +149,10 @@ const WorkpanelFilter = () => {
                     </div>
 
                     <hr />
+
+                    <div className="scanner-conditions-component">
+                        <ScannerConditions />
+                    </div>
 
                 </div>
 
