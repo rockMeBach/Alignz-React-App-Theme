@@ -5,25 +5,46 @@ const ScannerConditions = () => {
 
     const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
 
-    useEffect(() => {
+    const scannerOptionDivChecker = () => {
 
         let scannerConditionOptionsDiv = document
                                             .getElementById('scanner-condition-indicators');
         
         if(scannerConditionOptionsDiv) {
 
+            // console.log(scannerConditionOptionsDiv.childNodes)
             setScannerConditionOptions(
                 scannerConditionOptionsDiv
                     .childNodes
-                    .length
+                    .length > 1 ? true : false
             );
             
         }
 
-    }, [
-        document
-            .getElementById('scanner-condition-indicators')
-    ]);
+    }
+
+    const dropElement = e => {
+
+        const id = e.dataTransfer.getData('text');
+        let draggableElement = document.getElementById(id);
+        const dropzone = document.getElementById('scanner-condition-indicators');
+      
+        if(draggableElement) {
+            draggableElement = draggableElement.cloneNode(true);
+            dropzone.appendChild(draggableElement);
+            scannerOptionDivChecker();
+            // console.log(draggableElement, dropzone)
+            // draggableElement.style.display = 'flex';
+            draggableElement.style.width = '4rem';
+            draggableElement.style.textAlign = 'center';
+            draggableElement.innerText = id;
+            // draggableElement.setAttribute('onclick', `this.parentNode.remove();`);
+        }
+
+        e.dataTransfer.clearData();
+    }
+
+    useEffect(scannerOptionDivChecker, []);
 
     return (
         <div className="scanner-conditions">
@@ -66,13 +87,19 @@ const ScannerConditions = () => {
                     </div>
                     
                 </div>
-            ) : (
-                <div className="scanner-indicator-drag-request">
-                    Drag Something here !!
-                </div>
-            )}
+            ) : '' }
 
-            <div id="scanner-condition-indicators">
+            <div 
+                id="scanner-condition-indicators" 
+                onDragOver={e => e.preventDefault()} 
+                onDrop={dropElement}
+            >
+                
+                { !scannerConditionOptions && (
+                    <div className="scanner-indicator-drag-request">
+                        Drag Something here !!
+                    </div>
+                )}
                 
             </div>
 

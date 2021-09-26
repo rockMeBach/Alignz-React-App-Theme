@@ -6,6 +6,7 @@
 .scanner-indicator-drag-request {
     
     padding: 1rem 1rem;
+    // z-index: -10;
 }
 
 .scanner-conditions-option {
@@ -20,4 +21,8 @@
 
 .scanner-condition-option {
     background: #E2749810 0% 0% no-repeat padding-box !important;
+}
+
+#scanner-condition-indicators {
+    display: flex;
 }

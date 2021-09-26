@@ -4,6 +4,8 @@ import ScannerConditions from '../ScannerConditions/ScannerConditions'
 
 const WorkpanelFilter = () => {
 
+    const dragStart = e => e.dataTransfer.setData('text/plain', e.target.id);
+
     return (
 
         <div className="scanner-filter-component">
@@ -23,25 +25,25 @@ const WorkpanelFilter = () => {
 
                 <hr />
 
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" id="BBL" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name">
+                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
 
@@ -167,13 +169,13 @@ const WorkpanelFilter = () => {
                         
                         <h6 style={{marginBottom: '2rem'}}>Math Operation</h6>
 
-                        <span className="scanner-math-operation-icons" >
+                        <span className="scanner-math-operation-icons" id="+" draggable='true' onDragStart={dragStart}>
                             <strong>+</strong>
                         </span>
-                        <span className="scanner-math-operation-icons">
+                        <span className="scanner-math-operation-icons"id="-"  draggable='true' onDragStart={dragStart}>
                             <strong>-</strong>
                         </span>
-                        <span className="scanner-math-operation-icons" >
+                        <span className="scanner-math-operation-icons" id="*" draggable='true' onDragStart={dragStart}>
                             <strong>*</strong>
                         </span>
                         
@@ -182,11 +184,11 @@ const WorkpanelFilter = () => {
 
                         <h6 style={{marginBottom: '2rem'}}>Comparison</h6>
 
-                        <div className="scanner-math-operation-icons" >
+                        <div className="scanner-math-operation-icons" id=">" draggable='true' onDragStart={dragStart}>
                             <strong>&gt;</strong>
                         </div>
 
-                        <div className="scanner-math-operation-icons" >
+                        <div className="scanner-math-operation-icons" id="<" draggable='true' onDragStart={dragStart}>
                             <strong>&lt;</strong>
                         </div>
                         
@@ -195,15 +197,15 @@ const WorkpanelFilter = () => {
 
                         <h6 style={{marginBottom: '2rem'}}>Binary Operation</h6>
 
-                        <div className="scanner-binary-operation-icons" >
+                        <div className="scanner-binary-operation-icons" draggable='true' onDragStart={dragStart}>
                             <strong>OR</strong>
                         </div>
 
-                        <div className="scanner-binary-operation-icons">
+                        <div className="scanner-binary-operation-icons" draggable='true' onDragStart={dragStart}>
                             <strong>ADD</strong>
                         </div>
 
-                        <div className="scanner-binary-operation-icons">
+                        <div className="scanner-binary-operation-icons" draggable='true' onDragStart={dragStart}>
                             <strong>SUBSTRACT</strong>
                         </div>
                         
