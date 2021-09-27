@@ -28,11 +28,11 @@ const WorkpanelFilter = () => {
                 <div className="scanner-indicator-name" id="BBL" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
                 </div>
-                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
-                    Bollinger Bands Lover
+                <div className="scanner-indicator-name" id="RSI" draggable='true' onDragStart={dragStart}>
+                    Relative Strength Index
                 </div>
-                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
-                    Bollinger Bands Lover
+                <div className="scanner-indicator-name" id="SMA" draggable='true' onDragStart={dragStart}>
+                    Simple Moving Average
                 </div>
                 <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover
@@ -107,7 +107,8 @@ const WorkpanelFilter = () => {
                             name="fno-lot-size" 
                             id="scanner-fno-lot-size"
                         >
-                            <option value="FnO Lot Size">Segment</option>
+                            <option value="Segment">Segment</option>
+                            <option value="NIFTY-50">NIFTY 50</option>
                         </select>
                         
                         <select 
@@ -115,7 +116,8 @@ const WorkpanelFilter = () => {
                             name="fno-lot-size" 
                             id="scanner-fno-lot-size"
                         >
-                            <option value="FnO Lot Size">Segment 1(a)</option>
+                            <option value="Segment-1a">Segment 1(a)</option>
+                            <option value="CASH-EQUITY">Cash Equity</option>
                         </select>
                         
                     </div>
@@ -126,24 +128,24 @@ const WorkpanelFilter = () => {
 
                         <div className="scanner-satisfy-not-satisfy">
                             <div className="scanner-alert-button">
-                                <input type="radio" id="satisfy" name="satisfy" value="Satisfy" checked />
+                                <input type="radio" id="satisfy" name="satisfy-not-satisty" value="Satisfy" checked />
                                 <label for="satisfy">Satisfy</label>
                             </div>
 
                             <div className="scanner-alert-button">
-                                <input type="radio" id="not-satisfy" name="not_satisfy" value="Not Satisfy" />
+                                <input type="radio" id="not-satisfy" name="satisfy-not-satisty" value="Not Satisfy" />
                                 <label for="not-satisfy">Not Satisfy</label>
                             </div>
                         </div>
 
                         <div className="scanner-satisfy-not-satisfy">
                             <div className="scanner-alert-button">
-                                <input type="radio" id="all" name="all" value="all" checked />
+                                <input type="radio" id="all" name="all-not-all" value="all" checked />
                                 <label for="all">All</label>
                             </div>
 
                             <div className="scanner-alert-button">
-                                <input type="radio" id="not-all" name="not_all" value="Not All" />
+                                <input type="radio" id="not-all" name="all-not-all" value="Not All" />
                                 <label for="not-all">Not All</label>
                             </div>
                         </div>

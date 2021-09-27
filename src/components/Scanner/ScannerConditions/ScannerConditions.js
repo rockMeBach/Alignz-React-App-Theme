@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import './ScannerConditions.scss'
+import { AccessAlarm, ThreeDRotation } from '@mui/icons-material';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 const ScannerConditions = () => {
 
     const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
+
+    const deleteOption = async () => {
+
+        const removeAllChild = () => {
+            let scannerDiv = document
+                                .getElementById('scanner-condition-indicators');
+            while(scannerDiv.firstChild)
+                scannerDiv.removeChild(scannerDiv.firstChild);
+        }
+        
+        await removeAllChild();
+        
+        setScannerConditionOptions(false);
+    }
 
     const scannerOptionDivChecker = () => {
 
@@ -37,6 +53,7 @@ const ScannerConditions = () => {
             // draggableElement.style.display = 'flex';
             draggableElement.style.width = '4rem';
             draggableElement.style.textAlign = 'center';
+            draggableElement.style.margin = '1rem'
             draggableElement.innerText = id;
             // draggableElement.setAttribute('onclick', `this.parentNode.remove();`);
         }
@@ -60,6 +77,11 @@ const ScannerConditions = () => {
                             id="scanner-candelstick-timeframe"
                         >
                             <option value="1-min">1 min</option>
+                            <option value="2-min">2 min</option>
+                            <option value="3-min">3 min</option>
+                            <option value="5-min">5 min</option>
+                            <option value="10-min">10 min</option>
+                            <option value="15-min">15 min</option>
                         </select>
                     </div>
 
@@ -70,7 +92,12 @@ const ScannerConditions = () => {
                             name="scanner-offset" 
                             id="scanner-offset"
                         >
-                            <option value="latest-candel">Latest Candle</option>
+                            <option value="latest-candle">Latest Candle</option>
+                            <option value="1-candle">1 Candle ago</option>
+                            <option value="2-candle">2 Candle ago</option>
+                            <option value="3-candle">3 Candle ago</option>
+                            <option value="4-candle">4 Candle ago</option>
+                            <option value="5-candle">5 Candle ago</option>
                         </select>
                     </div>
 
@@ -82,9 +109,10 @@ const ScannerConditions = () => {
                             id="scanner-segment-2"
                         >
                             <option value="latest-candel">Latest Candle</option>
-                            <option value="latest-candel">Latest Candle2</option>
                         </select>
                     </div>
+
+                    <DeleteOutlinedIcon className="delete-icon" onClick={deleteOption} />
                     
                 </div>
             ) : '' }
@@ -100,6 +128,7 @@ const ScannerConditions = () => {
                         Drag Something here !!
                     </div>
                 )}
+
                 
             </div>
 
