@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PageHeader from "../../components/PageHeader";
 import ScannerWorkPanel from "../../components/Scanner/ScannerWorkpanel/ScannerWorkpanel"
 import ScannerResults from '../../components/Scanner/ScannerResults/ScannerResults';
 import Disclaimer from '../../components/Scanner/Disclaimer/Disclaimer';
 
 const Scanner = () => {
+
+    const [scannerResults, setScannerResults] = useState(null);
+
+    const scannerResultDisplay = (api_res => setScannerResults(api_res.data))
+
     return (
         <div style={{ flex: 1 }}>
             <div>
@@ -19,8 +24,8 @@ const Scanner = () => {
                     />
                 </div>
 
-                <ScannerWorkPanel />
-                <ScannerResults />
+                <ScannerWorkPanel scannerResultDisplay={scannerResultDisplay} />
+                <ScannerResults scannerResults={scannerResults} />
                 <Disclaimer />
             
             </div>

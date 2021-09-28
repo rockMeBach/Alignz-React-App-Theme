@@ -4,7 +4,7 @@ import WorkpanelHeading from '../WorkpanelHeading/WorkpanelHeading'
 import WorkpanelFilter from '../WorkpanelFilter/WorkpanelFilter'
 import axios from 'axios';
 
-const ScannerWorkpanel = () => {
+const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
     const fetchScannerResults = () => {
         
@@ -37,6 +37,7 @@ const ScannerWorkpanel = () => {
             segment: document.getElementById("scanner-segment").value,
             segment1a: document.getElementById("scanner-segment-1a").value,
             comparison: comparison,
+            timeframe: document.getElementById("scanner-candelstick-timeframe").value,
             LHS: LHS[0],
             RHS: RHS[0]
         };
@@ -45,7 +46,7 @@ const ScannerWorkpanel = () => {
         
         axios.get('http://localhost/scanner/data/', {
             params: query
-        })
+        }).then(res => scannerResultDisplay(res)).catch(err => console.log(err))
 
     }
 

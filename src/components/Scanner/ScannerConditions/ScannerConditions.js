@@ -54,7 +54,7 @@ const ScannerConditions = () => {
             draggableElement.style.width = '4rem';
             draggableElement.style.textAlign = 'center';
             draggableElement.style.margin = '1rem'
-            draggableElement.innerText = id;
+            draggableElement.innerText = id.toUpperCase();
             // draggableElement.setAttribute('onclick', `this.parentNode.remove();`);
         }
 
