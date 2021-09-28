@@ -19,6 +19,7 @@
     "@testing-library/react": "^9.3.3",
     "@testing-library/user-event": "^7.1.2",
     "apexcharts": "^3.26.0",
+    "axios": "^0.21.4",
     "bootstrap": "^4.6.0",
     "ckeditor4-react": "^1.0.1",
     "echarts": "^4.5.0",
