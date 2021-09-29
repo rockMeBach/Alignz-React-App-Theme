@@ -1,10 +1,12 @@
 import React from 'react'
 import './WorkpanelFilter.scss'
 import ScannerConditions from '../ScannerConditions/ScannerConditions'
+import IndicatorModal from '../IndicatorModal/IndicatorModal'
 
 const WorkpanelFilter = () => {
 
     const dragStart = e => e.dataTransfer.setData('text/plain', e.target.id);
+
 
     return (
 
@@ -34,8 +36,8 @@ const WorkpanelFilter = () => {
                 <div className="scanner-indicator-name" id="sma" draggable='true' onDragStart={dragStart}>
                     Simple Moving Average
                 </div>
-                <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
-                    Bollinger Bands Lover
+                <div className="scanner-indicator-name" id="WILLR" draggable='true' onDragStart={dragStart}>
+                    WILLR
                 </div>
                 <div className="scanner-indicator-name" draggable='true' onDragStart={dragStart}>
                     Bollinger Bands Lover

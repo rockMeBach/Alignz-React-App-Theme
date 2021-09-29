@@ -2,10 +2,18 @@ import React, { useState, useEffect } from 'react'
 import './ScannerConditions.scss'
 import { AccessAlarm, ThreeDRotation } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import IndicatorModal from '../IndicatorModal/IndicatorModal';
 
 const ScannerConditions = () => {
 
     const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
+    const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
+    const [indicatorModalInput, setIndicatorModalInput] = useState({});
+
+    const closeIndicatorModal = () => {
+
+        setIndicatorModalOpen(false);
+    }
 
     const deleteOption = async () => {
 
@@ -51,71 +59,34 @@ const ScannerConditions = () => {
             scannerOptionDivChecker();
             // console.log(draggableElement, dropzone)
             // draggableElement.style.display = 'flex';
-            draggableElement.style.width = '4rem';
+            // draggableElement.style.width = '4rem';
+
             draggableElement.style.textAlign = 'center';
             draggableElement.style.margin = '1rem'
             draggableElement.innerText = id.toUpperCase();
+
+            setIndicatorModalInput({
+                indicatorName: id
+            });
+            setIndicatorModalOpen(true);
             // draggableElement.setAttribute('onclick', `this.parentNode.remove();`);
         }
 
         e.dataTransfer.clearData();
     }
 
-    useEffect(scannerOptionDivChecker, []);
+    // useEffect(scannerOptionDivChecker, []);
 
     return (
         <div className="scanner-conditions">
-
-            { scannerConditionOptions ? (
-                <div className="scanner-conditions-options">
-                    
-                    <div className="scanner-conditions-option">
-                        <h6>Candelstick timeframe</h6>
-                        <select 
-                            className="form-control scanner-condition-option" 
-                            name="candelstick-timeframe" 
-                            id="scanner-candelstick-timeframe"
-                        >
-                            <option value="1-min">1 min</option>
-                            <option value="2-min">2 min</option>
-                            <option value="3-min">3 min</option>
-                            <option value="5-min">5 min</option>
-                            <option value="10-min">10 min</option>
-                            <option value="15-min">15 min</option>
-                        </select>
-                    </div>
-
-                    <div className="scanner-conditions-option">
-                        <h6>Offset(1)/offset(2)</h6>
-                        <select 
-                            className="form-control scanner-condition-option" 
-                            name="scanner-offset" 
-                            id="scanner-offset"
-                        >
-                            <option value="latest-candle">Latest Candle</option>
-                            <option value="1-candle">1 Candle ago</option>
-                            <option value="2-candle">2 Candle ago</option>
-                            <option value="3-candle">3 Candle ago</option>
-                            <option value="4-candle">4 Candle ago</option>
-                            <option value="5-candle">5 Candle ago</option>
-                        </select>
-                    </div>
-
-                    <div className="scanner-conditions-option">
-                        <h6>Segment 2</h6>
-                        <select 
-                            className="form-control scanner-condition-option" 
-                            name="scanner-segment-2" 
-                            id="scanner-segment-2"
-                        >
-                            <option value="latest-candel">Latest Candle</option>
-                        </select>
-                    </div>
-
-                    <DeleteOutlinedIcon className="delete-icon" onClick={deleteOption} />
-                    
-                </div>
-            ) : '' }
+            
+            {/* <DeleteOutlinedIcon className="delete-icon" onClick={deleteOption} /> */}
+            {indicatorModalOpen && 
+                <IndicatorModal 
+                    indicatorModalInput = { indicatorModalInput } 
+                    closeIndicatorModal = { closeIndicatorModal }
+                />
+            }
 
             <div 
                 id="scanner-condition-indicators" 
@@ -128,6 +99,7 @@ const ScannerConditions = () => {
                         Drag Something here !!
                     </div>
                 )}
+
 
                 
             </div>
