@@ -9,11 +9,37 @@ const ScannerConditions = () => {
     const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
     const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
     const [indicatorModalInput, setIndicatorModalInput] = useState({});
+    // const [currSelectedIndicator, setCurrSelectedIndicaotr] = useState(null);
 
-    const closeIndicatorModal = () => {
+    const closeIndicatorModal = (indicatorSetting) => {
 
+        indicatorModalInput.element.data = indicatorSetting;
         setIndicatorModalOpen(false);
     }
+
+    const openIndicatorModal = draggableElement => {
+
+        if(
+            draggableElement.id === '>' 
+            || draggableElement.id === '<' 
+            || draggableElement.id === '+' 
+            || draggableElement.id === '-' 
+            || draggableElement.id === '*'
+        )
+            return;
+
+        setIndicatorModalInput({
+            indicatorName: draggableElement.id,
+            element: draggableElement,
+            settings: [
+                {name: 'Length', value: 14},
+                {name: 'Source', options: ['Open', 'High', 'Low', 'Close'], value: 'Open'}
+            ]
+        });
+        
+        setIndicatorModalOpen(true);
+    }
+
 
     const deleteOption = async () => {
 
@@ -65,10 +91,8 @@ const ScannerConditions = () => {
             draggableElement.style.margin = '1rem'
             draggableElement.innerText = id.toUpperCase();
 
-            setIndicatorModalInput({
-                indicatorName: id
-            });
-            setIndicatorModalOpen(true);
+            openIndicatorModal(draggableElement);
+
             // draggableElement.setAttribute('onclick', `this.parentNode.remove();`);
         }
 
@@ -99,8 +123,6 @@ const ScannerConditions = () => {
                         Drag Something here !!
                     </div>
                 )}
-
-
                 
             </div>
 
@@ -108,4 +130,6 @@ const ScannerConditions = () => {
     )
 }
 
-export default ScannerConditions
+export default ScannerConditions;
+
+

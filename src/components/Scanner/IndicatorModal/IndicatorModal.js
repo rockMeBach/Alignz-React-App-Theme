@@ -1,24 +1,52 @@
-import React, { useEffect } from 'react'
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure,
-    Divider,
-} from "@chakra-ui/react";
+import { element } from 'prop-types';
+import React, { useState, useEffect } from 'react'
 import './IndicatorModal.scss'
 
 
 const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
 
+    const [indicatorSettings, setIndicatorSettings] = useState(indicatorModalInput.settings)
+    const [tmpValue, setTmpValue] = useState(14);
+
     const closeModal = () => {
 
-        closeIndicatorModal();
+        closeIndicatorModal({
+            
+            indicatorName: indicatorModalInput.indicatorName,
+            timeframe: document.getElementById("scanner-candelstick-timeframe").value,
+            offset: document.getElementById("scanner-offset").value,
+            setting: indicatorModalInput.settings
+        });
         document.getElementById('staticBackdropLive').style.display = "none";
     }
+
+    // const indicatorSettingLoad = () => {
+
+    //     const settings = indicatorModalInput.settings
+    //     for(let key in settings)
+    //     {
+    //         if(typeof settings[key] === 'array')
+    //             return (
+    //                 <div className="scanner-conditions-option">
+    //                     <h6>{key}</h6>
+    //                     <select 
+    //                         className="form-control scanner-condition-option" 
+    //                         name="candelstick-timeframe" 
+    //                         id="scanner-candelstick-timeframe"
+    //                     >
+    //                         <option value="1-min">1 min</option>
+    //                         <option value="2-min">2 min</option>
+    //                         <option value="3-min">3 min</option>
+    //                         <option value="5-min">5 min</option>
+    //                         <option value="10-min">10 min</option>
+    //                         <option value="15-min">15 min</option>
+    //                     </select>
+    //                 </div>
+    //             )
+    //     }
+
+    //     // console.log(indicatorModalInput)
+    // }
 
     useEffect(() => {
 
@@ -54,7 +82,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                         </div>
 
                         <div className="scanner-conditions-option">
-                            <h6>Offset(1)/offset(2)</h6>
+                            <h6>Offset</h6>
                             <select 
                                 className="form-control scanner-condition-option" 
                                 name="scanner-offset" 
@@ -80,7 +108,55 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                             </select>
                         </div>
 
+
+                    </div>
+
+                    <hr />
+
+                    <div className="indicator-settings">
                         
+                        {indicatorModalInput.settings.map((e, i) => {
+                            
+                            return (
+                                <div className="scanner-conditions-option">
+                                    <h6>{e.name}</h6>
+                                    {e.options === undefined ? (
+
+                                        <input 
+                                            className="form-control scanner-condition-option"
+                                            type='number'
+                                            name='indicator-setting-length'  
+                                            value={tmpValue} 
+                                            onChange={element => {
+                                                
+                                                if(element.target.value < 1)
+                                                    return;
+
+                                                e.value = element.target.value;
+                                                setTmpValue(element.target.value)
+                                            }} 
+                                        />
+
+                                    ) : (
+                                        <select 
+                                            className="form-control scanner-condition-option" 
+                                            name="indicator-setting-source"
+                                            id="indicator-source"
+                                            onChange={element => e.value = element.target.value}
+                                        >
+                                            {e.options.map(v => 
+
+                                                <option value={v}>
+                                                    {v}
+                                                </option>
+                                            )}
+
+                                        </select>
+                                    )}
+                                </div>
+                                )
+                        })}
+
                     </div>
 
                 </div>
