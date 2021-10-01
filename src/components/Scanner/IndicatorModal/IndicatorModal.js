@@ -1,4 +1,3 @@
-import { element } from 'prop-types';
 import React, { useState, useEffect } from 'react'
 import './IndicatorModal.scss'
 
@@ -160,9 +159,20 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                     </div>
 
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick={closeModal}>Close</button>
+
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal" 
+                        onClick={closeModal}
+                    >
+                        Close
+                    </button>
+
                 </div>
+
                 </div>
             </div>
         </div>

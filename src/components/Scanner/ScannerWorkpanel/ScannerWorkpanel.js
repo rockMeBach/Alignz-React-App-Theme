@@ -21,23 +21,21 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
                 flag = false;
             }
             else if(flag)
-                LHS.push(e.id);
+                LHS.push(e.data);
             else    
-                RHS.push(e.id);
+                RHS.push(e.data);
         });
 
         if(!document.getElementById("satisfy").checked)
             comparison = !comparison;
 
         let query = {
-            year: '2017',
             startTime: document.getElementById("scanner-start-time").childNodes[1].value,
             endTime: document.getElementById("scanner-end-time").childNodes[1].value,
             fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
             segment: document.getElementById("scanner-segment").value,
             segment1a: document.getElementById("scanner-segment-1a").value,
             comparison: comparison,
-            timeframe: document.getElementById("scanner-candelstick-timeframe").value,
             LHS: LHS[0],
             RHS: RHS[0]
         };
