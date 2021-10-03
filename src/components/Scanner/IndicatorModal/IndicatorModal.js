@@ -6,6 +6,10 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
     indicatorModalInput.settings
   );
   const [tmpValue, setTmpValue] = useState(14);
+  const [offsetCandleValue, setOffsetCandleValue] = useState("");
+  const [timeFrameValue, setTimeFrameValue] = useState("");
+  const [segmentValue, setSegmentValue] = useState("");
+  const [source, setSource] = useState("");
 
   const closeModal = () => {
     closeIndicatorModal({

@@ -14,6 +14,7 @@ const ScannerConditions = () => {
   const closeIndicatorModal = (indicatorSetting) => {
     let tmpSetting = indicatorModalInput;
     tmpSetting.settings = indicatorSetting.setting;
+    console.log(tmpSetting);
     setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
@@ -27,13 +28,7 @@ const ScannerConditions = () => {
   };
 
   const openIndicatorModal = (id) => {
-    if (
-      id === ">" ||
-      id === "<" ||
-      id === "+" ||
-      id === "-" ||
-      id === "*"
-    )
+    if (id === ">" || id === "<" || id === "+" || id === "-" || id === "*")
       return;
 
     setIndicatorModalInput({
@@ -51,8 +46,6 @@ const ScannerConditions = () => {
 
     setIndicatorModalOpen(true);
   };
-
-
 
   const dropElement = (e) => {
     const id = e.dataTransfer.getData("text");
@@ -91,7 +84,10 @@ const ScannerConditions = () => {
             <span onClick={() => deleteElement(index)}>
               <DeleteOutlinedIcon className="delete-icon" />
             </span>
-            <ScannerDraggableComponent id={e} modalInput={indicatorModalInput}/>
+            <ScannerDraggableComponent
+              id={e}
+              modalInput={indicatorModalInput}
+            />
           </div>
         ))}
       </div>
