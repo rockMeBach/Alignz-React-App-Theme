@@ -12,7 +12,9 @@ const ScannerConditions = () => {
   const [currSelectedIndicator, setCurrSelectedIndicator] = useState([]);
 
   const closeIndicatorModal = (indicatorSetting) => {
-    indicatorModalInput.element.data = indicatorSetting;
+    let tmpSetting = indicatorModalInput;
+    tmpSetting.settings = indicatorSetting.setting;
+    setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
 
@@ -22,22 +24,21 @@ const ScannerConditions = () => {
     if (arr.length === 0) {
       setScannerConditionOptions(false);
     }
-    console.log("suhas", scannerConditionOptions);
   };
 
-  const openIndicatorModal = (draggableElement) => {
+  const openIndicatorModal = (id) => {
     if (
-      draggableElement.id === ">" ||
-      draggableElement.id === "<" ||
-      draggableElement.id === "+" ||
-      draggableElement.id === "-" ||
-      draggableElement.id === "*"
+      id === ">" ||
+      id === "<" ||
+      id === "+" ||
+      id === "-" ||
+      id === "*"
     )
       return;
 
     setIndicatorModalInput({
-      indicatorName: draggableElement.id,
-      element: draggableElement,
+      indicatorName: id,
+      element: id,
       settings: [
         { name: "Length", value: 14 },
         {
@@ -51,26 +52,15 @@ const ScannerConditions = () => {
     setIndicatorModalOpen(true);
   };
 
-  //   const deleteOption = async () => {
-  //     const removeAllChild = () => {
-  //       let scannerDiv = document.getElementById("scanner-condition-indicators");
-  //       while (scannerDiv.firstChild)
-  //         scannerDiv.removeChild(scannerDiv.firstChild);
-  //     };
 
-  //     await removeAllChild();
-
-  //     setScannerConditionOptions(false);
-  //   };
 
   const dropElement = (e) => {
     const id = e.dataTransfer.getData("text");
-
     if (id) {
       arr.push(id);
       setCurrSelectedIndicator([...arr]);
       setScannerConditionOptions(true);
-      // openIndicatorModal(id);
+      openIndicatorModal(id);
     }
 
     e.dataTransfer.clearData();
@@ -78,12 +68,12 @@ const ScannerConditions = () => {
 
   return (
     <div className="scanner-conditions">
-      {/* {indicatorModalOpen && (
+      {indicatorModalOpen && (
         <IndicatorModal
           indicatorModalInput={indicatorModalInput}
           closeIndicatorModal={closeIndicatorModal}
         />
-      )} */}
+      )}
 
       <div
         id="scanner-condition-indicators"
@@ -101,7 +91,7 @@ const ScannerConditions = () => {
             <span onClick={() => deleteElement(index)}>
               <DeleteOutlinedIcon className="delete-icon" />
             </span>
-            <ScannerDraggableComponent id={e}/>
+            <ScannerDraggableComponent id={e} modalInput={indicatorModalInput}/>
           </div>
         ))}
       </div>
