@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import "./ScannerConditions.scss";
 import ScannerDraggableComponent from "../ScannerDraggableComponent/ScannerDraggableComponent";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
-let arr = [];
+
+var arr = [];
 const ScannerConditions = () => {
   const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
@@ -13,7 +15,14 @@ const ScannerConditions = () => {
     indicatorModalInput.element.data = indicatorSetting;
     setIndicatorModalOpen(false);
   };
-
+  const deleteElement = (index) => {
+    arr.splice(index, 1);
+    setCurrSelectedIndicator([...arr]);
+    if (arr.length === 0) {
+      setScannerConditionOptions(false);
+    }
+    console.log("suhas", scannerConditionOptions);
+  };
   const openIndicatorModal = (draggableElement) => {
     if (
       draggableElement.id === ">" ||
@@ -57,18 +66,15 @@ const ScannerConditions = () => {
     let draggableElement = document.getElementById(id);
     if (draggableElement) {
       arr.push(draggableElement);
-      setCurrSelectedIndicator(arr);
-      setScannerConditionOptions(arr.length > 0 ? true : false);
+      setCurrSelectedIndicator([...arr]);
+      setScannerConditionOptions(true);
       openIndicatorModal(draggableElement);
       draggableElement.setAttribute("onclick", `this.parentNode.remove();`);
     }
     e.dataTransfer.clearData();
   };
-
-
   return (
     <div className="scanner-conditions">
-      {/* <DeleteOutlinedIcon className="delete-icon" onClick={deleteOption} /> */}
       {indicatorModalOpen && (
         <IndicatorModal
           indicatorModalInput={indicatorModalInput}
@@ -86,8 +92,14 @@ const ScannerConditions = () => {
             Drag Something here !!
           </div>
         )}
-        {currSelectedIndicator.map((e) => (
-          <ScannerDraggableComponent id={e.id} draggableElement={e} />
+
+        {currSelectedIndicator.map((e, index) => (
+          <div>
+            <span onClick={() => deleteElement(index)}>
+              <DeleteOutlinedIcon className="delete-icon" />
+            </span>
+            <ScannerDraggableComponent id={e.id} draggableElement={e} />
+          </div>
         ))}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+
 const ScannerDraggableComponent = ({ id, draggableElement }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
@@ -36,7 +36,6 @@ const ScannerDraggableComponent = ({ id, draggableElement }) => {
   };
   return (
     <>
-      <DeleteOutlinedIcon className="delete-icon" />
       <div
         className="scanner-indicator-name"
         id={id}
