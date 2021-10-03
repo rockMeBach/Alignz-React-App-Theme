@@ -9,6 +9,11 @@ const ScannerDraggableComponent = ({ id }) => {
     
     console.log(indicatorSetting)
     indicatorModalInput.element.data = indicatorSetting;
+    
+    let tmpSetting = indicatorModalInput;
+    tmpSetting.settings = indicatorSetting.setting;
+    setIndicatorModalInput(tmpSetting);
+
     setIndicatorModalOpen(false);
   };
 
@@ -22,19 +27,7 @@ const ScannerDraggableComponent = ({ id }) => {
     )
       return;
 
-    if(e.target.data) {
-
-      console.log(e.target.data);
-      setIndicatorModalInput({
-        indicatorName: e.target.id,
-        element: e.target,
-        settings: e.target.data.setting,
-      });
-    }
-    
-    else{
-
-      console.log(2);
+    if(!e.target.data)
       setIndicatorModalInput({
         indicatorName: e.target.id,
         element: e.target,
@@ -47,8 +40,7 @@ const ScannerDraggableComponent = ({ id }) => {
           },
         ],
       });
-    }
-
+  
     setIndicatorModalOpen(true);
   };
 

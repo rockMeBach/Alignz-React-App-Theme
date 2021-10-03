@@ -120,12 +120,11 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                                 <div className="scanner-conditions-option">
                                     <h6>{e.name}</h6>
                                     {e.options === undefined ? (
-
                                         <input 
                                             className="form-control scanner-condition-option"
                                             type='number'
                                             name='indicator-setting-length'  
-                                            value={tmpValue} 
+                                            value={e.value} 
                                             onChange={element => {
                                                 
                                                 if(element.target.value < 1)
