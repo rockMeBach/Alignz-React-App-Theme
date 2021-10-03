@@ -1,39 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 
-const ScannerDraggableComponent = ({ id, draggableElement }) => {
+const ScannerDraggableComponent = ({ id }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
+
   const closeIndicatorModal = (indicatorSetting) => {
+    
+    console.log(indicatorSetting)
     indicatorModalInput.element.data = indicatorSetting;
     setIndicatorModalOpen(false);
   };
 
-  const openIndicatorModal = (draggableElement) => {
+  const openIndicatorModal = (e) => {
     if (
-      draggableElement.id === ">" ||
-      draggableElement.id === "<" ||
-      draggableElement.id === "+" ||
-      draggableElement.id === "-" ||
-      draggableElement.id === "*"
+      e.target.id === ">" ||
+      e.target.id === "<" ||
+      e.target.id === "+" ||
+      e.target.id === "-" ||
+      e.target.id === "*"
     )
       return;
 
-    setIndicatorModalInput({
-      indicatorName: draggableElement.id,
-      element: draggableElement,
-      settings: [
-        { name: "Length", value: 14 },
-        {
-          name: "Source",
-          options: ["Open", "High", "Low", "Close"],
-          value: "Open",
-        },
-      ],
-    });
+    if(e.target.data) {
+
+      console.log(e.target.data);
+      setIndicatorModalInput({
+        indicatorName: e.target.id,
+        element: e.target,
+        settings: e.target.data.setting,
+      });
+    }
+    
+    else{
+
+      console.log(2);
+      setIndicatorModalInput({
+        indicatorName: e.target.id,
+        element: e.target,
+        settings: [
+          { name: "Length", value: 14 },
+          {
+            name: "Source",
+            options: ["Open", "High", "Low", "Close"],
+            value: "Open",
+          },
+        ],
+      });
+    }
 
     setIndicatorModalOpen(true);
   };
+
   return (
     <>
       <div
@@ -43,7 +61,7 @@ const ScannerDraggableComponent = ({ id, draggableElement }) => {
           textAlign: "center",
           margin: "1rem",
         }}
-        onDoubleClick={() => openIndicatorModal(draggableElement)}
+        onDoubleClick={e => openIndicatorModal(e)}
       >
         {indicatorModalOpen && (
           <IndicatorModal

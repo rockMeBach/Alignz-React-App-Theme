@@ -15,6 +15,7 @@ const ScannerConditions = () => {
     indicatorModalInput.element.data = indicatorSetting;
     setIndicatorModalOpen(false);
   };
+
   const deleteElement = (index) => {
     arr.splice(index, 1);
     setCurrSelectedIndicator([...arr]);
@@ -23,6 +24,7 @@ const ScannerConditions = () => {
     }
     console.log("suhas", scannerConditionOptions);
   };
+
   const openIndicatorModal = (draggableElement) => {
     if (
       draggableElement.id === ">" ||
@@ -63,24 +65,25 @@ const ScannerConditions = () => {
 
   const dropElement = (e) => {
     const id = e.dataTransfer.getData("text");
-    let draggableElement = document.getElementById(id);
-    if (draggableElement) {
-      arr.push(draggableElement);
+
+    if (id) {
+      arr.push(id);
       setCurrSelectedIndicator([...arr]);
       setScannerConditionOptions(true);
-      openIndicatorModal(draggableElement);
-      draggableElement.setAttribute("onclick", `this.parentNode.remove();`);
+      // openIndicatorModal(id);
     }
+
     e.dataTransfer.clearData();
   };
+
   return (
     <div className="scanner-conditions">
-      {indicatorModalOpen && (
+      {/* {indicatorModalOpen && (
         <IndicatorModal
           indicatorModalInput={indicatorModalInput}
           closeIndicatorModal={closeIndicatorModal}
         />
-      )}
+      )} */}
 
       <div
         id="scanner-condition-indicators"
@@ -98,7 +101,7 @@ const ScannerConditions = () => {
             <span onClick={() => deleteElement(index)}>
               <DeleteOutlinedIcon className="delete-icon" />
             </span>
-            <ScannerDraggableComponent id={e.id} draggableElement={e} />
+            <ScannerDraggableComponent id={e}/>
           </div>
         ))}
       </div>

@@ -15,15 +15,15 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         let RHS = [];
         conditions.forEach(e => {
             
-            if(e.id === '<' || e.id === '>') {
+            if(e.childNodes[0].childNodes[1].id === '<' || e.childNodes[0].childNodes[1].id === '>') {
                 
-                comparison = e.id === '>' ? true : false;
+                comparison = e.childNodes[0].childNodes[1].id === '>' ? true : false;
                 flag = false;
             }
             else if(flag)
-                LHS.push(e.data);
+                LHS.push(e.childNodes[0].childNodes[1].data);
             else    
-                RHS.push(e.data);
+                RHS.push(e.childNodes[0].childNodes[1].data);
         });
 
         if(!document.getElementById("satisfy").checked)
