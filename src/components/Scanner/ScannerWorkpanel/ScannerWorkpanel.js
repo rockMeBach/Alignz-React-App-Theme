@@ -3,11 +3,11 @@ import './ScannerWorkpanel.scss'
 import WorkpanelHeading from '../WorkpanelHeading/WorkpanelHeading'
 import WorkpanelFilter from '../WorkpanelFilter/WorkpanelFilter'
 import axios from 'axios';
-import technicalIndicator from 'technicalindicators';
+import {SMA} from 'technicalindicators';
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
-    const fetchScannerResults = () => {
+    const fetchScannerResults = async () => {
         
         let conditions = document.getElementById("scanner-condition-indicators").childNodes;
         let flag = true;
@@ -53,23 +53,32 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
             let highPrice = [];
             let lowPrice = [];
 
-            // scannerResultDisplay(res)
             console.log(res);
             res.data.forEach(e => {
-
+                
                 // console.log(e)
                 // console.log(e.open)
-                openPrice.push(e.open);
-                closePrice.push(e.close);
-                highPrice.push(e.high);
-                lowPrice.push(e.low);
+                openPrice.push(parseFloat(e.open));
+                closePrice.push(parseFloat(e.close));
+                highPrice.push(parseFloat(e.high));
+                lowPrice.push(parseFloat(e.low));
             });
-
+            
             console.log(openPrice)
-            console.log(closePrice)
-            console.log(highPrice)
-            console.log(lowPrice)
+            // console.log(closePrice)
+            // console.log(highPrice)
+            // console.log(lowPrice)
 
+            // let final_result = SMA.calculate({period : 5, values : openPrice})
+            console.log("SMA", SMA.calculate({period : 8, values : openPrice}))    
+        
+            // let period = 8;
+            // let values = [1,2,3,4,5,6,7,8,9,10,11,12,13];                    
+
+            // console.log(SMA.calculate({period : period, values : values})) 
+
+            scannerResultDisplay(res)
+            
         }).catch(err => console.log(err))
 
     }
