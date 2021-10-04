@@ -15,15 +15,16 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         let RHS = [];
         conditions.forEach(e => {
             
-            if(e.childNodes[0].childNodes[1].id === '<' || e.childNodes[0].childNodes[1].id === '>') {
+            console.log(e.childNodes[1].id, e.childNodes[1].data);
+            if(e.childNodes[1].id === '<' || e.childNodes[1].id === '>') {
                 
-                comparison = e.childNodes[0].childNodes[1].id === '>' ? true : false;
+                comparison = e.childNodes[1].id;
                 flag = false;
             }
             else if(flag)
-                LHS.push(e.childNodes[0].childNodes[1].data);
+                LHS.push(e.childNodes[1].data);
             else    
-                RHS.push(e.childNodes[0].childNodes[1].data);
+                RHS.push(e.childNodes[1].data);
         });
 
         if(!document.getElementById("satisfy").checked)
@@ -36,8 +37,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
             segment: document.getElementById("scanner-segment").value,
             segment1a: document.getElementById("scanner-segment-1a").value,
             comparison: comparison,
-            LHS: LHS[0],
-            RHS: RHS[0]
+            LHS: LHS,
+            RHS: RHS
         };
 
         console.log(query)

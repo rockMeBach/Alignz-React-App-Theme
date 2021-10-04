@@ -61,18 +61,12 @@ const ScannerConditions = () => {
 
   return (
     <div className="scanner-conditions">
-      {indicatorModalOpen && (
-        <IndicatorModal
-          indicatorModalInput={indicatorModalInput}
-          closeIndicatorModal={closeIndicatorModal}
-        />
-      )}
 
       <div
         id="scanner-condition-indicators"
         onDragOver={(e) => e.preventDefault()}
         onDrop={dropElement}
-      >
+        >
         {!scannerConditionOptions && (
           <div className="scanner-indicator-drag-request">
             Drag Something here !!
@@ -87,10 +81,19 @@ const ScannerConditions = () => {
             <ScannerDraggableComponent
               id={e}
               modalInput={indicatorModalInput}
-            />
+              modalOpen={true}
+              />
           </div>
         ))}
       </div>
+
+      {indicatorModalOpen && (
+        <IndicatorModal
+          indicatorModalInput={indicatorModalInput}
+          closeIndicatorModal={closeIndicatorModal}
+        />
+      )}
+      
     </div>
   );
 };

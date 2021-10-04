@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 
-const ScannerDraggableComponent = ({ id, modalInput }) => {
+const ScannerDraggableComponent = ({ id, modalInput, modalOpen }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
+  const [clickFlag, setClickFlag] = useState(true);
 
   const closeIndicatorModal = (indicatorSetting) => {
     let tmpSetting = indicatorModalInput;
     tmpSetting.settings = indicatorSetting.setting;
+    indicatorModalInput.element.data = indicatorSetting;
     setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
@@ -21,7 +23,11 @@ const ScannerDraggableComponent = ({ id, modalInput }) => {
       e.target.id === "*"
     )
       return;
-    setIndicatorModalInput(modalInput);
+
+    let tmpModalInput = modalInput;
+    tmpModalInput.element = e.target
+    // console.log(tmpModalInput)
+    setIndicatorModalInput(tmpModalInput);
 
     setIndicatorModalOpen(true);
   };
@@ -37,12 +43,14 @@ const ScannerDraggableComponent = ({ id, modalInput }) => {
         }}
         onDoubleClick={(e) => openIndicatorModal(e)}
       >
+
         {indicatorModalOpen && (
           <IndicatorModal
             indicatorModalInput={indicatorModalInput}
             closeIndicatorModal={closeIndicatorModal}
           />
         )}
+        
         {id.toUpperCase()}
       </div>
     </>
