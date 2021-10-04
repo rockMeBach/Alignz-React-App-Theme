@@ -87,12 +87,12 @@ const ScannerConditions = () => {
         ))}
       </div>
 
-      {indicatorModalOpen && (
+      {/* {indicatorModalOpen && (
         <IndicatorModal
           indicatorModalInput={indicatorModalInput}
           closeIndicatorModal={closeIndicatorModal}
         />
-      )}
+      )} */}
       
     </div>
   );

@@ -3,6 +3,7 @@ import './ScannerWorkpanel.scss'
 import WorkpanelHeading from '../WorkpanelHeading/WorkpanelHeading'
 import WorkpanelFilter from '../WorkpanelFilter/WorkpanelFilter'
 import axios from 'axios';
+import technicalIndicator from 'technicalindicators';
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
@@ -45,7 +46,31 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         
         axios.get('http://localhost/scanner/data/', {
             params: query
-        }).then(res => scannerResultDisplay(res)).catch(err => console.log(err))
+        }).then(res => {
+
+            let openPrice = [];
+            let closePrice = [];
+            let highPrice = [];
+            let lowPrice = [];
+
+            // scannerResultDisplay(res)
+            console.log(res);
+            res.data.forEach(e => {
+
+                // console.log(e)
+                // console.log(e.open)
+                openPrice.push(e.open);
+                closePrice.push(e.close);
+                highPrice.push(e.high);
+                lowPrice.push(e.low);
+            });
+
+            console.log(openPrice)
+            console.log(closePrice)
+            console.log(highPrice)
+            console.log(lowPrice)
+
+        }).catch(err => console.log(err))
 
     }
 
