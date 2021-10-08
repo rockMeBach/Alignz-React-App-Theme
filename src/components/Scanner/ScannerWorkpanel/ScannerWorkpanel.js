@@ -3,9 +3,25 @@ import './ScannerWorkpanel.scss'
 import WorkpanelHeading from '../WorkpanelHeading/WorkpanelHeading'
 import WorkpanelFilter from '../WorkpanelFilter/WorkpanelFilter'
 import axios from 'axios';
-import {SMA} from 'technicalindicators';
+import {SMA, RSI} from 'technicalindicators';
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
+
+    const convertTime12to24 = time12h => {
+        const [time, modifier] = time12h.split(" ");
+        
+        let [hours, minutes] = time.split(":");
+        
+        if (hours === "12") {
+            hours = "00";
+        }
+        
+        if (modifier === "PM") {
+            hours = parseInt(hours, 10) + 12;
+        }
+        
+        return `${hours}:${minutes}`;
+    };
 
     const fetchScannerResults = async () => {
         
@@ -31,20 +47,34 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         if(!document.getElementById("satisfy").checked)
             comparison = !comparison;
 
+        // let query = {
+        //     startTime: document.getElementById("scanner-start-time").childNodes[1].value,
+        //     endTime: document.getElementById("scanner-end-time").childNodes[1].value,
+        //     fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
+        //     segment: document.getElementById("scanner-segment").value,
+        //     segment1a: document.getElementById("scanner-segment-1a").value,
+        //     comparison: comparison,
+        //     LHS: LHS,
+        //     RHS: RHS
+        // };
+
+        let starttime = document.getElementById("scanner-start-time").childNodes[1].value;
+        let endtime = document.getElementById("scanner-end-time").childNodes[1].value;
+
+        if(starttime)
+            starttime = convertTime12to24(starttime)
+        
+        if(endtime)
+            endtime = convertTime12to24(endtime)
+
         let query = {
-            startTime: document.getElementById("scanner-start-time").childNodes[1].value,
-            endTime: document.getElementById("scanner-end-time").childNodes[1].value,
-            fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
-            segment: document.getElementById("scanner-segment").value,
-            segment1a: document.getElementById("scanner-segment-1a").value,
-            comparison: comparison,
-            LHS: LHS,
-            RHS: RHS
+            starttime: starttime,
+            endtime: endtime
         };
 
-        console.log(query)
+        // console.log(query)
         
-        axios.get('http://localhost/scanner/data/', {
+        axios.get('http://localhost/api/stocks/', {
             params: query
         }).then(res => {
 
@@ -70,7 +100,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
             // console.log(lowPrice)
 
             // let final_result = SMA.calculate({period : 5, values : openPrice})
-            console.log("SMA", SMA.calculate({period : 8, values : openPrice}))    
+            console.log("SMA", RSI.calculate({period : 8, values : openPrice}))    
         
             // let period = 8;
             // let values = [1,2,3,4,5,6,7,8,9,10,11,12,13];                    

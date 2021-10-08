@@ -32,6 +32,8 @@ const ScannerResults = ({ scannerResults }) => {
                                 <th scope="col">Exch</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Volume</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time</th>
                             </tr>
                         </thead>
 
@@ -45,6 +47,8 @@ const ScannerResults = ({ scannerResults }) => {
                                     <td><strong>NSE</strong></td>
                                     <td>{e.close}</td>
                                     <td>{e.volume}</td>
+                                    <td>{e.date}</td>
+                                    <td>{e.time}</td>
                                 </tr>
 
                             ))}
