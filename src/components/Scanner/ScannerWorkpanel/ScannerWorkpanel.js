@@ -50,11 +50,11 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         let starttime = document.getElementById("scanner-start-time").childNodes[1].value;
         let endtime = document.getElementById("scanner-end-time").childNodes[1].value;
         
-        if(starttime)
-            starttime = convertTime12to24(starttime)
+        // if(starttime)
+        //     starttime = convertTime12to24(starttime)
         
-        if(endtime)
-            endtime = convertTime12to24(endtime)
+        // if(endtime)
+        //     endtime = convertTime12to24(endtime)
             
         // let query = {
         //     starttime: starttime,
@@ -62,8 +62,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         // };
         
         let query = {
-            startTime: starttime,
-            endTime: endtime,
+            starttime: starttime,
+            endtime: endtime,
             fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
             segment: document.getElementById("scanner-segment").value,
             segment1a: document.getElementById("scanner-segment-1a").value,
@@ -72,7 +72,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
             RHS: RHS
         };
 
-        const res = await queryCalculator(query);
+        let res = await queryCalculator(query);
+
+        if(res === undefined)
+            res = [];
         
         scannerResultDisplay(res);
     }

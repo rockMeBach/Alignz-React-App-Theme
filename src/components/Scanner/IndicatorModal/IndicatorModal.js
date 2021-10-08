@@ -13,7 +13,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
 
   const closeModal = () => {
     closeIndicatorModal({
-      // indicatorName: indicatorModalInput.indicatorName,
+      indicatorName: indicatorModalInput.indicatorName,
       timeframe: document.getElementById("scanner-candelstick-timeframe").value,
       offset: document.getElementById("scanner-offset").value,
       setting: indicatorModalInput.settings,

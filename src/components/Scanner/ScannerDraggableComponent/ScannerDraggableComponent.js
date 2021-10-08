@@ -24,10 +24,32 @@ const ScannerDraggableComponent = ({ id, modalInput, modalOpen }) => {
     )
       return;
 
-    let tmpModalInput = modalInput;
-    tmpModalInput.element = e.target
+    // let tmpModalInput = modalInput;
+    // tmpModalInput.element = e.target
     // console.log(tmpModalInput)
-    setIndicatorModalInput(tmpModalInput);
+    // setIndicatorModalInput(tmpModalInput);
+    if(e.target.data) {
+      
+      setIndicatorModalInput({
+        indicatorName: e.target.id,
+        element: e.target,
+        settings: JSON.parse(e.target.data)
+      });
+    } else {
+      
+      setIndicatorModalInput({
+        indicatorName: e.target.id,
+        element: e.target,
+        settings: [
+          { name: "Length", value: 14 },
+          {
+            name: "Source",
+            options: ["Open", "High", "Low", "Close"],
+            value: "Open",
+          },
+        ],
+      });
+    }
 
     setIndicatorModalOpen(true);
   };

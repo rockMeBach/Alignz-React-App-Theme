@@ -3,17 +3,16 @@ import {SMA, RSI} from 'technicalindicators';
 
 const queryCalculator = async query => {
 
-    console.log(query)
+    // console.log(query)
     
     let backendQuery = {
-        starttime: query.startTime,
-        endtime: query.endTime
+        starttime: query.starttime,
+        endtime: query.endtime
     };
-        
-
+    
     const res = axios.get('http://localhost/api/stocks/', {
 
-        params: backendQuery
+        params: query
     }).then(res => {
 
         let openPrice = [];
