@@ -7,6 +7,7 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import "./ScannerResults.scss";
+import ScannerTable from "../ScannerTable/ScannerTable";
 
 // Icons
 import DownloadIcon from "../../../assets/images/download.svg";
@@ -38,7 +39,49 @@ const ScannerResults = ({ scannerResults }) => {
                 <th scope="col">Time</th>
               </tr>
             </thead>
-            <tbody>{Object.entries(scannerResults).map((e, i) => {})}</tbody>
+            <tbody>
+
+              {Object.entries(scannerResults).map(([key, value], i) => (
+
+                <ScannerTable key={key} value={value} />  
+
+                // if(key && key !== 'undefined' && value) {
+                //   return (
+                //     <tr>
+                //       <th scope="row">{key}</th>
+                //       {/* <th scope="row">{i + 1}</th> */}
+                //       <td></td>
+                //       <td><strong></strong></td>
+                //       <td></td>
+                //       <td></td>
+                //       <td></td>
+                //       <td></td>
+                //     </tr>
+                //   )
+                // }
+
+                // let ans = '';
+                
+                // {
+                //   value.forEach(e => ans += (
+                //       <tr>
+                //         <th scope="row">{i + 1}</th>
+                //         <td>{e.ticker}</td>
+                //         <td><strong>NSE</strong></td>
+                //         <td>{e.close}</td>
+                //         <td>{e.volume}</td>
+                //         <td>{e.date}</td>
+                //         <td>{e.time}</td>
+                //       </tr>
+                //   ));
+                // }
+                
+                // return ans;
+
+
+              ))}
+
+            </tbody>
           </table>
           {/* 
                                   <tr>
