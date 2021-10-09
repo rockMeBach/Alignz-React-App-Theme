@@ -77,6 +77,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         if(res === undefined)
             res = [];
         
+        console.log("Response", res);
         scannerResultDisplay(res);
     }
 
