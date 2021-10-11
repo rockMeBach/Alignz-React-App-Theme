@@ -16,9 +16,8 @@ export const updatePassword = (val) => (disptch) => {
   });
 };
 
-export const onLoggedin = (val) => (disptch) => {
-  disptch({
+export const onLoggedin = () => {
+  return {
     type: ON_LOGGEDIN,
-    payload: val,
-  });
+  };
 };

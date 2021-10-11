@@ -5,9 +5,9 @@ import {
 } from "../actions/LoginAction";
 
 const initialState = {
-  email: "",
-  password: "",
-  isLoggedin: false,
+  user: [],
+  isLogged: false,
+  isAdmin: false,
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -29,7 +29,7 @@ const loginReducer = (state = initialState, action) => {
     case ON_LOGGEDIN: {
       return {
         ...state,
-        isLoggedin: action.payload,
+        isLogged: true,
       };
     }
 

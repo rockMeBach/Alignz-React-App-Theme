@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Dropdown, Nav, Toast } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import PropTypes from "prop-types";
 import {
   onPressDashbord,
@@ -142,6 +144,7 @@ class NavbarMenu extends React.Component {
     }, 10);
   }
   render() {
+    const auth = useSelector((state) => state.auth);
     const {
       addClassactive,
       addClassactiveChildAuth,
