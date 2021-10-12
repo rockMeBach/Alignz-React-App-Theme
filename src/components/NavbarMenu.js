@@ -144,7 +144,7 @@ class NavbarMenu extends React.Component {
     }, 10);
   }
   render() {
-    const auth = useSelector((state) => state.auth);
+    // const auth = useSelector((state) => state.auth);
     const {
       addClassactive,
       addClassactiveChildAuth,

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./IndicatorModal.scss";
 
 const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
-  const [indicatorSettings, setIndicatorSettings] = useState(
-    indicatorModalInput.settings
-  );
+  // const [indicatorSettings, setIndicatorSettings] = useState(
+  //   indicatorModalInput.settings
+  // );
   const [tmpValue, setTmpValue] = useState(14);
   const [offsetCandleValue, setOffsetCandleValue] = useState("");
   const [timeFrameValue, setTimeFrameValue] = useState("");
@@ -21,35 +21,8 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
     document.getElementById("staticBackdropLive").style.display = "none";
   };
 
-  // const indicatorSettingLoad = () => {
-
-  //     const settings = indicatorModalInput.settings
-  //     for(let key in settings)
-  //     {
-  //         if(typeof settings[key] === 'array')
-  //             return (
-  //                 <div className="scanner-conditions-option">
-  //                     <h6>{key}</h6>
-  //                     <select
-  //                         className="form-control scanner-condition-option"
-  //                         name="candelstick-timeframe"
-  //                         id="scanner-candelstick-timeframe"
-  //                     >
-  //                         <option value="1-min">1 min</option>
-  //                         <option value="2-min">2 min</option>
-  //                         <option value="3-min">3 min</option>
-  //                         <option value="5-min">5 min</option>
-  //                         <option value="10-min">10 min</option>
-  //                         <option value="15-min">15 min</option>
-  //                     </select>
-  //                 </div>
-  //             )
-  //     }
-
-  //     // console.log(indicatorModalInput)
-  // }
-
   useEffect(() => {
+
     document.getElementById("staticBackdropLive").style.background =
       "rgba(0, 0, 0, 0.9)";
   }, []);
@@ -65,6 +38,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
       aria-labelledby="staticBackdropLiveLabel"
       aria-modal="true"
       role="dialog"
+      onDoubleClick={e => e.preventDefault()}
     >
       <div class="modal-dialog">
         <div
@@ -125,6 +99,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
             <hr />
 
             <div className="indicator-settings">
+
               {indicatorModalInput.settings.map((e, i) => {
                 return (
                   <div className="scanner-conditions-option">

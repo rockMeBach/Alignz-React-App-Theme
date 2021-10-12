@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 
-const ScannerDraggableComponent = ({ id, modalInput, modalOpen }) => {
+const ScannerDraggableComponent = ({ id, index }) => {
+
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
-  const [clickFlag, setClickFlag] = useState(true);
 
   const closeIndicatorModal = (indicatorSetting) => {
     let tmpSetting = indicatorModalInput;
@@ -13,33 +13,36 @@ const ScannerDraggableComponent = ({ id, modalInput, modalOpen }) => {
     setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
-
+  
   const openIndicatorModal = (e) => {
+      
+    // console.log("Hi", e)
+    let classNames = e.className.split(' ');
+
+    if(classNames.length <= 1 || classNames[1] !== 'scanner-draggable-component-name')
+      return;
+      
     if (
-      e.target.id === ">" ||
-      e.target.id === "<" ||
-      e.target.id === "+" ||
-      e.target.id === "-" ||
-      e.target.id === "*"
+      e.id === ">" ||
+      e.id === "<" ||
+      e.id === "+" ||
+      e.id === "-" ||
+      e.id === "*"
     )
       return;
 
-    // let tmpModalInput = modalInput;
-    // tmpModalInput.element = e.target
-    // console.log(tmpModalInput)
-    // setIndicatorModalInput(tmpModalInput);
-    if(e.target.data) {
-      
+    if(e.data) {
+
       setIndicatorModalInput({
-        indicatorName: e.target.id,
-        element: e.target,
-        settings: JSON.parse(e.target.data)
+        indicatorName: e.id,
+        element: e,
+        settings: e.data.setting
       });
     } else {
       
       setIndicatorModalInput({
-        indicatorName: e.target.id,
-        element: e.target,
+        indicatorName: e.id,
+        element: e,
         settings: [
           { name: "Length", value: 14 },
           {
@@ -51,19 +54,28 @@ const ScannerDraggableComponent = ({ id, modalInput, modalOpen }) => {
       });
     }
 
+    // console.log(indicatorModalInput)
+
     setIndicatorModalOpen(true);
   };
+
+  useEffect(() => {
+
+    let e = document.getElementsByClassName('scanner-draggable-component-name')[index];
+    console.log(e);
+    openIndicatorModal(e);
+  }, []);
 
   return (
     <>
       <div
-        className="scanner-indicator-name"
+        className="scanner-indicator-name scanner-draggable-component-name"
         id={id}
         style={{
           textAlign: "center",
           margin: "1rem",
         }}
-        onDoubleClick={(e) => openIndicatorModal(e)}
+        onDoubleClick={(e) => openIndicatorModal(e.target)}
       >
 
         {indicatorModalOpen && (
