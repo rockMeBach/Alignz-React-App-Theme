@@ -62,7 +62,8 @@ import basicelements from "./screens/Forms/BasicElements";
 import tablenormal from "./screens/Tables/TableNormal";
 import echart from "./screens/Charts/Echart";
 import leafletmap from "./screens/Maps/GoogleMaps";
-
+import ResetPassword from "./screens/Auth/ResetPassword";
+import { Redirect } from "react-router-dom";
 window.__DEV__ = true;
 
 class App extends React.Component {
@@ -141,6 +142,11 @@ class App extends React.Component {
             />
             <Route
               exact
+              path={`${process.env.PUBLIC_URL}/user/reset/:id`}
+              component={ResetPassword}
+            />
+            <Route
+              exact
               path={`${process.env.PUBLIC_URL}/registration`}
               component={registration}
             />
@@ -162,16 +168,19 @@ class App extends React.Component {
             <NavbarMenu history={this.props.history} activeKey={activeKey1} />
             <div id="main-content">
               <Switch>
+                (
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/dashboard`}
                   component={dashboard}
                 />
+                ) (
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/demographic`}
                   component={demographic}
                 />
+                )
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/ioT`}
@@ -202,11 +211,13 @@ class App extends React.Component {
                   path={`${process.env.PUBLIC_URL}/apptaskbar`}
                   component={appTaskbar}
                 />
+                (
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/scanner`}
                   component={scanner}
                 />
+                )
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/filemanagerdashboard`}
@@ -367,7 +378,6 @@ class App extends React.Component {
                   path={`${process.env.PUBLIC_URL}/helperclass`}
                   component={helperclass}
                 />
-
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/teamsboard`}
@@ -422,8 +432,9 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = ({ loginReducer }) => ({
-  isLoggedin: loginReducer.isLoggedin,
-});
+const mapStateToProps = ({ loginReducer }) => {
+  const isLogged = loginReducer;
+  return isLogged;
+};
 
 export default withRouter(connect(mapStateToProps, {})(App));

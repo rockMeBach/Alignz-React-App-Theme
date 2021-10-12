@@ -6,9 +6,11 @@ import demographicReducer from "./demographicReducer";
 import ioTReducer from "./ioTReducer";
 import mailInboxReducer from "./mailInboxReducer";
 import UIElementsReducer from "./UIElementsReducer";
+import tokenReducer from "./tokenReducer";
 
 export default combineReducers({
   loginReducer,
+  tokenReducer,
   navigationReducer: navigationReducer,
   analyticalReducer: analyticalReducer,
   demographicReducer: demographicReducer,

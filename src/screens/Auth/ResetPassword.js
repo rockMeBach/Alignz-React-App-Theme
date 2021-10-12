@@ -1,36 +1,42 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
-import { isEmail } from "./Validation";
+import { isMatch, isLength } from "./Validation";
 import axios from "axios";
 
 const initialState = {
   email: "",
+  password: "",
+  cf_password: "",
   err: "",
   success: "",
 };
-const ForgotPassword = () => {
+const ResetPassword = () => {
   const [data, setData] = useState(initialState);
-
-  const { email, err, success } = data;
+  const { password, cf_password, err, success, email } = data;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value, err: "", success: "" });
   };
 
-  const forgotPassword = async (e) => {
+  const handleResetPass = async (e) => {
     e.preventDefault();
-    if (!isEmail(email))
-      return setData({ ...data, err: "Invalid emails.", success: "" });
+    if (isLength(password))
+      return setData({
+        ...data,
+        err: "Password must be at least 6 characters.",
+        success: "",
+      });
+
+    if (!isMatch(password, cf_password))
+      return setData({ ...data, err: "Password did not match.", success: "" });
 
     try {
-      const res = await axios.post(
-        "http://localhost/api/user/forgot-password",
-        {
-          email,
-        }
-      );
+      const res = await axios.post("http://localhost/api/user/reset-password", {
+        password,
+        email,
+      });
 
       return setData({ ...data, err: "", success: res.data.msg });
     } catch (err) {
@@ -54,22 +60,47 @@ const ForgotPassword = () => {
 
               <div className="card">
                 <div className="header">
-                  <p className="lead">Recover my password</p>
+                  <p className="lead">Enter Your Details</p>
                 </div>
                 <div className="body">
-                  <p>
-                    Please enter your email address below to receive
-                    instructions for resetting password.
-                  </p>
-                  <form className="form-auth-small" onSubmit={forgotPassword}>
+                  <form className="form-auth-small" onSubmit={handleResetPass}>
                     <div className="form-group">
+                      <label className="control-label sr-only">
+                        Your Email
+                      </label>
                       <input
                         className="form-control"
-                        placeholder="Enter your Email"
+                        id="email"
                         name="email"
+                        placeholder="Your Email"
                         type="email"
                         value={email}
-                        id="email"
+                        onChange={handleChangeInput}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="control-label sr-only">Password</label>
+                      <input
+                        className="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        type="password"
+                        value={password}
+                        onChange={handleChangeInput}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="control-label sr-only">
+                        Confirm Password
+                      </label>
+                      <input
+                        className="form-control"
+                        id="cf_password"
+                        name="cf_password"
+                        placeholder="Confirm Password"
+                        type="password"
+                        value={cf_password}
                         onChange={handleChangeInput}
                       />
                     </div>
@@ -94,4 +125,4 @@ const ForgotPassword = () => {
     </div>
   );
 };
-export default ForgotPassword;
+export default ResetPassword;

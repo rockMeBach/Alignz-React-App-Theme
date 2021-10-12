@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useParams } from "react-router-dom";
+import Logo from "../../assets/images/logo-white.svg";
 import axios from "axios";
 const ActivationEmail = () => {
   const { activation_token } = useParams();
@@ -22,6 +23,36 @@ const ActivationEmail = () => {
       activationEmail();
     }
   }, [activation_token]);
-  return <h1>Verification Done</h1>;
+  return (
+    <div className="theme-cyan">
+      <div>
+        <div className="vertical-align-wrap">
+          <div className="vertical-align-middle auth-main">
+            <div className="auth-box">
+              <div className="top">
+                <img
+                  src={Logo}
+                  alt="Lucid"
+                  style={{ height: "40px", margin: "10px" }}
+                />
+              </div>
+              <div className="card">
+                <div className="header">
+                  <p className="lead">Verification Done</p>
+                </div>
+                <div className="body">
+                  <a href="/login">
+                    <button className="btn btn-primary btn-lg btn-block">
+                      Login Now
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 export default ActivationEmail;

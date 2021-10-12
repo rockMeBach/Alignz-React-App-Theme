@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ReactEcharts from "echarts-for-react";
 import "echarts-gl";
@@ -33,6 +33,7 @@ import {
   searchProgressBar,
 } from "../../actions";
 import SparkleCard from "../../components/SparkleCard";
+import axios from "axios";
 
 var timer = null;
 class Dashbord extends React.Component {
@@ -48,6 +49,17 @@ class Dashbord extends React.Component {
     this.setState({
       cardData: [...sparkleCardData],
     });
+    const firstLogin = localStorage.getItem("firstLogin");
+    if (firstLogin) {
+      const getToken = async () => {
+        const res = await axios.post(
+          "http://localhost/api/user/refresh_token",
+          null
+        );
+        console.log(res);
+      };
+      getToken();
+    }
 
     this.chartPlace();
   }
@@ -566,7 +578,10 @@ const mapStateToProps = ({
   loginReducer,
   navigationReducer,
   analyticalReducer,
+  tokenReducer,
 }) => ({
+  isLogged: loginReducer,
+  token: tokenReducer,
   email: loginReducer.email,
   menuArrowToggle: navigationReducer.menuArrowToggle,
   sparkleCardData: analyticalReducer.sparkleCardData,
