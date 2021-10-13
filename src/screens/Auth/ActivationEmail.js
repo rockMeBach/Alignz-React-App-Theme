@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useParams } from "react-router-dom";
+import { showErrMsg, showSuccessMsg } from "../Auth/Notification/Notification";
 import Logo from "../../assets/images/logo-white.svg";
 import axios from "axios";
 const ActivationEmail = () => {
   const { activation_token } = useParams();
-  const [err, setErr] = useState(" ");
+  const [err, setErr] = useState("");
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
@@ -37,15 +38,24 @@ const ActivationEmail = () => {
                 />
               </div>
               <div className="card">
-                <div className="header">
-                  <p className="lead">Verification Done</p>
-                </div>
+                {err && showErrMsg(err)}
+                {success && showSuccessMsg(success)}
+                <div className="header"></div>
                 <div className="body">
-                  <a href="/login">
-                    <button className="btn btn-primary btn-lg btn-block">
-                      Login Now
-                    </button>
-                  </a>
+                  {err && (
+                    <a href="/registration">
+                      <button className="btn btn-primary btn-lg btn-block">
+                        Register Again
+                      </button>
+                    </a>
+                  )}
+                  {success && (
+                    <a href="/login">
+                      <button className="btn btn-primary btn-lg btn-block">
+                        Login Now
+                      </button>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

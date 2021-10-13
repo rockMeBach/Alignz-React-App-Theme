@@ -66,7 +66,13 @@ const NavbarMenu = () => {
                 </li>
 
                 <li>
-                  <a href="login" className="icon-menu">
+                  <a
+                    href="login"
+                    className="icon-menu"
+                    onClick={() => {
+                      localStorage.removeItem("firstLogin");
+                    }}
+                  >
                     <i className="icon-login"></i>
                   </a>
                 </li>

@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../assets/images/logo-white.svg";
 import { useDispatch } from "react-redux";
+import { showErrMsg, showSuccessMsg } from "./Auth/Notification/Notification";
 import axios from "axios";
 import { onLoggedin } from "../actions";
 import { useHistory } from "react-router";
 
 const initialState = {
-  email: " ",
+  email: "",
   password: "",
-  err: " ",
-  success: " ",
+  err: "",
+  success: "",
 };
 
 const Login = () => {
@@ -19,9 +20,9 @@ const Login = () => {
   const history = useHistory();
   const { email, password, err, success } = user;
 
-  const handleInputChange = (e) => {
+  const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value, err: " ", success: " " });
+    setUser({ ...user, [name]: value, err: "", success: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -32,16 +33,14 @@ const Login = () => {
         password,
       });
       setUser({ ...user, err: "", success: res.data.msg });
+
       localStorage.setItem("firstLogin", true);
 
       dispatch(onLoggedin());
       history.push("/dashboard");
     } catch (err) {
-      setUser({
-        ...user,
-        err: err.msg,
-        success: " ",
-      });
+      err.response.data.msg &&
+        setUser({ ...user, err: err.response.data.msg, success: "" });
     }
   };
 
@@ -71,7 +70,10 @@ const Login = () => {
                   style={{ height: "40px", margin: "10px" }}
                 />
               </div>
+
               <div className="card">
+                {err && showErrMsg(err)}
+                {success && showSuccessMsg(success)}
                 <div className="header">
                   <p className="lead">Login to your account</p>
                 </div>
@@ -87,7 +89,7 @@ const Login = () => {
                           placeholder="Enter Email Address"
                           type="email"
                           value={email}
-                          onChange={handleInputChange}
+                          onChange={handleChangeInput}
                         />
                       </div>
                       <div className="form-group">
@@ -101,7 +103,7 @@ const Login = () => {
                           placeholder="Password"
                           type="password"
                           value={password}
-                          onChange={handleInputChange}
+                          onChange={handleChangeInput}
                         />
                       </div>
                       <button

@@ -1,30 +1,26 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { useDispatch } from "react-redux";
 import axios from "axios";
-import { useHistory } from "react-router";
+import { showErrMsg, showSuccessMsg } from "../Auth/Notification/Notification";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
 import { isEmpty, isLength, isEmail, isMatch } from "./Validation";
 
 const initialState = {
   name: "",
-  email: " ",
+  email: "",
   password: "",
   cf_password: "",
-  err: " ",
-  success: " ",
+  err: "",
+  success: "",
 };
 
 const Registration = () => {
   const [user, setUser] = useState(initialState);
-  const dispatch = useDispatch();
-  const history = useHistory();
   const { name, email, password, cf_password, err, success } = user;
 
-  const handleInputChange = (e) => {
+  const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value, err: " ", success: " " });
+    setUser({ ...user, [name]: value, err: "", success: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -32,30 +28,22 @@ const Registration = () => {
     if (isEmpty(name) || isEmpty(password))
       return setUser({
         ...user,
-        err: "Please fill all the details",
-        success: " ",
+        err: "Please fill in all fields.",
+        success: "",
       });
 
     if (!isEmail(email))
-      return setUser({
-        ...user,
-        err: "Invalid Email",
-        success: " ",
-      });
+      return setUser({ ...user, err: "Invalid emails.", success: "" });
 
     if (isLength(password))
       return setUser({
         ...user,
-        err: "Password must be of length 6",
-        success: " ",
+        err: "Password must be at least 6 characters.",
+        success: "",
       });
 
     if (!isMatch(password, cf_password))
-      return setUser({
-        ...user,
-        err: "Confirm password and password do not match",
-        success: " ",
-      });
+      return setUser({ ...user, err: "Password did not match.", success: "" });
 
     try {
       const res = await axios.post("http://localhost/api/user/register", {
@@ -64,17 +52,10 @@ const Registration = () => {
         password,
       });
 
-      setUser({
-        ...user,
-        err: "",
-        success: res.data.msg,
-      });
+      setUser({ ...user, err: "", success: res.data.msg });
     } catch (err) {
-      setUser({
-        ...user,
-        err: err.msg,
-        success: " ",
-      });
+      err.response.data.msg &&
+        setUser({ ...user, err: err.response.data.msg, success: "" });
     }
   };
   return (
@@ -91,6 +72,8 @@ const Registration = () => {
                 />
               </div>
               <div className="card">
+                {err && showErrMsg(err)}
+                {success && showSuccessMsg(success)}
                 <div className="header">
                   <p className="lead">Create an account</p>
                 </div>
@@ -105,7 +88,7 @@ const Registration = () => {
                         placeholder="Name"
                         type="name"
                         value={name}
-                        onChange={handleInputChange}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <div className="form-group">
@@ -117,7 +100,7 @@ const Registration = () => {
                         placeholder="Enter Email Address"
                         type="email"
                         value={email}
-                        onChange={handleInputChange}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <div className="form-group">
@@ -129,7 +112,7 @@ const Registration = () => {
                         placeholder="Password"
                         type="password"
                         value={password}
-                        onChange={handleInputChange}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <div className="form-group">
@@ -143,7 +126,7 @@ const Registration = () => {
                         placeholder="Confirm Password"
                         type="password"
                         value={cf_password}
-                        onChange={handleInputChange}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <button

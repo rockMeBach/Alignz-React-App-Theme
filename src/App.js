@@ -1,8 +1,8 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Login from "./screens/Login";
 import dashboard from "./screens/Dashbord/Dashbord";
+import { useDispatch, useSelector } from "react-redux";
 import demographic from "./screens/Dashbord/Demographic";
 import ioT from "./screens/Dashbord/IoT";
 import NavbarMenu from "./components/NavbarMenu";
@@ -63,378 +63,370 @@ import tablenormal from "./screens/Tables/TableNormal";
 import echart from "./screens/Charts/Echart";
 import leafletmap from "./screens/Maps/GoogleMaps";
 import ResetPassword from "./screens/Auth/ResetPassword";
+import axios from "axios";
 import { Redirect } from "react-router-dom";
 window.__DEV__ = true;
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoad: true,
-    };
-  }
-  render() {
-    var res = window.location.pathname;
-    var baseUrl = process.env.PUBLIC_URL;
-    baseUrl = baseUrl.split("/");
-    res = res.split("/");
-    res = res.length > 0 ? res[baseUrl.length] : "/";
-    res = res ? res : "/";
-    const activeKey1 = res;
+const App = () => {
+  const isLoggedIn = localStorage.getItem("firstLogin");
 
-    return (
-      <div id="wrapper">
-        {activeKey1 === "" ||
-        activeKey1 === "/" ||
-        activeKey1 === "login" ||
-        activeKey1 === "registration" ||
-        activeKey1 === "lockscreen" ||
-        activeKey1 === "forgotpassword" ||
-        activeKey1 === "page404" ||
-        activeKey1 === "page403" ||
-        activeKey1 === "page500" ||
-        activeKey1 === "page503" ||
-        activeKey1 === "maintanance" ||
-        activeKey1 === "user" ? (
-          <Switch>
-            {/* <Route exact path={`${process.env.PUBLIC_URL}`} component={Login} /> */}
+  var res = window.location.pathname;
+  var baseUrl = process.env.PUBLIC_URL;
+  baseUrl = baseUrl.split("/");
+  res = res.split("/");
+  res = res.length > 0 ? res[baseUrl.length] : "/";
+  res = res ? res : "/";
+  const activeKey1 = res;
 
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/`}
-              component={Login}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/login`}
-              component={Login}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/forgotpassword`}
-              component={forgotpassword}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/page404`}
-              component={page404}
-            />
+  return (
+    <div id="wrapper">
+      {activeKey1 === "" ||
+      activeKey1 === "/" ||
+      activeKey1 === "login" ||
+      activeKey1 === "registration" ||
+      activeKey1 === "lockscreen" ||
+      activeKey1 === "forgotpassword" ||
+      activeKey1 === "page404" ||
+      activeKey1 === "page403" ||
+      activeKey1 === "page500" ||
+      activeKey1 === "page503" ||
+      activeKey1 === "maintanance" ||
+      activeKey1 === "user" ? (
+        <Switch>
+          <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/login`}
+            component={Login}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/forgotpassword`}
+            component={forgotpassword}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/page404`}
+            component={page404}
+          />
 
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/page403`}
-              component={page403}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/page500`}
-              component={page500}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/page503`}
-              component={page503}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/user/activate/:activation_token`}
-              component={ActivationEmail}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/user/reset/:id`}
-              component={ResetPassword}
-            />
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/registration`}
-              component={registration}
-            />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/page403`}
+            component={page403}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/page500`}
+            component={page500}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/page503`}
+            component={page503}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/user/activate/:activation_token`}
+            component={ActivationEmail}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/user/reset/:id`}
+            component={ResetPassword}
+          />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/registration`}
+            component={registration}
+          />
 
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/lockscreen`}
-              component={lockscreen}
-            />
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/lockscreen`}
+            component={lockscreen}
+          />
 
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/maintanance`}
-              component={maintanance}
-            />
-          </Switch>
-        ) : (
-          <>
-            <NavbarMenu history={this.props.history} activeKey={activeKey1} />
-            <div id="main-content">
-              <Switch>
-                (
+          <Route
+            exact
+            path={`${process.env.PUBLIC_URL}/maintanance`}
+            component={maintanance}
+          />
+        </Switch>
+      ) : (
+        <>
+          <NavbarMenu />
+          <div id="main-content">
+            <Switch>
+              (
+              {isLoggedIn ? (
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/dashboard`}
                   component={dashboard}
                 />
-                ) (
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/demographic`}
-                  component={demographic}
-                />
-                )
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/ioT`}
-                  component={ioT}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/appinbox`}
-                  component={appInbox}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/appchat`}
-                  component={appChat}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/appcalendar`}
-                  component={appCalendar}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/appcontact`}
-                  component={appContact}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/apptaskbar`}
-                  component={appTaskbar}
-                />
-                (
+              ) : (
+                <Redirect to="/login" />
+              )}
+              ) (
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/demographic`}
+                component={demographic}
+              />
+              )
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/ioT`}
+                component={ioT}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/appinbox`}
+                component={appInbox}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/appchat`}
+                component={appChat}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/appcalendar`}
+                component={appCalendar}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/appcontact`}
+                component={appContact}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/apptaskbar`}
+                component={appTaskbar}
+              />
+              (
+              {isLoggedIn ? (
                 <Route
                   exact
                   path={`${process.env.PUBLIC_URL}/scanner`}
                   component={scanner}
                 />
-                )
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/filemanagerdashboard`}
-                  component={filemanagerdashboard}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/filedocuments`}
-                  component={filedocuments}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/filemedia`}
-                  component={filemedia}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/fileimages`}
-                  component={fileimages}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/blognewpost`}
-                  component={blognewPost}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/blogdetails`}
-                  component={blogdetails}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/bloglist`}
-                  component={bloglist}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uitypography`}
-                  component={uitypography}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uitabs`}
-                  component={uitabs}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/bootstrapui`}
-                  component={bootstrapui}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uiicons`}
-                  component={uiicons}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uinotifications`}
-                  component={uinotifications}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uicolors`}
-                  component={uicolors}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uilistgroup`}
-                  component={uilistgroup}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uimediaobject`}
-                  component={uimediaobject}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uimodal`}
-                  component={uimodal}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uibuttons`}
-                  component={uibuttons}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/uiprogressbar`}
-                  component={uiprogressbar}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/widgetsdata`}
-                  component={widgetsdata}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/widgetsweather`}
-                  component={widgetsweather}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/widgetsblog`}
-                  component={widgetsblog}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/widgetsecommers`}
-                  component={widgetsecommers}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/blankpage`}
-                  component={blankpage}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/profilev1page`}
-                  component={profilev1page}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/profilev2page`}
-                  component={profilev2page}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/imagegalleryprofile`}
-                  component={imagegalleryprofile}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/timeline`}
-                  component={timeline}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/pricing`}
-                  component={pricing}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/invoices`}
-                  component={invoices}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/invoicesv2`}
-                  component={invoicesv2}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/searchresult`}
-                  component={searchresult}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/helperclass`}
-                  component={helperclass}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/teamsboard`}
-                  component={teamsboard}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/projectslist`}
-                  component={projectslist}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/testimonials`}
-                  component={testimonials}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/faqs`}
-                  component={faqs}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/formvalidation`}
-                  component={formvalidation}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/basicelements`}
-                  component={basicelements}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/tablenormal`}
-                  component={tablenormal}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/echart`}
-                  component={echart}
-                />
-                <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/leafletmap`}
-                  component={leafletmap}
-                />
-              </Switch>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = ({ loginReducer }) => {
-  const isLogged = loginReducer;
-  return isLogged;
+              ) : (
+                <Redirect to="/login" />
+              )}
+              )
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/filemanagerdashboard`}
+                component={filemanagerdashboard}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/filedocuments`}
+                component={filedocuments}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/filemedia`}
+                component={filemedia}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/fileimages`}
+                component={fileimages}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/blognewpost`}
+                component={blognewPost}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/blogdetails`}
+                component={blogdetails}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/bloglist`}
+                component={bloglist}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uitypography`}
+                component={uitypography}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uitabs`}
+                component={uitabs}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/bootstrapui`}
+                component={bootstrapui}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uiicons`}
+                component={uiicons}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uinotifications`}
+                component={uinotifications}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uicolors`}
+                component={uicolors}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uilistgroup`}
+                component={uilistgroup}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uimediaobject`}
+                component={uimediaobject}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uimodal`}
+                component={uimodal}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uibuttons`}
+                component={uibuttons}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/uiprogressbar`}
+                component={uiprogressbar}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/widgetsdata`}
+                component={widgetsdata}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/widgetsweather`}
+                component={widgetsweather}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/widgetsblog`}
+                component={widgetsblog}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/widgetsecommers`}
+                component={widgetsecommers}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/blankpage`}
+                component={blankpage}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/profilev1page`}
+                component={profilev1page}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/profilev2page`}
+                component={profilev2page}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/imagegalleryprofile`}
+                component={imagegalleryprofile}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/timeline`}
+                component={timeline}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/pricing`}
+                component={pricing}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/invoices`}
+                component={invoices}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/invoicesv2`}
+                component={invoicesv2}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/searchresult`}
+                component={searchresult}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/helperclass`}
+                component={helperclass}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/teamsboard`}
+                component={teamsboard}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/projectslist`}
+                component={projectslist}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/testimonials`}
+                component={testimonials}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/faqs`}
+                component={faqs}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/formvalidation`}
+                component={formvalidation}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/basicelements`}
+                component={basicelements}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/tablenormal`}
+                component={tablenormal}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/echart`}
+                component={echart}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/leafletmap`}
+                component={leafletmap}
+              />
+            </Switch>
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
-export default withRouter(connect(mapStateToProps, {})(App));
+export default withRouter(App);
