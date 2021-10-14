@@ -107,7 +107,7 @@ class Dashbord extends React.Component {
         }}
       >
         <div>
-          <div className="container-fluid">
+          <div className="container">
             <PageHeader
               HeaderText="Dashboard"
               Breadcrumb={[{ name: "Dashboard" }]}

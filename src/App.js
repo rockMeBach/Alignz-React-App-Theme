@@ -65,6 +65,8 @@ import leafletmap from "./screens/Maps/GoogleMaps";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import ProjectsListTable from "./components/Pages/ProjectsListTable";
+import ProjectsList from "./screens/Pages/ProjectsList";
 window.__DEV__ = true;
 
 const App = () => {
@@ -209,8 +211,8 @@ const App = () => {
               {isLoggedIn ? (
                 <Route
                   exact
-                  path={`${process.env.PUBLIC_URL}/scanner`}
-                  component={scanner}
+                  path={`${process.env.PUBLIC_URL}/scanners`}
+                  component={ProjectsList}
                 />
               ) : (
                 <Redirect to="/login" />
@@ -383,8 +385,8 @@ const App = () => {
               />
               <Route
                 exact
-                path={`${process.env.PUBLIC_URL}/projectslist`}
-                component={projectslist}
+                path={`${process.env.PUBLIC_URL}/scanners/scanner`}
+                component={scanner}
               />
               <Route
                 exact

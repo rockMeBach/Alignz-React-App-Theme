@@ -38,24 +38,16 @@ const ActivationEmail = () => {
                 />
               </div>
               <div className="card">
-                {err && showErrMsg(err)}
-                {success && showSuccessMsg(success)}
+                {showSuccessMsg("Verification Done")}
                 <div className="header"></div>
                 <div className="body">
-                  {err && (
-                    <a href="/registration">
-                      <button className="btn btn-primary btn-lg btn-block">
-                        Register Again
-                      </button>
-                    </a>
-                  )}
-                  {success && (
+                  {
                     <a href="/login">
                       <button className="btn btn-primary btn-lg btn-block">
                         Login Now
                       </button>
                     </a>
-                  )}
+                  }
                 </div>
               </div>
             </div>

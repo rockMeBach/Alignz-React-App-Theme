@@ -12,11 +12,12 @@ const initialState = {
   cf_password: "",
   err: "",
   success: "",
+  referral: "",
 };
 
 const Registration = () => {
   const [user, setUser] = useState(initialState);
-  const { name, email, password, cf_password, err, success } = user;
+  const { name, email, password, cf_password, err, success, referral } = user;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -50,9 +51,10 @@ const Registration = () => {
         name,
         email,
         password,
+        referral,
       });
 
-      setUser({ ...user, err: "", success: res.data.msg });
+      setUser({ ...user, err: "", success: "Verification Email Send" });
     } catch (err) {
       err.response.data.msg &&
         setUser({ ...user, err: err.response.data.msg, success: "" });
@@ -126,6 +128,20 @@ const Registration = () => {
                         placeholder="Confirm Password"
                         type="password"
                         value={cf_password}
+                        onChange={handleChangeInput}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="control-label sr-only">
+                        Referral Code
+                      </label>
+                      <input
+                        className="form-control"
+                        id="referral"
+                        name="referral"
+                        placeholder="Referral Code"
+                        type="name"
+                        value={referral}
                         onChange={handleChangeInput}
                       />
                     </div>

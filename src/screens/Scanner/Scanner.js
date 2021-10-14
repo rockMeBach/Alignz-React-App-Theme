@@ -13,7 +13,13 @@ const Scanner = () => {
     <div style={{ flex: 1 }}>
       <div>
         <div className="container-fluid">
-          <PageHeader HeaderText="Scanner" Breadcrumb={[{ name: "Scanner" }]} />
+          <PageHeader
+            HeaderText="Scanner"
+            Breadcrumb={[
+              { name: "Scanners", navigate: "scanners" },
+              { name: "Scanner", navigate: "" },
+            ]}
+          />
         </div>
 
         <ScannerWorkPanel scannerResultDisplay={scannerResultDisplay} />

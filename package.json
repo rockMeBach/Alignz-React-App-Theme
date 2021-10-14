@@ -22,6 +22,7 @@
     "apexcharts": "^3.26.0",
     "axios": "^0.21.4",
     "bootstrap": "^5.1.1",
+    "bootstrap-icons": "^1.6.0",
     "ckeditor4-react": "^1.0.1",
     "echarts": "^4.5.0",
     "echarts-for-react": "^2.0.15-beta.1",

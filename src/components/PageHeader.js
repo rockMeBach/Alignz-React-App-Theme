@@ -43,7 +43,10 @@ class PageHeader extends React.Component {
             <h2>{HeaderText}</h2>
             <ul className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="dashboard">
+                <a
+                  href="dashboard"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <i className="icon-home"></i>
                 </a>
               </li>
@@ -53,7 +56,10 @@ class PageHeader extends React.Component {
                     key={item.name + index}
                     className="breadcrumb-item active"
                   >
-                    <a href={item.navigate ? item.navigate : null}>
+                    <a
+                      href={item.navigate ? item.navigate : null}
+                      style={{ textDecoration: "none", color: "gray" }}
+                    >
                       {item.name}
                     </a>
                   </li>

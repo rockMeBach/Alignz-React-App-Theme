@@ -27,7 +27,6 @@
 
 #main-content {
   @include transition(all 0.3s ease-in-out);
-  float: right;
   position: relative;
   padding: 0 10px;
   @include max-screen($break-large) {
