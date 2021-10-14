@@ -112,16 +112,18 @@ const NavbarMenu = () => {
                   </a>
                 </li>
                 <li className="mx-4">
-                  <img
-                    src={user}
-                    alt="user"
-                    className="img-fluid"
-                    style={{
-                      height: "30px",
-                      borderRadius: "50px",
-                      border: "1px solid black",
-                    }}
-                  ></img>
+                  <a href="/profile">
+                    <img
+                      src={user}
+                      alt="user"
+                      className="img-fluid"
+                      style={{
+                        height: "30px",
+                        borderRadius: "50px",
+                        border: "1px solid black",
+                      }}
+                    ></img>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -183,14 +185,14 @@ const NavbarMenu = () => {
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#" style={{ color: "black" }}>
-                    Action
+                    Holdings
                   </a>
                   <a class="dropdown-item" href="" style={{ color: "black" }}>
-                    Another action
+                    Positions
                   </a>
-                  <div class="dropdown-divider"></div>
+
                   <a class="dropdown-item" href="#" style={{ color: "black" }}>
-                    Something else here
+                    Trainings
                   </a>
                 </div>
               </li>

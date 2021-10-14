@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Login from "./screens/Login";
 import dashboard from "./screens/Dashbord/Dashbord";
-import { useDispatch, useSelector } from "react-redux";
 import demographic from "./screens/Dashbord/Demographic";
 import ioT from "./screens/Dashbord/IoT";
 import NavbarMenu from "./components/NavbarMenu";
@@ -42,7 +41,7 @@ import page403 from "./screens/Auth/Page403";
 import page500 from "./screens/Auth/Page500";
 import page503 from "./screens/Auth/Page503";
 import blankpage from "./screens/Pages/BlankPage";
-import profilev1page from "./screens/Pages/ProfileV1";
+import profile from "./screens/Pages/Profile";
 import profilev2page from "./screens/Pages/ProfileV2";
 import imagegalleryprofile from "./screens/Pages/ImageGallery";
 import timeline from "./screens/Pages/TimeLine";
@@ -52,7 +51,6 @@ import invoicesv2 from "./screens/Pages/InvoicesV2";
 import searchresult from "./screens/Pages/SearchResults";
 import helperclass from "./screens/Pages/HelperClass";
 import teamsboard from "./screens/Pages/TeamsBoard";
-import projectslist from "./screens/Pages/ProjectsList";
 import maintanance from "./screens/Pages/Maintanance";
 import testimonials from "./screens/Pages/Testimonials";
 import faqs from "./screens/Pages/Faqs";
@@ -63,9 +61,7 @@ import tablenormal from "./screens/Tables/TableNormal";
 import echart from "./screens/Charts/Echart";
 import leafletmap from "./screens/Maps/GoogleMaps";
 import ResetPassword from "./screens/Auth/ResetPassword";
-import axios from "axios";
 import { Redirect } from "react-router-dom";
-import ProjectsListTable from "./components/Pages/ProjectsListTable";
 import ProjectsList from "./screens/Pages/ProjectsList";
 window.__DEV__ = true;
 
@@ -335,8 +331,8 @@ const App = () => {
               />
               <Route
                 exact
-                path={`${process.env.PUBLIC_URL}/profilev1page`}
-                component={profilev1page}
+                path={`${process.env.PUBLIC_URL}/profile`}
+                component={profile}
               />
               <Route
                 exact

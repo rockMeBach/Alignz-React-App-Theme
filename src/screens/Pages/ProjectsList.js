@@ -43,10 +43,11 @@ const ProjectsList = () => {
                 <div className="col-lg-6 col-md-6">
                   <div
                     style={{
+                      marginBottom: "10px",
                       fontSize: "25px",
                       color: "#e27498",
                       fontWeight: "500",
-                      paddingBottom: "15px",
+                      paddingBottom: "5px",
                       width: "max-content",
                       borderBottom: "2px solid #e27498",
                     }}
@@ -77,8 +78,11 @@ const ProjectsList = () => {
                   </a>
                 </div>
               </div>
-              <div className="card">
-                <div className="body project_report">
+              <div className="card" style={{ borderRadius: "16px" }}>
+                <div
+                  className="body project_report"
+                  style={{ padding: "5px " }}
+                >
                   <ProjectsListTable />
                 </div>
               </div>
