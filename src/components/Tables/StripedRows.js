@@ -29,7 +29,14 @@ class StripedRows extends React.Component {
                 <tr>
                   <th scope="row">1</th>
                   <td>Mark</td>
-                  <td>Otto</td>
+                  <td>
+                    Otto lorem100cefl,vnjefrvoiepw;mlcewd3u94fih4f43 f4rfr4g
+                    t5gerfreg erfewdikrcv Otto
+                    lorem100cefl,vnjefrvoiepw;mlcewd3u94fih4f43 f4rfr4g
+                    t5gerfreg erfewdikrcv Otto
+                    lorem100cefl,vnjefrvoiepw;mlcewd3u94fih4f43 f4rfr4g
+                    t5gerfreg erfewdikrcv
+                  </td>
                   <td>@mdo</td>
                 </tr>
                 <tr>

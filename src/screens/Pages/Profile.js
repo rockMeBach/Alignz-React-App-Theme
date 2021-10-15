@@ -12,7 +12,7 @@ const Profile = () => {
       }}
     >
       <div>
-        <div className="container-fluid">
+        <div className="container">
           <PageHeader
             HeaderText="Profile"
             Breadcrumb={[{ name: "Profile", navigate: "" }]}

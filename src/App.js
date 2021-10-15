@@ -91,12 +91,24 @@ const App = () => {
       activeKey1 === "maintanance" ||
       activeKey1 === "user" ? (
         <Switch>
-          <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
-          <Route
-            exact
-            path={`${process.env.PUBLIC_URL}/login`}
-            component={Login}
-          />
+          {!isLoggedIn ? (
+            <Route
+              exact
+              path={`${process.env.PUBLIC_URL}/`}
+              component={Login}
+            />
+          )   : (
+            <Redirect to="/dashboard" />
+          )}
+          {!isLoggedIn ? (
+            <Route
+              exact
+              path={`${process.env.PUBLIC_URL}/login`}
+              component={Login}
+            />
+          ) : (
+            <Redirect to="/dashboard" />
+          )}
           <Route
             exact
             path={`${process.env.PUBLIC_URL}/forgotpassword`}

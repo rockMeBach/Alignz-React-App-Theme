@@ -241,7 +241,7 @@ const NavbarMenu = () => {
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  href="#"
+                  href="/pricing"
                   style={{
                     color: "black",
                     fontSize: "15px",
