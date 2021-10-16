@@ -90,6 +90,357 @@ const ProjectsList = () => {
           </div>
         </div>
       </div>
+
+      <div className="container">
+        <div className="row clearfix mt-5">
+          <div className="col-lg-6 col-md-6">
+            <div
+              style={{
+                marginBottom: "10px",
+                fontSize: "25px",
+                color: "#e27498",
+                fontWeight: "500",
+                paddingBottom: "5px",
+                width: "max-content",
+                borderBottom: "2px solid #e27498",
+              }}
+            >
+              Public Scanners
+            </div>
+          </div>
+        </div>
+
+        <div className="row clearfix">
+          <div className="col-lg-6 col-md-6">
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                width: "max-content",
+              }}
+            >
+              Search Scanners
+            </div>
+          </div>
+        </div>
+
+        <div className="row clearfix">
+          <div className="col-lg-6 col-md-6">
+            <div
+              style={{
+                fontSize: "10px",
+                width: "max-content",
+              }}
+            >
+              Search over 150,000+ scans or create your own customized screener.
+            </div>
+          </div>
+        </div>
+
+        <div className="row mt-2">
+          <div className="col-12">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" />
+              <div class="input-group-append">
+                <button
+                  className="btn"
+                  type="button"
+                  style={{
+                    backgroundColor: "#E27498",
+                    color: "white",
+                    fontWeight: "bold",
+                    width: "100px",
+                  }}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Fundamental Scanners
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Top Loved
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Candlestick Patterns Scan
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Range Breakouts Scan
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Bullish Scan
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="col-lg-4 cool-md-6 col-sm-12 mt-3">
+            <div className="card" style={{ borderRadius: "15px" }}>
+              <ul
+                className="pricing body"
+                style={{
+                  fontSize: "15px",
+                  textAlign: "left",
+                  padding: "0px",
+                }}
+              >
+                <li>
+                  <h2
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                      color: "#E27498",
+                      paddingLeft: "20px",
+                    }}
+                  >
+                    Bearish Scan
+                  </h2>
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                  15 minute stock breakouts
+                </li>
+                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                  Intraday buying seen in the past 15 minutes
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
