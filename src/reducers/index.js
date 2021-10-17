@@ -1,16 +1,18 @@
 import { combineReducers } from "redux";
-import loginReducer from "./loginReducer";
 import navigationReducer from "./navigationReducer";
 import analyticalReducer from "./analyticalReducer";
 import demographicReducer from "./demographicReducer";
 import ioTReducer from "./ioTReducer";
 import mailInboxReducer from "./mailInboxReducer";
 import UIElementsReducer from "./UIElementsReducer";
-import tokenReducer from "./tokenReducer";
+import auth from "./authReducer";
+import token from "./tokenReducer";
+import users from "./usersReducer";
 
 export default combineReducers({
-  loginReducer,
-  tokenReducer,
+  auth,
+  token,
+  users,
   navigationReducer: navigationReducer,
   analyticalReducer: analyticalReducer,
   demographicReducer: demographicReducer,

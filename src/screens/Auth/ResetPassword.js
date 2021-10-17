@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
+import { useParams } from "react-router-dom";
 import { isMatch, isLength } from "./Validation";
 import axios from "axios";
 
 const initialState = {
-  email: "",
   password: "",
   cf_password: "",
   err: "",
@@ -13,7 +13,8 @@ const initialState = {
 };
 const ResetPassword = () => {
   const [data, setData] = useState(initialState);
-  const { password, cf_password, err, success, email } = data;
+  const { token } = useParams();
+  const { password, cf_password, err, success } = data;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -33,10 +34,13 @@ const ResetPassword = () => {
       return setData({ ...data, err: "Password did not match.", success: "" });
 
     try {
-      const res = await axios.post("http://localhost/api/user/reset-password", {
-        password,
-        email,
-      });
+      const res = await axios.post(
+        "http://localhost/api/user/reset-password",
+        { password },
+        {
+          headers: { Authorization: token },
+        }
+      );
 
       return setData({ ...data, err: "", success: res.data.msg });
     } catch (err) {
@@ -64,20 +68,6 @@ const ResetPassword = () => {
                 </div>
                 <div className="body">
                   <form className="form-auth-small" onSubmit={handleResetPass}>
-                    <div className="form-group">
-                      <label className="control-label sr-only">
-                        Your Email
-                      </label>
-                      <input
-                        className="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Your Email"
-                        type="email"
-                        value={email}
-                        onChange={handleChangeInput}
-                      />
-                    </div>
                     <div className="form-group">
                       <label className="control-label sr-only">Password</label>
                       <input

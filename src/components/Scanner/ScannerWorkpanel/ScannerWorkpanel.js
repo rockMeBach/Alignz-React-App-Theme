@@ -45,17 +45,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let endtime =
       document.getElementById("scanner-end-time").childNodes[1].value;
 
-    // if(starttime)
-    //     starttime = convertTime12to24(starttime)
-
-    // if(endtime)
-    //     endtime = convertTime12to24(endtime)
-
-    // let query = {
-    //     starttime: starttime,
-    //     endtime: endtime
-    // };
-
     let query = {
       starttime: starttime,
       endtime: endtime,

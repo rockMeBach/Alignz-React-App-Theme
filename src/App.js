@@ -63,10 +63,52 @@ import leafletmap from "./screens/Maps/GoogleMaps";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import { Redirect } from "react-router-dom";
 import ProjectsList from "./screens/Pages/ProjectsList";
+import FundamentalScanner from "./screens/FundamentalScanner/FundamentalScanner";
+import { useDispatch, useSelector } from "react-redux";
+import CandlestickScanner from "./screens/CandlestickScanner/CandlestickScanner";
+import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
+import axios from "axios";
+import {
+  dispatchLogin,
+  fetchUser,
+  dispatchGetUser,
+} from "./actions/authAction";
 window.__DEV__ = true;
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("firstLogin");
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
+
+  useEffect(() => {
+    const firstLogin = localStorage.getItem("firstLogin");
+    if (firstLogin) {
+      const getToken = async () => {
+        const res = await axios.post(
+          "http://localhost/api/user/refresh_token",
+          null
+        );
+        dispatch({ type: "GET_TOKEN", payload: res.data.access_token });
+      };
+      getToken();
+    }
+  }, [auth.isLogged, dispatch]);
+
+  useEffect(() => {
+    if (token) {
+      const getUser = () => {
+        dispatch(dispatchLogin());
+
+        return fetchUser(token).then((res) => {
+          dispatch(dispatchGetUser(res));
+        });
+      };
+      getUser();
+    }
+  }, [token, dispatch]);
+  console.log(auth);
 
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;
@@ -97,7 +139,7 @@ const App = () => {
               path={`${process.env.PUBLIC_URL}/`}
               component={Login}
             />
-          )   : (
+          ) : (
             <Redirect to="/dashboard" />
           )}
           {!isLoggedIn ? (
@@ -226,6 +268,33 @@ const App = () => {
                 <Redirect to="/login" />
               )}
               )
+              {isLoggedIn ? (
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/scanners/fundamental-scanner`}
+                  component={FundamentalScanner}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )}
+              {isLoggedIn ? (
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/scanners/top-loved-scanner`}
+                  component={TopLovedScanners}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )}
+              {isLoggedIn ? (
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/scanners/candlestick-scanner`}
+                  component={CandlestickScanner}
+                />
+              ) : (
+                <Redirect to="/login" />
+              )}
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/filemanagerdashboard`}

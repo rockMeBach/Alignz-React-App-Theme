@@ -1,14 +1,14 @@
 import ACTIONS from "../actions/";
 
-const token = "";
+const users = [];
 
-const tokenReducer = (state = token, action) => {
+const usersReducer = (state = users, action) => {
   switch (action.type) {
-    case ACTIONS.GET_TOKEN:
+    case ACTIONS.GET_ALL_USERS:
       return action.payload;
     default:
       return state;
   }
 };
 
-export default tokenReducer;
+export default usersReducer;
