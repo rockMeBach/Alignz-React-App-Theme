@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./WorkpanelFilter.scss";
 import ScannerConditions from "../ScannerConditions/ScannerConditions";
-import IndicatorModal from "../IndicatorModal/IndicatorModal";
+import axios from 'axios';
 
 const WorkpanelFilter = () => {
   const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
+  const [indicators, setIndicators] = useState([]);
+
+  useEffect(() => {
+
+    axios.get('http://localhost/api/scanner/overlap-studies')
+      .then(res => setIndicators(res.data))
+      .catch(err => console.log(err));
+        
+  }, []);
 
   return (
     <div className="scanner-filter-component">
@@ -22,59 +31,21 @@ const WorkpanelFilter = () => {
 
         <hr />
 
-        <div
-          className="scanner-indicator-name"
-          id="bbl"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Bollinger Bands Lover
+        <div style={{height: '35rem', overflow: 'auto'}}>
+          {
+            indicators.map(e => (
+              <div
+                className="scanner-indicator-name"
+                id={e.id}
+                draggable="true"
+                onDragStart={dragStart}
+              >
+                {e.name}
+              </div>
+            ))
+          }
         </div>
-        <div
-          className="scanner-indicator-name"
-          id="rsi"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Relative Strength Index
-        </div>
-        <div
-          className="scanner-indicator-name"
-          id="sma"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Simple Moving Average
-        </div>
-        <div
-          className="scanner-indicator-name"
-          id="WILLR"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          WILLR
-        </div>
-        <div
-          className="scanner-indicator-name"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Bollinger Bands Lover
-        </div>
-        <div
-          className="scanner-indicator-name"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Bollinger Bands Lover
-        </div>
-        <div
-          className="scanner-indicator-name"
-          draggable="true"
-          onDragStart={dragStart}
-        >
-          Bollinger Bands Lover
-        </div>
+        
       </div>
 
       <div className="scanner-filter">
