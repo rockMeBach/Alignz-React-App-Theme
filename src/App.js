@@ -73,6 +73,7 @@ import {
   fetchUser,
   dispatchGetUser,
 } from "./actions/authAction";
+import { LocalSeeRounded } from "@mui/icons-material";
 window.__DEV__ = true;
 
 const App = () => {
@@ -86,11 +87,8 @@ const App = () => {
     const firstLogin = localStorage.getItem("firstLogin");
     if (firstLogin) {
       const getToken = async () => {
-        const res = await axios.post(
-          "http://localhost/api/user/refresh_token",
-          null
-        );
-        dispatch({ type: "GET_TOKEN", payload: res.data.access_token });
+        const access_token = localStorage.getItem("access");
+        dispatch({ type: "GET_TOKEN", payload: access_token });
       };
       getToken();
     }

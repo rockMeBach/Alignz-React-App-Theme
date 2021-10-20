@@ -89,6 +89,7 @@ const NavbarMenu = () => {
                     className="icon-menu d-none d-sm-block"
                     onClick={() => {
                       localStorage.removeItem("firstLogin");
+                      localStorage.removeItem("access");
                     }}
                   >
                     <svg
