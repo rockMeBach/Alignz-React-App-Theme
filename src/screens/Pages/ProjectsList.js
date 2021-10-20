@@ -90,8 +90,8 @@ const ProjectsList = () => {
           </div>
         </div>
       </div>
-
-      <div className="container">
+      {/* <div className="container" id="searchresults"></div> */}
+      <div className="container" id="allresults">
         <div className="row clearfix mt-5">
           <div className="col-lg-6 col-md-6">
             <div
@@ -140,7 +140,12 @@ const ProjectsList = () => {
         <div className="row mt-2">
           <div className="col-12">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search"
+                id="searchName"
+              />
               <div class="input-group-append">
                 <button
                   className="btn"
@@ -180,27 +185,61 @@ const ProjectsList = () => {
                     Fundamental Scanners
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                <li
+                  style={{ padding: "13px", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{
+                    background: "#F8F9FA",
+                    padding: "13px",
+                    paddingLeft: "35px",
+                  }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
+                <a
+                  href="/scanners/fundamental-scanner"
+                  style={{ textDecoration: "none" }}
+                >
+                  <li
+                    style={{
+                      padding: "13px",
+                      paddingLeft: "35px",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    More
+                  </li>
+                </a>
               </ul>
             </div>
           </div>
@@ -227,27 +266,58 @@ const ProjectsList = () => {
                     Top Loved
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{
+                    background: "#F8F9FA",
+                    padding: "13px",
+                    paddingLeft: "35px",
+                  }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
+                <a
+                  href="/scanners/top-loved-scanner"
+                  style={{ textDecoration: "none" }}
+                >
+                  <li
+                    style={{
+                      padding: "13px",
+                      paddingLeft: "35px",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    More
+                  </li>
+                </a>
               </ul>
             </div>
           </div>
@@ -274,27 +344,58 @@ const ProjectsList = () => {
                     Candlestick Patterns Scan
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
+                <li style={{ paddingLeft: "35px" }} className="wcard">
                   15 minute stock breakouts
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
+                <li
+                  style={{
+                    background: "#F8F9FA",
+                    padding: "13px",
+                    paddingLeft: "35px",
+                  }}
+                  className="wcard"
+                >
                   Intraday buying seen in the past 15 minutes
                 </li>
+                <a
+                  href="/scanners/candlestick-scanner"
+                  style={{ textDecoration: "none" }}
+                >
+                  <li
+                    style={{
+                      padding: "13px",
+                      paddingLeft: "35px",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    More
+                  </li>
+                </a>
               </ul>
             </div>
           </div>

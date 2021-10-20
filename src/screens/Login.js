@@ -4,7 +4,7 @@ import Logo from "../assets/images/logo-white.svg";
 import { useDispatch } from "react-redux";
 import { showErrMsg, showSuccessMsg } from "./Auth/Notification/Notification";
 import axios from "axios";
-import { onLoggedin } from "../actions";
+import { dispatchLogin } from "../actions/authAction";
 import { useHistory } from "react-router";
 
 const initialState = {
@@ -36,11 +36,10 @@ const Login = () => {
 
       localStorage.setItem("firstLogin", true);
 
-      dispatch(onLoggedin());
+      dispatch(dispatchLogin());
       history.push("/dashboard");
     } catch (err) {
-      err.response.data.msg &&
-        setUser({ ...user, err: err.response.data.msg, success: "" });
+      setUser({ ...user, err: err.response.data.msg, success: "" });
     }
   };
 

@@ -12,7 +12,7 @@ const Scanner = () => {
   return (
     <div style={{ flex: 1 }}>
       <div>
-        <div className="container-fluid">
+        <div className="container">
           <PageHeader
             HeaderText="Scanner"
             Breadcrumb={[
