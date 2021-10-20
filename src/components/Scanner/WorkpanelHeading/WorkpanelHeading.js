@@ -31,7 +31,7 @@ const WorkpanelHeading = () => {
                 </div>
 
                 <div className="scanner-header-options form">
-
+                    
                     <div className="scanner-alert-button">
                         <input type="radio" id="alert-public" name="alert" value="Public" checked/>
                         <label for="alert-public">Public</label>

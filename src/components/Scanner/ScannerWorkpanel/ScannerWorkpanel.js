@@ -5,6 +5,7 @@ import WorkpanelFilter from "../WorkpanelFilter/WorkpanelFilter";
 import queryCalculator from "../ScannerExpressionCalculator/ScannerexpressionCalculator";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
+  
   const convertTime12to24 = (time12h) => {
     const [time, modifier] = time12h.split(" ");
 
@@ -22,9 +23,13 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   };
 
   const fetchScannerResults = async () => {
+
     let conditions = document.getElementById(
       "scanner-condition-indicators"
     ).childNodes;
+
+    console.log("Hi", document.getElementById('alert-public').checked);
+
     let flag = true;
     let comparison;
     let LHS = [];
@@ -70,6 +75,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let res = await queryCalculator(query);
 
     if (res === undefined) res = [];
+
+    console.log(res)
     scannerResultDisplay(res.data);
   };
 
