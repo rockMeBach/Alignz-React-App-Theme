@@ -4,24 +4,19 @@ import "./ScannerConditions.scss";
 import ScannerDraggableComponent from "../ScannerDraggableComponent/ScannerDraggableComponent";
 
 const ScannerConditions = () => {
-  
   const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
   const [currSelectedIndicator, setCurrSelectedIndicator] = useState([]);
 
   const deleteElement = (index) => {
-    
     let arr = currSelectedIndicator;
     arr.splice(index, 1);
 
     setCurrSelectedIndicator([...arr]);
 
-    if (arr.length === 0) 
-      setScannerConditionOptions(false);
-
+    if (arr.length === 0) setScannerConditionOptions(false);
   };
 
   const dropElement = (e) => {
-
     let arr = currSelectedIndicator;
 
     const id = e.dataTransfer.getData("text");
@@ -36,12 +31,11 @@ const ScannerConditions = () => {
 
   return (
     <div className="scanner-conditions">
-
       <div
         id="scanner-condition-indicators"
         onDragOver={(e) => e.preventDefault()}
         onDrop={dropElement}
-        >
+      >
         {!scannerConditionOptions && (
           <div className="scanner-indicator-drag-request">
             Drag Something here !!
@@ -53,14 +47,10 @@ const ScannerConditions = () => {
             <span onClick={() => deleteElement(index)}>
               <DeleteOutlinedIcon className="delete-icon" />
             </span>
-            <ScannerDraggableComponent
-              id={e}
-              index={index}
-            />
+            <ScannerDraggableComponent id={e} index={index} />
           </div>
         ))}
       </div>
-      
     </div>
   );
 };
