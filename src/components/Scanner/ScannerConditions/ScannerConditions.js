@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import "./ScannerConditions.scss";
 import ScannerDraggableComponent from "../ScannerDraggableComponent/ScannerDraggableComponent";
-import IndicatorModal from "../IndicatorModal/IndicatorModal";
 
 const ScannerConditions = () => {
   

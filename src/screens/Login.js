@@ -32,8 +32,12 @@ const Login = () => {
         email,
         password,
       });
+      const rf_token = res.data.refresh_token;
+      const temp = await axios.post("http://localhost/api/user/refresh_token", {
+        rf_token,
+      });
       setUser({ ...user, err: "", success: res.data.msg });
-
+      localStorage.setItem("access", temp.data.access_token);
       localStorage.setItem("firstLogin", true);
 
       dispatch(dispatchLogin());
