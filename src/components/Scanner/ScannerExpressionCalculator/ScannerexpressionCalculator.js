@@ -10,7 +10,7 @@ const queryCalculator = async query => {
         endtime: query.endtime
     };
     
-    const res = await axios.get('http://backend-allinz.herokuapp.com/api/stocks/', {
+    const res = await axios.get('http://localhost/api/stocks/', {
 
         params: query
     }).then(res => {
