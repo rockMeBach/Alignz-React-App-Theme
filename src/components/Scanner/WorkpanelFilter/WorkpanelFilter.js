@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./WorkpanelFilter.scss";
 import ScannerConditions from "../ScannerConditions/ScannerConditions";
 import axios from 'axios';
-
 const WorkpanelFilter = () => {
   const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
   const [indicators, setIndicators] = useState([]);
-
   useEffect(() => {
-
     axios.get('http://localhost/api/scanner/overlap-studies')
       .then(res => setIndicators(res.data))
-      .catch(err => console.log(err));
-        
+      .catch(err => console.log(err));   
   }, []);
-
   return (
     <div className="scanner-filter-component">
       <div className="scanner-indicator-component">
@@ -28,9 +23,7 @@ const WorkpanelFilter = () => {
             <i className="icon-magnifier"></i>
           </button>
         </form>
-
         <hr />
-
         <div style={{height: '35rem', overflow: 'auto'}}>
           {
             indicators.map(e => (
@@ -45,12 +38,9 @@ const WorkpanelFilter = () => {
             ))
           }
         </div>
-        
       </div>
-
       <div className="scanner-filter">
         <h5>Filter</h5>
-
         <div className="scanner-custom-filter">
           <div className="scanner-time-and-lot-size">
             <div className="scanner-time-input" id="scanner-start-time">
@@ -67,7 +57,6 @@ const WorkpanelFilter = () => {
                 required
               />
             </div>
-
             <div className="scanner-time-input" id="scanner-end-time">
               <h6>End Time</h6>
               <input
@@ -82,7 +71,6 @@ const WorkpanelFilter = () => {
                 required
               />
             </div>
-
             <div className="scanner-time-input">
               <h6>FnO Lot Size</h6>
               <select

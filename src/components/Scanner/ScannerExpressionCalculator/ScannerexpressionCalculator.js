@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const queryCalculator = async (query) => {
   console.log("Suhas pro coder", query);
   const res = await axios
@@ -10,7 +9,6 @@ const queryCalculator = async (query) => {
       return res;
     })
     .catch((err) => console.log(err));
-
   return res;
 };
 

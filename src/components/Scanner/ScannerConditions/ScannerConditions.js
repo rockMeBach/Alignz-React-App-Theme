@@ -6,16 +6,12 @@ import ScannerDraggableComponent from "../ScannerDraggableComponent/ScannerDragg
 const ScannerConditions = () => {
   const [scannerConditionOptions, setScannerConditionOptions] = useState(false);
   const [currSelectedIndicator, setCurrSelectedIndicator] = useState([]);
-
   const deleteElement = (index) => {
     let arr = currSelectedIndicator;
     arr.splice(index, 1);
-
     setCurrSelectedIndicator([...arr]);
-
     if (arr.length === 0) setScannerConditionOptions(false);
   };
-
   const dropElement = (e) => {
     let arr = currSelectedIndicator;
 
@@ -25,7 +21,6 @@ const ScannerConditions = () => {
       setCurrSelectedIndicator([...arr]);
       setScannerConditionOptions(true);
     }
-
     e.dataTransfer.clearData();
   };
 

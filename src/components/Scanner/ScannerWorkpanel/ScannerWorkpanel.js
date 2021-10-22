@@ -30,30 +30,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
     console.log(res);
   };
-
-  // const convertTime12to24 = (time12h) => {
-  //   const [time, modifier] = time12h.split(" ");
-
-  //   let [hours, minutes] = time.split(":");
-
-  //   if (hours === "12") {
-  //     hours = "00";
-  //   }
-
-  //   if (modifier === "PM") {
-  //     hours = parseInt(hours, 10) + 12;
-  //   }
-
-  //   return `${hours}:${minutes}`;
-  // };
-
   const fetchScannerResults = async () => {
     let conditions = document.getElementById(
       "scanner-condition-indicators"
     ).childNodes;
-
-    console.log("Hi", document.getElementById("alert-public").checked);
-
     let flag = true;
     let comparison;
     let LHS = [];
@@ -65,14 +45,11 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       } else if (flag) LHS.push(e.childNodes[1].data);
       else RHS.push(e.childNodes[1].data);
     });
-
     if (!document.getElementById("satisfy").checked) comparison = !comparison;
-
     let starttime =
       document.getElementById("scanner-start-time").childNodes[1].value;
     let endtime =
       document.getElementById("scanner-end-time").childNodes[1].value;
-
     let query = {
       starttime: starttime,
       endtime: endtime,
@@ -84,12 +61,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       RHS: RHS,
     };
     setScannerInfo(query);
-
     let res = await queryCalculator(query);
-
     if (res === undefined) res = [];
-
-    console.log(res);
     scannerResultDisplay(res.data);
   };
 
@@ -97,7 +70,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     <div className="col-lg-12 scanner-workpanel-component">
       <WorkpanelHeading scannerData={scannerData} />
       <WorkpanelFilter />
-
       <button className="btn submit-btn" onClick={fetchScannerResults}>
         Submit
       </button>
