@@ -39,11 +39,27 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let LHS = [];
     let RHS = [];
     conditions.forEach((e) => {
+      
+      console.log(e.childNodes[1].id, e.childNodes[1].data);
+
       if (e.childNodes[1].id === "<" || e.childNodes[1].id === ">") {
+
         comparison = e.childNodes[1].id;
         flag = false;
-      } else if (flag) LHS.push(e.childNodes[1].data);
-      else RHS.push(e.childNodes[1].data);
+      } else if (flag) {
+
+        if(e.childNodes[1].data)
+          LHS.push(e.childNodes[1].data);
+        else
+          LHS.push(e.childNodes[1].id)
+      }
+      else {
+
+        if(e.childNodes[1].data)
+          RHS.push(e.childNodes[1].data);
+        else
+          RHS.push(e.childNodes[1].id)
+      }
     });
     if (!document.getElementById("satisfy").checked) comparison = !comparison;
     let starttime =

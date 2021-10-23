@@ -1,13 +1,8 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
-import PricingTableCard1 from "../../components/Pages/PricingTableCard1";
+import Subscription from "../../components/Subscription/Subscription";
 import PricingTableCard2 from "../../components/Pages/PricingTableCard2";
-import PricingTableCard3 from "../../components/Pages/PricingTableCard3";
-import {
-  PriceCardData1,
-  PriceCardData2,
-  PriceCardData3,
-} from "../../Data/Pages";
+import { PriceCardData2 } from "../../Data/Pages";
 
 const Pricing = () => {
   return (
@@ -24,23 +19,6 @@ const Pricing = () => {
             Breadcrumb={[{ name: "Pricing", navigate: "" }]}
           />
           <div className="row clearfix">
-            {PriceCardData1.map((data, i) => {
-              return (
-                <PricingTableCard1
-                  key={i}
-                  head={data.head}
-                  list={data.list}
-                  price={data.price}
-                  joined={data.joined}
-                />
-              );
-            })}
-          </div>
-          <div className="row clearfix">
-            <div className="col-12">
-              <h5>Pricing Table Option 2</h5>
-              <hr />
-            </div>
             {PriceCardData2.map((data, i) => {
               return (
                 <PricingTableCard2
@@ -55,20 +33,18 @@ const Pricing = () => {
             })}
           </div>
           <div className="row clearfix">
-            <div className="col-12">
-              <h5>Pricing Table Option 3</h5>
-              <hr />
+            <div
+              className="col-12"
+              style={{
+                border: "1px solid gray",
+                borderRadius: "16px",
+                opacity: "1",
+                marginBottom: "50px",
+                paddingBottom: "40px",
+              }}
+            >
+              <Subscription />
             </div>
-            {PriceCardData3.map((data, i) => {
-              return (
-                <PricingTableCard3
-                  key={i}
-                  img={data.image}
-                  head={data.head}
-                  price={data.price}
-                />
-              );
-            })}
           </div>
         </div>
       </div>

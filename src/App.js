@@ -67,13 +67,12 @@ import FundamentalScanner from "./screens/FundamentalScanner/FundamentalScanner"
 import { useDispatch, useSelector } from "react-redux";
 import CandlestickScanner from "./screens/CandlestickScanner/CandlestickScanner";
 import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
-import axios from "axios";
+import Checkout from "./components/Pages/Checkout";
 import {
   dispatchLogin,
   fetchUser,
   dispatchGetUser,
 } from "./actions/authAction";
-import { LocalSeeRounded } from "@mui/icons-material";
 window.__DEV__ = true;
 
 const App = () => {
@@ -229,6 +228,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/ioT`}
                 component={ioT}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/checkout`}
+                component={Checkout}
               />
               <Route
                 exact
