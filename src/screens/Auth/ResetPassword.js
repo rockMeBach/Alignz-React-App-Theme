@@ -4,6 +4,7 @@ import Logo from "../../assets/images/logo-white.svg";
 import { useParams } from "react-router-dom";
 import { isMatch, isLength } from "./Validation";
 import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
 
 const initialState = {
   password: "",
@@ -35,7 +36,7 @@ const ResetPassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost/api/user/reset-password",
+        `http://${BACKEND_URL}/api/user/reset-password`,
         { password },
         {
           headers: { Authorization: token },

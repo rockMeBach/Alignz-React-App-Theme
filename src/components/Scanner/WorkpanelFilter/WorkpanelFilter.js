@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./WorkpanelFilter.scss";
 import ScannerConditions from "../ScannerConditions/ScannerConditions";
 import axios from 'axios';
+import BACKEND_URL from "../../../Backend_url";
+
+
 const WorkpanelFilter = () => {
   const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
   const [indicators, setIndicators] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost/api/scanner/overlap-studies')
+
+    axios.get(`http://${BACKEND_URL}/api/scanner/overlap-studies`)
       .then(res => setIndicators(res.data))
       .catch(err => console.log(err));   
   }, []);

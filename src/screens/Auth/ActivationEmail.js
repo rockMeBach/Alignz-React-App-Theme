@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { showErrMsg, showSuccessMsg } from "../Auth/Notification/Notification";
 import Logo from "../../assets/images/logo-white.svg";
 import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
+
 const ActivationEmail = () => {
   const { activation_token } = useParams();
   const [err, setErr] = useState("");
@@ -13,7 +15,7 @@ const ActivationEmail = () => {
     if (activation_token) {
       const activationEmail = async () => {
         try {
-          const res = await axios.post("http://localhost/api/user/activation", {
+          const res = await axios.post(`http://${BACKEND_URL}/api/user/activation`, {
             activation_token,
           });
           setSuccess(res.data.msg);

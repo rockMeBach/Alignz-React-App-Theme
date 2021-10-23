@@ -4,6 +4,7 @@ import { showErrMsg, showSuccessMsg } from "../Auth/Notification/Notification";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
 import { isEmpty, isLength, isEmail, isMatch } from "./Validation";
+import BACKEND_URL from "../../Backend_url";
 
 const initialState = {
   name: "",
@@ -47,7 +48,7 @@ const Registration = () => {
       return setUser({ ...user, err: "Password did not match.", success: "" });
 
     try {
-      const res = await axios.post("http://localhost/api/user/register", {
+      const res = await axios.post(`http://${BACKEND_URL}/api/user/register`, {
         name,
         email,
         password,

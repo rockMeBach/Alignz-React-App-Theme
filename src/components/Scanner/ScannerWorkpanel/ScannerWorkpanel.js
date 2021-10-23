@@ -5,6 +5,7 @@ import WorkpanelHeading from "../WorkpanelHeading/WorkpanelHeading";
 import WorkpanelFilter from "../WorkpanelFilter/WorkpanelFilter";
 import queryCalculator from "../ScannerExpressionCalculator/ScannerexpressionCalculator";
 import axios from "axios";
+import BACKEND_URL from "../../../Backend_url";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const auth = useSelector((state) => state.auth);
@@ -25,7 +26,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     tmp.LHS = scannerInfo.LHS;
     tmp.RHS = scannerInfo.RHS;
     tmp.owner = auth.user._id;
-    const res = await axios.post("http://localhost/api/scanner/setScanner", {
+    const res = await axios.post(`http://${BACKEND_URL}/api/scanner/setScanner`, {
       tmp,
     });
     console.log(res);
