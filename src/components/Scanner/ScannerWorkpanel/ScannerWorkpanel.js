@@ -26,9 +26,12 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     tmp.LHS = scannerInfo.LHS;
     tmp.RHS = scannerInfo.RHS;
     tmp.owner = auth.user._id;
-    const res = await axios.post(`http://${BACKEND_URL}/api/scanner/setScanner`, {
-      tmp,
-    });
+    const res = await axios.post(
+      `http://${BACKEND_URL}/api/scanner/setScanner`,
+      {
+        tmp,
+      }
+    );
     console.log(res);
   };
   const fetchScannerResults = async () => {
@@ -40,29 +43,24 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let LHS = [];
     let RHS = [];
     conditions.forEach((e) => {
-      
       console.log(e.childNodes[1].id, e.childNodes[1].data);
 
-      if (e.childNodes[1].id === "<" || 
-          e.childNodes[1].id === ">" || 
-          e.childNodes[1].id === "cfab" || 
-          e.childNodes[1].id === "cfba") {
-
+      if (
+        e.childNodes[1].id === "<" ||
+        e.childNodes[1].id === ">" ||
+        e.childNodes[1].id === "cfab" ||
+        e.childNodes[1].id === "cfba" ||
+        e.childNodes[1].id === ">=" ||
+        e.childNodes[1].id === "<="
+      ) {
         comparison = e.childNodes[1].id;
         flag = false;
       } else if (flag) {
-
-        if(e.childNodes[1].data)
-          LHS.push(e.childNodes[1].data);
-        else
-          LHS.push(e.childNodes[1].id)
-      }
-      else {
-
-        if(e.childNodes[1].data)
-          RHS.push(e.childNodes[1].data);
-        else
-          RHS.push(e.childNodes[1].id)
+        if (e.childNodes[1].data) LHS.push(e.childNodes[1].data);
+        else LHS.push(e.childNodes[1].id);
+      } else {
+        if (e.childNodes[1].data) RHS.push(e.childNodes[1].data);
+        else RHS.push(e.childNodes[1].id);
       }
     });
     if (!document.getElementById("satisfy").checked) comparison = !comparison;

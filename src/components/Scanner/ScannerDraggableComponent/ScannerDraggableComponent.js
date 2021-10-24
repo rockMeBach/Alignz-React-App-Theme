@@ -12,9 +12,12 @@ const ScannerDraggableComponent = ({ id, index }) => {
     setIndicatorModalOpen(false);
   };
   const openIndicatorModal = (e) => {
-    let classNames = e.className.split(' ');
-    if(classNames.length <= 1 || classNames[1] !== 'scanner-draggable-component-name')
-      return; 
+    let classNames = e.className.split(" ");
+    if (
+      classNames.length <= 1 ||
+      classNames[1] !== "scanner-draggable-component-name"
+    )
+      return;
     if (
       e.id === ">" ||
       e.id === "<" ||
@@ -22,17 +25,19 @@ const ScannerDraggableComponent = ({ id, index }) => {
       e.id === "-" ||
       e.id === "*" ||
       e.id === "cfab" ||
-      e.id === "cfba"
+      e.id === "cfba" ||
+      e.id === "/" ||
+      e.id === "<=" ||
+      e.id === ">="
     )
       return;
-    if(e.data) {
+    if (e.data) {
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
-        settings: e.data.setting
+        settings: e.data.setting,
       });
     } else {
-      
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
@@ -49,7 +54,9 @@ const ScannerDraggableComponent = ({ id, index }) => {
     setIndicatorModalOpen(true);
   };
   useEffect(() => {
-    let e = document.getElementsByClassName('scanner-draggable-component-name')[index];
+    let e = document.getElementsByClassName("scanner-draggable-component-name")[
+      index
+    ];
     console.log(e);
     openIndicatorModal(e);
   }, []);

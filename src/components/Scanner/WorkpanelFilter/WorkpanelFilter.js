@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./WorkpanelFilter.scss";
 import ScannerConditions from "../ScannerConditions/ScannerConditions";
-import axios from 'axios';
+import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
-
 
 const WorkpanelFilter = () => {
   const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
   const [indicators, setIndicators] = useState([]);
   useEffect(() => {
-
-    axios.get(`http://${BACKEND_URL}/api/scanner/overlap-studies`)
-      .then(res => setIndicators(res.data))
-      .catch(err => console.log(err));   
+    axios
+      .get(`http://${BACKEND_URL}/api/scanner/overlap-studies`)
+      .then((res) => setIndicators(res.data))
+      .catch((err) => console.log(err));
   }, []);
   return (
     <div className="scanner-filter-component">
@@ -28,19 +27,17 @@ const WorkpanelFilter = () => {
           </button>
         </form>
         <hr />
-        <div style={{height: '35rem', overflow: 'auto'}}>
-          {
-            indicators.map(e => (
-              <div
-                className="scanner-indicator-name"
-                id={e.id}
-                draggable="true"
-                onDragStart={dragStart}
-              >
-                {e.name}
-              </div>
-            ))
-          }
+        <div style={{ height: "35rem", overflow: "auto" }}>
+          {indicators.map((e) => (
+            <div
+              className="scanner-indicator-name"
+              id={e.id}
+              draggable="true"
+              onDragStart={dragStart}
+            >
+              {e.name}
+            </div>
+          ))}
         </div>
       </div>
       <div className="scanner-filter">
@@ -198,6 +195,14 @@ const WorkpanelFilter = () => {
             >
               <strong>*</strong>
             </span>
+            <span
+              className="scanner-math-operation-icons"
+              id="/"
+              draggable="true"
+              onDragStart={dragStart}
+            >
+              <strong>/</strong>
+            </span>
           </div>
           <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Comparison</h6>
@@ -218,6 +223,22 @@ const WorkpanelFilter = () => {
               onDragStart={dragStart}
             >
               <strong>&lt;</strong>
+            </div>
+            <div
+              className="scanner-math-operation-icons"
+              id=">="
+              draggable="true"
+              onDragStart={dragStart}
+            >
+              <strong>&gt;&#61;</strong>
+            </div>
+            <div
+              className="scanner-math-operation-icons"
+              id="<="
+              draggable="true"
+              onDragStart={dragStart}
+            >
+              <strong>&lt;&#61;</strong>
             </div>
           </div>
           <div className="scanner-math-operation">
@@ -240,7 +261,6 @@ const WorkpanelFilter = () => {
             >
               <strong>Cross from below to above</strong>
             </div>
-
           </div>
           <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Binary Operation</h6>
