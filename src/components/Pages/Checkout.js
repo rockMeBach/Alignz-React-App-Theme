@@ -1,6 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
-const Checkout = () => {
+const Checkout = ({ match }) => {
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const getPaymentStatus = async (payment_id) => {
+    const payment_status = await axios
+      .get(`http://localhost/api/payment/status/${payment_id}`)
+      .then((res) => {
+        // console.log(res);
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log("Payment Status: ", payment_status);
+    setPaymentStatus(paymentStatus);
+    return payment_status;
+  };
+
+  useEffect(() => {
+    // console.log("match", match.params.paymentid);
+
+    getPaymentStatus(match.params.paymentId);
+  }, []);
+
   return (
     <div>
       <div className="container">

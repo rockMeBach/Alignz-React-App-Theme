@@ -105,7 +105,6 @@ const App = () => {
       getUser();
     }
   }, [token, dispatch]);
-  console.log(auth);
 
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;
@@ -148,6 +147,7 @@ const App = () => {
           ) : (
             <Redirect to="/dashboard" />
           )}
+
           <Route
             exact
             path={`${process.env.PUBLIC_URL}/forgotpassword`}
@@ -229,11 +229,13 @@ const App = () => {
                 path={`${process.env.PUBLIC_URL}/ioT`}
                 component={ioT}
               />
-              <Route
-                exact
-                path={`${process.env.PUBLIC_URL}/checkout`}
-                component={Checkout}
-              />
+              {isLoggedIn && (
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/payment/status/:paymentId`}
+                  component={Checkout}
+                />
+              )}
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/appinbox`}

@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import PageHeader from "../../components/PageHeader";
 import Subscription from "../../components/Subscription/Subscription";
 import PricingTableCard2 from "../../components/Pages/PricingTableCard2";
 import { PriceCardData2 } from "../../Data/Pages";
+import axios from "axios";
 
 const Pricing = () => {
+
+
   return (
     <div
       style={{ flex: 1 }}

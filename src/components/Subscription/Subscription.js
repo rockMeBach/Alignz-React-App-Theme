@@ -1,6 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Subscription = () => {
+  const auth = useSelector((state) => state.auth);
+  const name = auth.user.name;
+  const id = auth.user._id;
+  const email = auth.user.email;
+
+  const [values, setValues] = useState({
+    amount: 0,
+    orderID: "",
+    error: "",
+    success: false,
+  });
+  const { amount, orderID, error, success } = values;
+
+  const createOrder = async () => {
+    const res = await axios
+      .get(`http://localhost/api/payment/createOrder`)
+      .then((res) => res)
+      .catch((err) => console.log(err));
+    if (res) {
+      setValues({
+        error: "",
+        success: true,
+        orderID: res.data.id,
+        amount: res.data.amount,
+      });
+    }
+  };
+
+  const showRazorPay = () => {
+    const form = document.createElement("form");
+    form.setAttribute("action", "http://localhost/api/payment/callback");
+    form.setAttribute("method", "POST");
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.setAttribute("data-key", "rzp_test_yPJvTUYJKWzCa6");
+    script.setAttribute("data-amount", amount);
+    script.setAttribute("data-name", "Unfluke");
+    script.setAttribute("data-prefill.contact", "9650324051");
+    script.setAttribute("data-prefill.email", email);
+    script.setAttribute("data-order_id", orderID);
+    script.setAttribute("data-prefill.name", name);
+    document.getElementById("root").appendChild(form);
+    form.appendChild(script);
+    console.log(form);
+
+    script.onload = () => {
+      console.log(form.childNodes[1]);
+      form.childNodes[1].click();
+      form.childNodes[1].style.display = "none";
+    };
+  };
+
+  useEffect(() => {
+    if (amount && orderID && amount > 0 && orderID !== "") {
+      showRazorPay();
+    }
+  }, [values]);
   return (
     <div>
       <div className="col-12">
@@ -175,20 +235,19 @@ const Subscription = () => {
               <div className="col-4"></div>
               <div className="col-8">
                 {" "}
-                <a href="/checkout">
-                  <button
-                    className="btn"
-                    type="button"
-                    style={{
-                      backgroundColor: "#E27498",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Pay Now
-                  </button>
-                </a>
+                <button
+                  className="btn"
+                  type="button"
+                  style={{
+                    backgroundColor: "#E27498",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  }}
+                  onClick={createOrder}
+                >
+                  Pay Now
+                </button>
               </div>
             </div>
           </div>
