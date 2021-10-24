@@ -1,5 +1,6 @@
 import ACTIONS from "./index";
 import axios from "axios";
+import BACKEND_URL from "../Backend_url";
 
 export const dispatchLogin = () => {
   return {
@@ -8,7 +9,7 @@ export const dispatchLogin = () => {
 };
 
 export const fetchUser = async (token) => {
-  const res = await axios.get("http://localhost/api/user/info", {
+  const res = await axios.get(`http://${BACKEND_URL}/api/user/info`, {
     headers: { Authorization: token },
   });
   return res;

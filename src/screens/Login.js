@@ -6,6 +6,7 @@ import { showErrMsg, showSuccessMsg } from "./Auth/Notification/Notification";
 import axios from "axios";
 import { dispatchLogin } from "../actions/authAction";
 import { useHistory } from "react-router";
+import BACKEND_URL from "../Backend_url";
 
 const initialState = {
   email: "",
@@ -28,12 +29,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost/api/user/login", {
+      const res = await axios.post(`http://${BACKEND_URL}/api/user/login`, {
         email,
         password,
       });
       const rf_token = res.data.refresh_token;
-      const temp = await axios.post("http://localhost/api/user/refresh_token", {
+      const temp = await axios.post(`http://${BACKEND_URL}/api/user/refresh_token`, {
         rf_token,
       });
       setUser({ ...user, err: "", success: res.data.msg });

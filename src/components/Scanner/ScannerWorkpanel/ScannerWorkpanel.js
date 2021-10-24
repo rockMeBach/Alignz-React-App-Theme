@@ -5,6 +5,7 @@ import WorkpanelHeading from "../WorkpanelHeading/WorkpanelHeading";
 import WorkpanelFilter from "../WorkpanelFilter/WorkpanelFilter";
 import queryCalculator from "../ScannerExpressionCalculator/ScannerexpressionCalculator";
 import axios from "axios";
+import BACKEND_URL from "../../../Backend_url";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const auth = useSelector((state) => state.auth);
@@ -25,7 +26,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     tmp.LHS = scannerInfo.LHS;
     tmp.RHS = scannerInfo.RHS;
     tmp.owner = auth.user._id;
-    const res = await axios.post("http://localhost/api/scanner/setScanner", {
+    const res = await axios.post(`http://${BACKEND_URL}/api/scanner/setScanner`, {
       tmp,
     });
     console.log(res);
@@ -42,7 +43,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       
       console.log(e.childNodes[1].id, e.childNodes[1].data);
 
-      if (e.childNodes[1].id === "<" || e.childNodes[1].id === ">") {
+      if (e.childNodes[1].id === "<" || 
+          e.childNodes[1].id === ">" || 
+          e.childNodes[1].id === "cfab" || 
+          e.childNodes[1].id === "cfba") {
 
         comparison = e.childNodes[1].id;
         flag = false;
@@ -79,6 +83,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     setScannerInfo(query);
     let res = await queryCalculator(query);
     if (res === undefined) res = [];
+
+    console.log(res);
+
     scannerResultDisplay(res.data);
   };
 

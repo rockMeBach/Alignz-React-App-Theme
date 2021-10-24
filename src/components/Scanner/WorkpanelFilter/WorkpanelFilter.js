@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./WorkpanelFilter.scss";
 import ScannerConditions from "../ScannerConditions/ScannerConditions";
 import axios from 'axios';
+import BACKEND_URL from "../../../Backend_url";
+
+
 const WorkpanelFilter = () => {
   const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
   const [indicators, setIndicators] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost/api/scanner/overlap-studies')
+
+    axios.get(`http://${BACKEND_URL}/api/scanner/overlap-studies`)
       .then(res => setIndicators(res.data))
       .catch(err => console.log(err));   
   }, []);
@@ -217,11 +221,34 @@ const WorkpanelFilter = () => {
             </div>
           </div>
           <div className="scanner-math-operation">
+            <h6 style={{ marginBottom: "2rem" }}>Cross</h6>
+
+            <div
+              className="scanner-binary-operation-icons"
+              draggable="true"
+              id="cfab"
+              onDragStart={dragStart}
+            >
+              <strong>Cross from above to below</strong>
+            </div>
+
+            <div
+              className="scanner-binary-operation-icons"
+              draggable="true"
+              id="cfba"
+              onDragStart={dragStart}
+            >
+              <strong>Cross from below to above</strong>
+            </div>
+
+          </div>
+          <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Binary Operation</h6>
 
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="or"
               onDragStart={dragStart}
             >
               <strong>OR</strong>
@@ -230,6 +257,7 @@ const WorkpanelFilter = () => {
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="and"
               onDragStart={dragStart}
             >
               <strong>ADD</strong>
@@ -238,6 +266,7 @@ const WorkpanelFilter = () => {
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="substract"
               onDragStart={dragStart}
             >
               <strong>SUBSTRACT</strong>

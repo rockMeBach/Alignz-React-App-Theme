@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
 import { isEmail } from "./Validation";
 import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
 
 const initialState = {
   email: "",
@@ -26,7 +27,7 @@ const ForgotPassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost/api/user/forgot-password",
+        `http://${BACKEND_URL}/api/user/forgot-password`,
         {
           email,
         }
