@@ -221,11 +221,34 @@ const WorkpanelFilter = () => {
             </div>
           </div>
           <div className="scanner-math-operation">
+            <h6 style={{ marginBottom: "2rem" }}>Cross</h6>
+
+            <div
+              className="scanner-binary-operation-icons"
+              draggable="true"
+              id="cfab"
+              onDragStart={dragStart}
+            >
+              <strong>Cross from above to below</strong>
+            </div>
+
+            <div
+              className="scanner-binary-operation-icons"
+              draggable="true"
+              id="cfba"
+              onDragStart={dragStart}
+            >
+              <strong>Cross from below to above</strong>
+            </div>
+
+          </div>
+          <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Binary Operation</h6>
 
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="or"
               onDragStart={dragStart}
             >
               <strong>OR</strong>
@@ -234,6 +257,7 @@ const WorkpanelFilter = () => {
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="and"
               onDragStart={dragStart}
             >
               <strong>ADD</strong>
@@ -242,6 +266,7 @@ const WorkpanelFilter = () => {
             <div
               className="scanner-binary-operation-icons"
               draggable="true"
+              id="substract"
               onDragStart={dragStart}
             >
               <strong>SUBSTRACT</strong>

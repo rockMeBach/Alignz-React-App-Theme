@@ -43,7 +43,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       
       console.log(e.childNodes[1].id, e.childNodes[1].data);
 
-      if (e.childNodes[1].id === "<" || e.childNodes[1].id === ">") {
+      if (e.childNodes[1].id === "<" || 
+          e.childNodes[1].id === ">" || 
+          e.childNodes[1].id === "cfab" || 
+          e.childNodes[1].id === "cfba") {
 
         comparison = e.childNodes[1].id;
         flag = false;
@@ -80,6 +83,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     setScannerInfo(query);
     let res = await queryCalculator(query);
     if (res === undefined) res = [];
+
+    console.log(res);
+
     scannerResultDisplay(res.data);
   };
 
