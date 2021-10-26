@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 
 const Checkout = ({ match }) => {
+  const auth = useSelector((state) => state.auth);
   const [paymentStatus, setPaymentStatus] = useState(null);
-  const getPaymentStatus = async (payment_id) => {
+  const getPaymentStatus = async (payment_id, i) => {
+    console.log("Suhas", i);
     const payment_status = await axios
-      .get(`http://localhost/api/payment/status/${payment_id}`)
+      .get(`http://localhost/api/payment/status/${payment_id}/?id=${i}`)
       .then((res) => {
-        // console.log(res);
         return res.data;
       })
       .catch((err) => {
@@ -20,10 +22,9 @@ const Checkout = ({ match }) => {
   };
 
   useEffect(() => {
-    // console.log("match", match.params.paymentid);
-
-    getPaymentStatus(match.params.paymentId);
-  }, []);
+    const i = auth.user._id;
+    if (i !== undefined) getPaymentStatus(match.params.paymentId, i);
+  }, [auth]);
 
   return (
     <div>

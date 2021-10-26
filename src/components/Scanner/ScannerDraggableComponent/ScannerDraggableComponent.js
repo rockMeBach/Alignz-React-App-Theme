@@ -28,7 +28,10 @@ const ScannerDraggableComponent = ({ id, index }) => {
       e.id === "cfba" ||
       e.id === "/" ||
       e.id === "<=" ||
-      e.id === ">="
+      e.id === ">=" ||
+      e.id === "or" ||
+      e.id === "and" ||
+      e.id === "substract"
     )
       return;
     if (e.data) {
