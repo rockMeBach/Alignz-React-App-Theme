@@ -66,20 +66,26 @@ const ScannerConditions = () => {
         onDragOver={(e) => e.preventDefault()}
         onDrop={dropElement}
       >
+
+      {multipleScannerIndicators.map((currExpression, index) => {
+        
+
+      })}
+
         {!scannerConditionOptions && (
           <div className="scanner-indicator-drag-request">
             Drag Something here !!
           </div>
         )}
 
-        {currSelectedIndicator.map((e, index) => (
+        {/* {currSelectedIndicator.map((e, index) => (
           <div>
             <span onClick={() => deleteElement(index)}>
               <DeleteOutlinedIcon className="delete-icon" />
             </span>
             <ScannerDraggableComponent id={e} index={index} />
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
