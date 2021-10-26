@@ -1,6 +1,6 @@
 import React from "react";
 import ScannerDraggableComponent from "../ScannerDraggableComponent/ScannerDraggableComponent";
-const CurrentExpression = ({ currExpression, i }) => {
+const CurrentExpression = ({ currExpression, currSelectedIndicator }) => {
   return (
     <>
       <div style={{ display: "flex" }}>
@@ -9,7 +9,7 @@ const CurrentExpression = ({ currExpression, i }) => {
             {/* <span onClick={() => deleteElement(index)}>
             <DeleteOutlinedIcon className="delete-icon" />
           </span> */}
-            <ScannerDraggableComponent id={e} j={j} i={i} />
+            <ScannerDraggableComponent id={e} currSelectedIndicator={currSelectedIndicator} />
           </>
         ))}
       </div>

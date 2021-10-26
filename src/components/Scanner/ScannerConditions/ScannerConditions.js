@@ -66,7 +66,7 @@ const ScannerConditions = () => {
       >
         {multipleScannerIndicators.map((currExpression, index) => (
           <>
-            <CurrentExpression currExpression={currExpression} i={index} />
+            <CurrentExpression currExpression={currExpression} currSelectedIndicator={currSelectedIndicator} />
           </>
         ))}
 
