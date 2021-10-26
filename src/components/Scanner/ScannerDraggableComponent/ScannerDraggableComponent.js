@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 
-const ScannerDraggableComponent = ({ id, index }) => {
+const ScannerDraggableComponent = ({ id, i, j }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
   const closeIndicatorModal = (indicatorSetting) => {
@@ -57,10 +57,10 @@ const ScannerDraggableComponent = ({ id, index }) => {
     setIndicatorModalOpen(true);
   };
   useEffect(() => {
-    let e = document.getElementsByClassName("scanner-draggable-component-name")[
-      index
-    ];
-    console.log(e);
+    let e = Array.from(
+      document.getElementsByClassName("scanner-draggable-component-name")
+    )[i];
+    console.log("Suhas", e);
     openIndicatorModal(e);
   }, []);
   return (
