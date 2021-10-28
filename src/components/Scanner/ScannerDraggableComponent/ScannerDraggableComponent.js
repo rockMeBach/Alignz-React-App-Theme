@@ -57,10 +57,11 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
     setIndicatorModalOpen(true);
   };
   useEffect(() => {
+
     let e = Array.from(
       document.getElementsByClassName("scanner-draggable-component-name")
     )[currSelectedIndicator.length - 1];
-    console.log("Suhas", e);
+    
     openIndicatorModal(e);
   }, []);
   return (

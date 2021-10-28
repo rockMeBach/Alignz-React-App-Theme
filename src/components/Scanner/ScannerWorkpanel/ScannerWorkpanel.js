@@ -8,13 +8,20 @@ import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
+
   const auth = useSelector((state) => state.auth);
   const [data, setData] = useState(null);
   const [scannerInfo, setScannerInfo] = useState(null);
   const [apiResults, setApiResults] = useState([]);
+  const [binaryOperator, setBinaryOperator] = useState([]);
+  const [apiResultsLength, setApiResultsLength] = useState(0);
+  const [finalResult, setFinalResult] = useState(null);
+  const [middleResult, setMiddleResult] = useState(null);
+  
   const scannerData = (s) => {
     setData(s);
   };
+
   const saveScanner = async () => {
     var tmp = data;
     tmp.publicChecked = document.getElementById("alert-public").checked;
@@ -35,19 +42,16 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     );
     console.log(res);
   };
+
   const fetchScannerResults = async (conditions) => {
 
-    // let conditions = document.getElementById(
-    //   "scanner-condition-indicators"
-    // ).childNodes;
-    
     let flag = true;
     let comparison;
     let LHS = [];
     let RHS = [];
     conditions.forEach((e) => {
-      console.log(e)
-      console.log(e.id, e.data);
+      // console.log(e)
+      console.log("ID", e.id, e.data);
 
       if (
         e.id === "<" ||
@@ -88,45 +92,119 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let res = await queryCalculator(query);
     if (res === undefined) res = [];
 
-    console.log(res.data);
+    let results = apiResults;
+    results.push(res.data);
+    console.log("result", results)
+    setApiResults(results)
+    setApiResultsLength(apiResults.length + 1);
 
-    let response = apiResults;
-    response.push(res.data);
-    setApiResults(response);
-
-    // return res.data;
-    // scannerResultDisplay(res.data);
+    return res.data;
   };
 
-  const submitScanner = () => {
+  const submitScanner = async () => {
 
     let conditions = document.getElementById(
       "scanner-condition-indicators"
     ).childNodes
 
     let binary_operation = [];
+    let results = [];
+    
     conditions.forEach(async e => {
-      console.log(Array.from(e.childNodes));
 
       if(e.childNodes.length === 1 && (
           e.childNodes[0].id === 'or' ||
           e.childNodes[0].id === 'and' ||
           e.childNodes[0].id === 'substract'
-        ))
-        binary_operation.push(e.childNodes[0].id)
+        )) {
+
+          binary_operation.push(e.childNodes[0].id);
+          // setBinaryOperator(e.childNodes[0].id);
+      }
       else {
 
-        fetchScannerResults(Array.from(e.childNodes))
+        // let results = apiResults;
+        let tmp = await fetchScannerResults(e.childNodes)
+        // results.push(tmp);
+        // console.log("tmp", results)
+        // setApiResultsLength(apiResultsLength + 1);
       }
     });
 
-    console.log("Binary", binary_operation)
+    setApiResults(results);
+    // setApiResultsLength(binary_operation.length);
+    console.log("Binary", binary_operation);
+    setBinaryOperator(binary_operation);
   };
 
   useEffect(() => {
     
-    console.log("Results", apiResults)
-  }, [apiResults]);
+    let conditions = document.getElementById(
+      "scanner-condition-indicators"
+    ).childNodes;
+
+    console.log("Results", apiResults, apiResultsLength, conditions)
+    if(apiResultsLength === 0) {
+
+      console.log("Final Result", finalResult)
+      setFinalResult(null);
+      // setMiddleResult(null);
+      setBinaryOperator(null);
+      setApiResults([]);
+      scannerResultDisplay(finalResult);
+      return;
+    }
+
+    if(conditions.length === apiResultsLength) {
+
+      console.log("febjfejf")
+      calculateFinalResult();
+      setApiResultsLength(0);
+    }
+
+  }, [apiResultsLength]);
+
+  // useEffect(() => {
+
+  //     console.log("State", apiResults, apiResultsLength)
+  // }, [apiResultsLength])
+
+  const calculateFinalResult = () => {
+
+
+    console.log("calculator")
+    let final_result = null;
+    apiResults.forEach(e => {
+
+      if(final_result === null) {
+
+        final_result = e;
+      } else {
+
+          // if(binaryOperator === 'or') {
+
+
+          // } else if (binaryOperator === 'and') {
+
+          // } else if (binaryOperator === 'substract') {
+
+          // }
+
+          // let newFinalResult = {};
+          // let finalResultKeys = Object.keys(final_result);
+          // let MiddleResultKeys = Object.keys(e);
+          let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
+
+          Array.from(stocks).forEach(e => {
+
+            console.log("Stocks", e);
+          })
+        
+      }
+    });
+
+    setFinalResult(final_result)
+  }
 
   return (
     <div className="col-lg-12 scanner-workpanel-component">
