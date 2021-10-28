@@ -16,8 +16,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const [binaryOperator, setBinaryOperator] = useState([]);
   const [apiResultsLength, setApiResultsLength] = useState(0);
   const [finalResult, setFinalResult] = useState(null);
-  const [middleResult, setMiddleResult] = useState(null);
-  
+
   const scannerData = (s) => {
     setData(s);
   };
@@ -123,11 +122,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       }
       else {
 
-        // let results = apiResults;
         let tmp = await fetchScannerResults(e.childNodes)
-        // results.push(tmp);
-        // console.log("tmp", results)
-        // setApiResultsLength(apiResultsLength + 1);
       }
     });
 
@@ -164,16 +159,13 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
   }, [apiResultsLength]);
 
-  // useEffect(() => {
-
-  //     console.log("State", apiResults, apiResultsLength)
-  // }, [apiResultsLength])
 
   const calculateFinalResult = () => {
 
 
     console.log("calculator")
     let final_result = null;
+    let binaryOperatorIndex = 0;
     apiResults.forEach(e => {
 
       if(final_result === null) {
@@ -181,30 +173,45 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         final_result = e;
       } else {
 
-          // if(binaryOperator === 'or') {
-
-
-          // } else if (binaryOperator === 'and') {
-
-          // } else if (binaryOperator === 'substract') {
-
-          // }
-
-          // let newFinalResult = {};
+          let newFinalResult = {};
           // let finalResultKeys = Object.keys(final_result);
           // let MiddleResultKeys = Object.keys(e);
           let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
 
-          Array.from(stocks).forEach(e => {
+          Array.from(stocks).forEach(e2 => {
 
-            console.log("Stocks", e);
+            console.log("Stocks", e2);
+            newFinalResult[e2] = binaryCalculator(
+              final_result[e2] ? final_result[e2] : [], 
+              e[e2] ? e[e2] : [], 
+              binaryOperator[binaryOperatorIndex]
+            );
           })
         
+          binaryOperatorIndex = binaryOperatorIndex + 1;
+          final_result = newFinalResult;
       }
     });
 
-    setFinalResult(final_result)
+    setFinalResult(final_result);
   }
+
+  const binaryCalculator = (array1, array2, binary_operator) => {
+
+    console.log('binary', array1, array2, binary_operator);
+
+    if(binaryOperator === 'or') {
+
+
+    } else if (binaryOperator === 'and') {
+
+    } else if (binaryOperator === 'substract') {
+      
+      // array1 - array2
+
+    }
+
+  };
 
   return (
     <div className="col-lg-12 scanner-workpanel-component">
