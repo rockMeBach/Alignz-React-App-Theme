@@ -162,9 +162,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         Array.from(stocks).forEach((e2) => {
           console.log("Stocks", e2);
           newFinalResult[e2] = binaryCalculator(
-            (final_result[e2] ? final_result[e2] : []),
-            (e[e2] ? e[e2] : []),
-            (binaryOperator[binaryOperatorIndex])
+            final_result[e2] ? final_result[e2] : [],
+            e[e2] ? e[e2] : [],
+            binaryOperator[binaryOperatorIndex]
           );
         });
 
@@ -179,10 +179,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   };
 
   const binaryCalculator = (array1, array2, binary_operator) => {
-    console.log("binary", array1, array2, binary_operator);
-
+    var combine = [];
     if (binary_operator === "or") {
-      var combine = array1.concat(array2);
+      combine = array1.concat(array2);
       for (let i = 0; i < combine.length - 1; i++) {
         for (let j = i + 1; j < combine.length; j++) {
           if (
@@ -201,49 +200,47 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       }
       console.log("returned result", combine);
     } else if (binary_operator === "and") {
-      var combine1 = [];
+      combine = [];
 
       for (var i = 0; i < array1.length; i++) {
         var item1 = array1[i],
           found = false;
         for (var j = 0; j < array2.length && !found; j++) {
           found =
-            combine[i].close === combine[j].close &&
-            combine[i].date === combine[j].date &&
-            combine[i].high === combine[j].high &&
-            combine[i].low === combine[j].low &&
-            combine[i].open === combine[j].open &&
-            combine[i].ticker === combine[j].ticker &&
-            combine[i].time === combine[j].time;
+            array1[i].close === array2[j].close &&
+            array1[i].date === array2[j].date &&
+            array1[i].high === array2[j].high &&
+            array1[i].low === array2[j].low &&
+            array1[i].open === array2[j].open &&
+            array1[i].ticker === array2[j].ticker &&
+            array1[i].time === array2[j].time;
         }
         if (found === true) {
-          combine1.push(item1);
+          combine.push(item1);
         }
       }
-      console.log("AND", combine1);
     } else if (binary_operator === "substract") {
-      var combine2 = [];
+      combine = [];
 
       for (var k = 0; k < array1.length; k++) {
         var item2 = array1[k],
           found1 = false;
         for (var l = 0; l < array2.length && !found1; l++) {
           found =
-            combine[k].close === combine[l].close &&
-            combine[k].date === combine[l].date &&
-            combine[k].high === combine[l].high &&
-            combine[k].low === combine[l].low &&
-            combine[k].open === combine[l].open &&
-            combine[k].ticker === combine[l].ticker &&
-            combine[k].time === combine[l].time;
+            array1[k].close === array2[l].close &&
+            array1[k].date === array2[l].date &&
+            array1[k].high === array2[l].high &&
+            array1[k].low === array2[l].low &&
+            array1[k].open === array2[l].open &&
+            array1[k].ticker === array2[l].ticker &&
+            array1[k].time === array2[l].time;
         }
         if (found === false) {
-          combine2.push(item2);
+          combine.push(item2);
         }
       }
-      console.log("SUBSTRACT", combine2);
     }
-    
+    console.log(binary_operator, combine);
     return combine;
   };
 
