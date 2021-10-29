@@ -134,11 +134,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     console.log("Results", apiResults, apiResultsLength, conditions);
     if (apiResultsLength === 0) {
       console.log("Final Result", finalResult);
+      scannerResultDisplay(finalResult);
       setFinalResult(null);
-      // setMiddleResult(null);
       setBinaryOperator(null);
       setApiResults([]);
-      scannerResultDisplay(finalResult);
       return;
     }
 
@@ -158,16 +157,14 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         final_result = e;
       } else {
         let newFinalResult = {};
-        // let finalResultKeys = Object.keys(final_result);
-        // let MiddleResultKeys = Object.keys(e);
         let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
 
         Array.from(stocks).forEach((e2) => {
           console.log("Stocks", e2);
           newFinalResult[e2] = binaryCalculator(
-            final_result[e2] ? final_result[e2] : [],
-            e[e2] ? e[e2] : [],
-            binaryOperator[binaryOperatorIndex]
+            (final_result[e2] ? final_result[e2] : []),
+            (e[e2] ? e[e2] : []),
+            (binaryOperator[binaryOperatorIndex])
           );
         });
 
@@ -177,6 +174,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     setFinalResult(final_result);
+    // console.log("Final Result", final_result);
+    // scannerResultDisplay(final_result);
   };
 
   const binaryCalculator = (array1, array2, binary_operator) => {
@@ -200,7 +199,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           }
         }
       }
-      console.log("OR", combine);
+      console.log("returned result", combine);
     } else if (binary_operator === "and") {
       var combine1 = [];
 
@@ -244,6 +243,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       }
       console.log("SUBSTRACT", combine2);
     }
+    
+    return combine;
   };
 
   return (
