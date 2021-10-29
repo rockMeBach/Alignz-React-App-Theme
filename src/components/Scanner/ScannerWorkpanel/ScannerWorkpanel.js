@@ -200,10 +200,49 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           }
         }
       }
-      console.log("Suhas", combine);
+      console.log("OR", combine);
     } else if (binary_operator === "and") {
-    } else if (binaryOperator === "substract") {
-      // array1 - array2
+      var combine1 = [];
+
+      for (var i = 0; i < array1.length; i++) {
+        var item1 = array1[i],
+          found = false;
+        for (var j = 0; j < array2.length && !found; j++) {
+          found =
+            combine[i].close === combine[j].close &&
+            combine[i].date === combine[j].date &&
+            combine[i].high === combine[j].high &&
+            combine[i].low === combine[j].low &&
+            combine[i].open === combine[j].open &&
+            combine[i].ticker === combine[j].ticker &&
+            combine[i].time === combine[j].time;
+        }
+        if (found === true) {
+          combine1.push(item1);
+        }
+      }
+      console.log("AND", combine1);
+    } else if (binary_operator === "substract") {
+      var combine2 = [];
+
+      for (var k = 0; k < array1.length; k++) {
+        var item2 = array1[k],
+          found1 = false;
+        for (var l = 0; l < array2.length && !found1; l++) {
+          found =
+            combine[k].close === combine[l].close &&
+            combine[k].date === combine[l].date &&
+            combine[k].high === combine[l].high &&
+            combine[k].low === combine[l].low &&
+            combine[k].open === combine[l].open &&
+            combine[k].ticker === combine[l].ticker &&
+            combine[k].time === combine[l].time;
+        }
+        if (found === false) {
+          combine2.push(item2);
+        }
+      }
+      console.log("SUBSTRACT", combine2);
     }
   };
 
