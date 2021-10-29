@@ -8,7 +8,6 @@ import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
-
   const auth = useSelector((state) => state.auth);
   const [data, setData] = useState(null);
   const [scannerInfo, setScannerInfo] = useState(null);
@@ -43,7 +42,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   };
 
   const fetchScannerResults = async (conditions) => {
-
     let flag = true;
     let comparison;
     let LHS = [];
@@ -72,7 +70,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     if (!document.getElementById("satisfy").checked) comparison = !comparison;
-    
+
     let starttime =
       document.getElementById("scanner-start-time").childNodes[1].value;
     let endtime =
@@ -93,36 +91,32 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
     let results = apiResults;
     results.push(res.data);
-    console.log("result", results)
-    setApiResults(results)
+    console.log("result", results);
+    setApiResults(results);
     setApiResultsLength(apiResults.length + 1);
 
     return res.data;
   };
 
   const submitScanner = async () => {
-
     let conditions = document.getElementById(
       "scanner-condition-indicators"
-    ).childNodes
+    ).childNodes;
 
     let binary_operation = [];
     let results = [];
-    
-    conditions.forEach(async e => {
 
-      if(e.childNodes.length === 1 && (
-          e.childNodes[0].id === 'or' ||
-          e.childNodes[0].id === 'and' ||
-          e.childNodes[0].id === 'substract'
-        )) {
-
-          binary_operation.push(e.childNodes[0].id);
-          // setBinaryOperator(e.childNodes[0].id);
-      }
-      else {
-
-        let tmp = await fetchScannerResults(e.childNodes)
+    conditions.forEach(async (e) => {
+      if (
+        e.childNodes.length === 1 &&
+        (e.childNodes[0].id === "or" ||
+          e.childNodes[0].id === "and" ||
+          e.childNodes[0].id === "substract")
+      ) {
+        binary_operation.push(e.childNodes[0].id);
+        // setBinaryOperator(e.childNodes[0].id);
+      } else {
+        let tmp = await fetchScannerResults(e.childNodes);
       }
     });
 
@@ -133,15 +127,13 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   };
 
   useEffect(() => {
-    
     let conditions = document.getElementById(
       "scanner-condition-indicators"
     ).childNodes;
 
-    console.log("Results", apiResults, apiResultsLength, conditions)
-    if(apiResultsLength === 0) {
-
-      console.log("Final Result", finalResult)
+    console.log("Results", apiResults, apiResultsLength, conditions);
+    if (apiResultsLength === 0) {
+      console.log("Final Result", finalResult);
       setFinalResult(null);
       // setMiddleResult(null);
       setBinaryOperator(null);
@@ -150,67 +142,69 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       return;
     }
 
-    if(conditions.length === apiResultsLength) {
-
-      console.log("febjfejf")
+    if (conditions.length === apiResultsLength) {
+      console.log("febjfejf");
       calculateFinalResult();
       setApiResultsLength(0);
     }
-
   }, [apiResultsLength]);
 
-
   const calculateFinalResult = () => {
-
-
-    console.log("calculator")
+    console.log("calculator");
     let final_result = null;
     let binaryOperatorIndex = 0;
-    apiResults.forEach(e => {
-
-      if(final_result === null) {
-
+    apiResults.forEach((e) => {
+      if (final_result === null) {
         final_result = e;
       } else {
+        let newFinalResult = {};
+        // let finalResultKeys = Object.keys(final_result);
+        // let MiddleResultKeys = Object.keys(e);
+        let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
 
-          let newFinalResult = {};
-          // let finalResultKeys = Object.keys(final_result);
-          // let MiddleResultKeys = Object.keys(e);
-          let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
+        Array.from(stocks).forEach((e2) => {
+          console.log("Stocks", e2);
+          newFinalResult[e2] = binaryCalculator(
+            final_result[e2] ? final_result[e2] : [],
+            e[e2] ? e[e2] : [],
+            binaryOperator[binaryOperatorIndex]
+          );
+        });
 
-          Array.from(stocks).forEach(e2 => {
-
-            console.log("Stocks", e2);
-            newFinalResult[e2] = binaryCalculator(
-              final_result[e2] ? final_result[e2] : [], 
-              e[e2] ? e[e2] : [], 
-              binaryOperator[binaryOperatorIndex]
-            );
-          })
-        
-          binaryOperatorIndex = binaryOperatorIndex + 1;
-          final_result = newFinalResult;
+        binaryOperatorIndex = binaryOperatorIndex + 1;
+        final_result = newFinalResult;
       }
     });
 
     setFinalResult(final_result);
-  }
+  };
 
   const binaryCalculator = (array1, array2, binary_operator) => {
+    console.log("binary", array1, array2, binary_operator);
 
-    console.log('binary', array1, array2, binary_operator);
-
-    if(binaryOperator === 'or') {
-
-
-    } else if (binaryOperator === 'and') {
-
-    } else if (binaryOperator === 'substract') {
-      
+    if (binary_operator === "or") {
+      var combine = array1.concat(array2);
+      for (let i = 0; i < combine.length - 1; i++) {
+        for (let j = i + 1; j < combine.length; j++) {
+          if (
+            combine[i].close === combine[j].close &&
+            combine[i].date === combine[j].date &&
+            combine[i].high === combine[j].high &&
+            combine[i].low === combine[j].low &&
+            combine[i].open === combine[j].open &&
+            combine[i].ticker === combine[j].ticker &&
+            combine[i].time === combine[j].time
+          ) {
+            combine.splice(j, 1);
+            j--;
+          }
+        }
+      }
+      console.log("Suhas", combine);
+    } else if (binary_operator === "and") {
+    } else if (binaryOperator === "substract") {
       // array1 - array2
-
     }
-
   };
 
   return (
