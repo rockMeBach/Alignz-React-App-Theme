@@ -9,8 +9,19 @@ import axios from "axios";
 
 const Pricing = () => {
   const auth = useSelector((state) => state.auth);
+  const [tier1, setTier1] = useState([]);
+  const [tier2, setTier2] = useState([]);
+  const [tier3, setTier3] = useState([]);
   const name = auth.user.name;
   const email = auth.user.email;
+  const tier = auth.user.tier;
+  let res;
+  useEffect(async () => {
+    res = await axios.get("http://localhost/api/payment/paymentDatabase");
+    setTier1(res.data[0]);
+    setTier2(res.data[1]);
+    setTier3(res.data[2]);
+  }, []);
 
   const [values, setValues] = useState({
     amount: 0,
@@ -19,7 +30,9 @@ const Pricing = () => {
     success: false,
   });
   const { amount, orderID, error, success } = values;
-
+  console.log("tier1", tier1);
+  console.log("tier2", tier2);
+  console.log("tier3", tier3);
   const createOrder = async (a) => {
     const res = await axios
       .get(`http://localhost/api/payment/createOrder?amount=${a}`)
@@ -99,49 +112,50 @@ const Pricing = () => {
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            Upto 6 months
+                            upto {tier1.scans}
                           </div>
                           <div className="col-6 text-left">Emails ALerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            5 per month
+                            {tier1.email} per month
                           </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            5 per month
-                          </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            5 per month
-                          </div>
+
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            200 trades
+                            {tier1.trades} per month
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            1 month old
+                            {tier1.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            2 per month
+                            {tier1.backtest} per month
+                          </div>
+                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier1.whatsapp} per month
+                          </div>
+                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier1.telegram} per month
                           </div>
                         </div>
                       </div>
@@ -175,60 +189,67 @@ const Pricing = () => {
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            Upto 1 year
+                            upto {tier2.scans}
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            50 per month
-                          </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            50 per month
-                          </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            50 per month
-                          </div>
+
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            500 trades
+                            {tier2.trades} per month
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            1 year old
+                            {tier2.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            10 per month
+                            {tier2.backtest} per month
+                          </div>
+                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier2.email} per month
+                          </div>
+                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier2.whatsapp} per month
+                          </div>
+                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier2.telegram} per month
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">Rs.399</span>
-                    <a
-                      className="btn btn-primary"
-                      onClick={() => createOrder(399)}
-                    >
-                      Buy Now
-                    </a>
+                    <span className="pricing-price">Rs. {tier2.price}</span>
+                    {tier === 2 ? (
+                      <button className="btn btn-success disable">
+                        Already Subscribed
+                      </button>
+                    ) : (
+                      <a
+                        className="btn btn-primary"
+                        onClick={() => createOrder(tier2.price)}
+                      >
+                        Buy Now
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -254,60 +275,67 @@ const Pricing = () => {
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            Upto 3 years
+                            upto {tier3.scans}
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            150 per month
-                          </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            150 per month
-                          </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            150 per month
-                          </div>
+
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            Unlimited
+                            {tier3.trades}
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            3 years old
+                            {tier3.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
-                            50 per month
+                            {tier3.backtest} per month
+                          </div>
+                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier3.email} per month
+                          </div>
+                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier3.whatsapp} per month
+                          </div>
+                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier3.telegram} per month
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">Rs.599</span>
-                    <a
-                      className="btn btn-primary"
-                      onClick={() => createOrder(599)}
-                    >
-                      Buy Now
-                    </a>
+                    <span className="pricing-price">Rs. {tier3.price}</span>
+                    {tier === 3 ? (
+                      <button className="btn btn-success disable">
+                        Already Subscribed
+                      </button>
+                    ) : (
+                      <a
+                        className="btn btn-primary"
+                        onClick={() => createOrder(tier3.price)}
+                      >
+                        Buy Now
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

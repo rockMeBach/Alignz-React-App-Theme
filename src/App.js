@@ -68,6 +68,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CandlestickScanner from "./screens/CandlestickScanner/CandlestickScanner";
 import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
 import Checkout from "./components/Pages/Checkout";
+import Home from "./screens/Home/Home";
 import {
   dispatchLogin,
   fetchUser,
@@ -129,15 +130,7 @@ const App = () => {
       activeKey1 === "maintanance" ||
       activeKey1 === "user" ? (
         <Switch>
-          {!isLoggedIn ? (
-            <Route
-              exact
-              path={`${process.env.PUBLIC_URL}/`}
-              component={Login}
-            />
-          ) : (
-            <Redirect to="/dashboard" />
-          )}
+          <Route exact path={`${process.env.PUBLIC_URL}/`} component={Home} />
           {!isLoggedIn ? (
             <Route
               exact
