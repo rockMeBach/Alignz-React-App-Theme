@@ -141,7 +141,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       return;
     }
 
-    if (conditions.length === apiResultsLength) {
+    console.log("length", conditions.length, apiResultsLength)
+
+    if (conditions.length === apiResults.length || conditions.length === apiResultsLength) {
       console.log("febjfejf");
       calculateFinalResult();
       setApiResultsLength(0);
@@ -150,10 +152,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
   const calculateFinalResult = () => {
     console.log("calculator");
-    let final_result = null;
+    let final_result = undefined;
     let binaryOperatorIndex = 0;
     apiResults.forEach((e) => {
-      if (final_result === null) {
+      if (final_result === undefined) {
         final_result = e;
       } else {
         let newFinalResult = {};
@@ -174,7 +176,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     setFinalResult(final_result);
-    // console.log("Final Result", final_result);
+    console.log("Final Result 2", final_result);
     // scannerResultDisplay(final_result);
   };
 
