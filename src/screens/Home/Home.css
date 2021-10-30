@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 .navbar {
-  background-color: #ffe0e5;
+  background-color: rgb(224, 213, 252);
 }
 .navbar-brand1 {
   font-size: 25px !important;
@@ -17,7 +17,7 @@
   cursor: pointer;
 }
 .btn-signup {
-  background-color: #ffc0cb !important;
+  background-color: #c585f7 !important;
   font-weight: 700 !important;
   border-radius: 10px !important;
 }

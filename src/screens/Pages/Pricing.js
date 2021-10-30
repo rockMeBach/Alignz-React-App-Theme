@@ -114,13 +114,6 @@ const Pricing = () => {
                           >
                             upto {tier1.scans}
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
-                          <div
-                            className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
-                          >
-                            {tier1.email} per month
-                          </div>
 
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
@@ -142,6 +135,13 @@ const Pricing = () => {
                             style={{ fontWeight: "800" }}
                           >
                             {tier1.backtest} per month
+                          </div>
+                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {tier1.email} per month
                           </div>
                           <div className="col-6 text-left">Whatsapp ALerts</div>
                           <div

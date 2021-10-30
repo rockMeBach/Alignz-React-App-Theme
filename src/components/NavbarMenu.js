@@ -24,17 +24,6 @@ const NavbarMenu = () => {
           </div>
 
           <div className="navbar-right">
-            <form id="navbar-search" className="navbar-form search-form">
-              <input
-                className="form-control"
-                placeholder="Search here..."
-                type="text"
-              />
-              <button type="button" className="btn btn-default">
-                <i className="icon-magnifier"></i>
-              </button>
-            </form>
-
             <div id="navbar-menu">
               <ul className="nav navbar-nav">
                 <li>

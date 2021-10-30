@@ -1,5 +1,6 @@
 import React from "react";
 import "./Home.css";
+import image1 from "../../assets/images/image1.jpg";
 const Home = () => {
   return (
     <div>
@@ -57,9 +58,43 @@ const Home = () => {
           </div>
         </div>
       </nav>
-      <p>Middle</p>
+      <div
+        className="container-fluid"
+        style={{ backgroundColor: "rgb(224,213,252)" }}
+      >
+        <div className="row">
+          <div className="col-sm-12 col-md-5">
+            <h1
+              className="pt-5 mt-5 ml-5"
+              style={{ fontSize: "64px", fontWeight: "900" }}
+            >
+              Make your Trades with Us
+            </h1>
+            <p className="ml-5">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam et
+              purus a odio finibus bibendum amet leo.
+            </p>
+            <div class="mt-4">
+              <a
+                className="btn btn-login ml-5 "
+                href="/login"
+                style={{ width: "150px" }}
+              >
+                {" "}
+                Login
+              </a>
+            </div>
+          </div>
+          <div className="col-sm-12 col-md-7">
+            <img src={image1} className="img-fluid" alt="" />
+          </div>
+        </div>
+      </div>
       {/* FOOTER */}
-      <div className="container-fluid" style={{ backgroundColor: "#ffe0e5" }}>
+      <div
+        className="container-fluid"
+        style={{ backgroundColor: "rgb(224,213,252)" }}
+      >
         <div className="row">
           <div className="col-12">
             <div className="text-center text-lg-start text-muted">
@@ -215,8 +250,12 @@ const Home = () => {
                 </div>
               </section>
               <div
-                className="text-center p-4"
-                style={{ backgroundColor: "#ffc0cb", color: "black" }}
+                className="text-center py-3"
+                style={{
+                  backgroundColor: "#c585f7",
+                  color: "black",
+                  opacity: "0.5",
+                }}
               >
                 © 2021 Copyright:
                 <a
