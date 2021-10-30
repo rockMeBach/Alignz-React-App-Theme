@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
 .navbar {
-  background-color: #fcdfe494;
+  background-color: #ffe0e5;
 }
 .navbar-brand1 {
   font-size: 25px !important;
@@ -17,7 +17,7 @@
   cursor: pointer;
 }
 .btn-signup {
-  background-color: #f5a3b0 !important;
+  background-color: #ffc0cb !important;
   font-weight: 700 !important;
   border-radius: 10px !important;
 }
@@ -27,4 +27,7 @@
   font-weight: 700 !important;
   color: black !important;
   border-radius: 10px !important;
+}
+ion-icon {
+  color: black;
 }
