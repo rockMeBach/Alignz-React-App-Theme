@@ -1,16 +1,23 @@
+import { number } from "prop-types";
 import React, { useState, useEffect, Fragment } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
+import NumberModal from "../NumberModal/NumberModal";
 
 const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
+  const [numberModalInput, setNumberModalInput] = useState({});
+  const [numberModalOpen, setNumberModalOpen] = useState(false);
+
   const closeIndicatorModal = (indicatorSetting) => {
+
     let tmpSetting = indicatorModalInput;
     tmpSetting.settings = indicatorSetting.setting;
     indicatorModalInput.element.data = indicatorSetting;
     setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
+
   const openIndicatorModal = (e) => {
     let classNames = e.className.split(" ");
     if (
@@ -34,13 +41,41 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
       e.id === "substract"
     )
       return;
+
+
+    if(e.id === "number") {
+
+      if(e.data) {
+
+        setNumberModalInput({
+
+          indicatorName: e.id,
+          element: e,
+          value: e.data.value
+        });
+      } else {
+
+        setNumberModalInput({
+
+          indicatorName: e.id,
+          element: e,
+          value: 0
+        });
+      }
+
+      setNumberModalOpen(true);
+      return;
+    }
+
     if (e.data) {
+
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
         settings: e.data.setting,
       });
     } else {
+
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
@@ -56,6 +91,13 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
     }
     setIndicatorModalOpen(true);
   };
+
+  const closeNumberModal = (numberSettings) => {
+
+    numberModalInput.element.data = numberSettings;
+    setNumberModalOpen(false);
+  }
+
   useEffect(() => {
 
     let e = Array.from(
@@ -64,6 +106,7 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
     
     openIndicatorModal(e);
   }, []);
+
   return (
     <>
       <div
@@ -81,7 +124,32 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
             closeIndicatorModal={closeIndicatorModal}
           />
         )}
-        {id.toUpperCase()}
+
+        {numberModalOpen && (
+          <NumberModal
+            numberModalInput={numberModalInput}
+            closeNumberModal={closeNumberModal}
+          />
+        )}
+
+        {
+          id === "number" && Array.from(
+                document.getElementsByClassName("scanner-draggable-component-name")
+          ) && 
+          Array.from(
+              document.getElementsByClassName("scanner-draggable-component-name")
+          )[currSelectedIndicator.length - 1] && 
+          Array.from(
+                document.getElementsByClassName("scanner-draggable-component-name")
+          )[currSelectedIndicator.length - 1].data 
+          ? 
+          Array.from(
+              document.getElementsByClassName("scanner-draggable-component-name")
+          )[currSelectedIndicator.length - 1].data.value 
+          : 
+          id.toUpperCase()
+        }
+
       </div>
     </>
   );

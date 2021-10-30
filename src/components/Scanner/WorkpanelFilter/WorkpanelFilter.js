@@ -203,6 +203,14 @@ const WorkpanelFilter = () => {
             >
               <strong>/</strong>
             </span>
+            <span
+              className="scanner-math-operation-icons"
+              id="number"
+              draggable="true"
+              onDragStart={dragStart}
+            >
+              <strong>Number</strong>
+            </span>
           </div>
           <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Comparison</h6>
