@@ -1,9 +1,10 @@
-import { number } from "prop-types";
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 import NumberModal from "../NumberModal/NumberModal";
+import CrossIcon from "../../../assets/icons/cross-icon.svg"
+import './ScannerDraggableComponent.scss'
 
-const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
+const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent }) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
   const [numberModalInput, setNumberModalInput] = useState({});
@@ -98,11 +99,17 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
     setNumberModalOpen(false);
   }
 
+  const deleteDraggableComponent = e => {
+
+    // console.log(e.target.parentNode.remove())
+    deleteComponent(i, j);
+  }
+
   useEffect(() => {
 
     let e = Array.from(
       document.getElementsByClassName("scanner-draggable-component-name")
-    )[currSelectedIndicator.length - 1];
+    )[indicatorLength - 1];
     
     openIndicatorModal(e);
   }, []);
@@ -113,11 +120,19 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
         className="scanner-indicator-name scanner-draggable-component-name"
         id={id}
         style={{
-          textAlign: "center",
+          // textAlign: "center",
           margin: "1rem",
         }}
         onDoubleClick={(e) => openIndicatorModal(e.target)}
       >
+
+        <img 
+          src={CrossIcon} 
+          alt=''
+          className="cross-icon" 
+          onClick={deleteDraggableComponent}
+        />
+
         {indicatorModalOpen && (
           <IndicatorModal
             indicatorModalInput={indicatorModalInput}
@@ -138,14 +153,14 @@ const ScannerDraggableComponent = ({ id, currSelectedIndicator }) => {
           ) && 
           Array.from(
               document.getElementsByClassName("scanner-draggable-component-name")
-          )[currSelectedIndicator.length - 1] && 
+          )[indicatorLength - 1] && 
           Array.from(
                 document.getElementsByClassName("scanner-draggable-component-name")
-          )[currSelectedIndicator.length - 1].data 
+          )[indicatorLength - 1].data 
           ? 
           Array.from(
               document.getElementsByClassName("scanner-draggable-component-name")
-          )[currSelectedIndicator.length - 1].data.value 
+          )[indicatorLength - 1].data.value 
           : 
           id.toUpperCase()
         }

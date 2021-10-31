@@ -14,6 +14,7 @@ const ScannerConditions = () => {
   const [multipleScannerIndicators, setMultipleScannerIndicators] = useState(
     []
   );
+  const [indicatorLength, setIndicatorLength] = useState(0);
   const scannerReducer = useSelector((state) => state.scannerReducer);
 
   const deleteElement = (index) => {
@@ -43,12 +44,29 @@ const ScannerConditions = () => {
       }
 
       setMultipleScannerIndicators(_2dArray);
+      setIndicatorLength(indicatorLength + 1);
       dispatch(dispatchScanner());
       arr.push(id);
       setCurrSelectedIndicator([...arr]);
       setScannerConditionOptions(true);
     }
     e.dataTransfer.clearData();
+  };
+
+  const deleteComponent = (i, j) => {
+
+    let tmpState = multipleScannerIndicators;
+    console.log(tmpState, i, j);
+
+    tmpState[i].splice(j, 1);
+
+    if(tmpState[i].length === 0)
+      tmpState.splice(i, 1);
+
+      setMultipleScannerIndicators(tmpState)
+      setIndicatorLength(indicatorLength > 0 ? indicatorLength - 1 : 0);
+    if(tmpState.length === 0)
+      setScannerConditionOptions(false);
   };
 
   useEffect(() => {
@@ -66,7 +84,12 @@ const ScannerConditions = () => {
       >
         {multipleScannerIndicators.map((currExpression, index) => (
           <>
-            <CurrentExpression currExpression={currExpression} currSelectedIndicator={currSelectedIndicator} />
+            <CurrentExpression 
+              currExpression={currExpression} 
+              indicatorLength={indicatorLength} 
+              i={index} 
+              deleteComponent={deleteComponent}  
+            />
           </>
         ))}
 
