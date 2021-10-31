@@ -34,7 +34,7 @@ const ScannerResults = ({ scannerResults }) => {
             </thead>
             <tbody>
               {Object.entries(scannerResults).map(([key, value], i) => (
-                <ScannerTable key={key} value={value} />
+                <ScannerTable key={key} value={value} index={i} />
               ))}
             </tbody>
           </table>

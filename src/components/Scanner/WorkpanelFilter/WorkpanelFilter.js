@@ -288,7 +288,7 @@ const WorkpanelFilter = () => {
               id="and"
               onDragStart={dragStart}
             >
-              <strong>ADD</strong>
+              <strong>AND</strong>
             </div>
 
             <div
