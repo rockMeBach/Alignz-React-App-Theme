@@ -5,7 +5,9 @@ import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
 
 const WorkpanelFilter = () => {
-  const dragStart = (e) => e.dataTransfer.setData("text/plain", e.target.id);
+  const dragStart = (e) => {
+    e.dataTransfer.setData("text/plain", e.target.id);
+  };
   const [indicators, setIndicators] = useState([]);
   useEffect(() => {
     axios
@@ -170,7 +172,6 @@ const WorkpanelFilter = () => {
         <div className="scanner-custom-filter">
           <div className="scanner-math-operation">
             <h6 style={{ marginBottom: "2rem" }}>Math Operation</h6>
-
             <span
               className="scanner-math-operation-icons"
               id="+"
