@@ -38,7 +38,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         tmp,
       }
     );
-    console.log(res);
+    // console.log(res);
   };
 
   const fetchScannerResults = async (conditions) => {
@@ -48,7 +48,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let RHS = [];
     conditions.forEach((e) => {
       // console.log(e)
-      console.log("ID", e.id, e.data);
+      // console.log("ID", e.id, e.data);
 
       if (
         e.id === "<" ||
@@ -78,6 +78,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let query = {
       starttime: starttime,
       endtime: endtime,
+      duplicate: document.getElementById('duplicate-switch').checked,
       fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
       segment: document.getElementById("scanner-segment").value,
       segment1a: document.getElementById("scanner-segment-1a").value,
@@ -103,6 +104,8 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       "scanner-condition-indicators"
     ).childNodes;
 
+      // console.log("Duplicate", document.getElementById('duplicate-switch').checked)
+
     let binary_operation = [];
     let results = [];
 
@@ -122,7 +125,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
     setApiResults(results);
     // setApiResultsLength(binary_operation.length);
-    console.log("Binary", binary_operation);
+    // console.log("Binary", binary_operation);
     setBinaryOperator(binary_operation);
   };
 
@@ -131,9 +134,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       "scanner-condition-indicators"
     ).childNodes;
 
-    console.log("Results", apiResults, apiResultsLength, conditions);
+    // console.log("Results", apiResults, apiResultsLength, conditions);
     if (apiResultsLength === 0) {
-      console.log("Final Result", finalResult);
+      // console.log("Final Result", finalResult);
       scannerResultDisplay(finalResult);
       setFinalResult(null);
       setBinaryOperator(null);
@@ -141,8 +144,9 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       return;
     }
 
-    if (conditions.length === apiResultsLength) {
-      console.log("febjfejf");
+    // console.log("length", conditions.length, apiResultsLength)
+
+    if (conditions.length === apiResults.length || conditions.length === apiResultsLength) {
       calculateFinalResult();
       setApiResultsLength(0);
     }
@@ -150,10 +154,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
 
   const calculateFinalResult = () => {
     console.log("calculator");
-    let final_result = null;
+    let final_result = undefined;
     let binaryOperatorIndex = 0;
     apiResults.forEach((e) => {
-      if (final_result === null) {
+      if (final_result === undefined) {
         final_result = e;
       } else {
         let newFinalResult = {};
@@ -174,7 +178,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     setFinalResult(final_result);
-    // console.log("Final Result", final_result);
+    // console.log("Final Result 2", final_result);
     // scannerResultDisplay(final_result);
   };
 
@@ -198,7 +202,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           }
         }
       }
-      console.log("returned result", combine);
+      // console.log("returned result", combine);
     } else if (binary_operator === "and") {
       combine = [];
 
@@ -240,7 +244,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         }
       }
     }
-    console.log(binary_operator, combine);
+    // console.log(binary_operator, combine);
     return combine;
   };
 
@@ -248,6 +252,19 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     <div className="col-lg-12 scanner-workpanel-component">
       <WorkpanelHeading scannerData={scannerData} />
       <WorkpanelFilter />
+
+      <div className="form-check form-switch" style={{margin: '1rem'}}>
+        <label className="form-check-label" for="alert-switch">
+          Do you want duplicate results ?
+        </label>
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="duplicate-switch"
+          style={{marginTop: '0.3rem', marginLeft: '1rem'}}
+        />
+      </div>
+
       <button className="btn submit-btn" onClick={submitScanner}>
         Submit
       </button>
