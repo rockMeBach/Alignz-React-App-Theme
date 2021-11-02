@@ -6,6 +6,8 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
   //   indicatorModalInput.settings
   // );
   const [tmpValue, setTmpValue] = useState(14);
+  const [tmpSourceValue, setTmpSourceValue] = useState('Open');
+  const [tmpTimeframeValue, setTmpTimeframeValue] = useState(indicatorModalInput.timeframe);
   const [offsetCandleValue, setOffsetCandleValue] = useState("");
   const [timeFrameValue, setTimeFrameValue] = useState("");
   const [segmentValue, setSegmentValue] = useState("");
@@ -23,6 +25,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
 
   useEffect(() => {
 
+    console.log(indicatorModalInput)
     document.getElementById("staticBackdropLive").style.background =
       "rgba(0, 0, 0, 0.9)";
   }, []);
@@ -58,6 +61,8 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                   className="form-control scanner-condition-option"
                   name="candelstick-timeframe"
                   id="scanner-candelstick-timeframe"
+                  value={tmpTimeframeValue}
+                  onChange={e => setTmpTimeframeValue(e.target.value)}
                 >
                   <option value="1-min">1 min</option>
                   <option value="2-min">2 min</option>
@@ -122,7 +127,12 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                         className="form-control scanner-condition-option"
                         name="indicator-setting-source"
                         id="indicator-source"
-                        onChange={(element) => (e.value = element.target.value)}
+                        value={e.value}
+                        onChange={(element) => {
+                          
+                          e.value = element.target.value;
+                          setTmpSourceValue(element.target.value);
+                        }}
                       >
                         {e.options.map((v) => (
                           <option value={v}>{v}</option>

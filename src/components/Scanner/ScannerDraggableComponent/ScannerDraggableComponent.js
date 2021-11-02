@@ -20,6 +20,7 @@ const ScannerDraggableComponent = ({
     let tmpSetting = indicatorModalInput;
     tmpSetting.settings = indicatorSetting.setting;
     indicatorModalInput.element.data = indicatorSetting;
+    // console.log(indicatorSetting)
     setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
@@ -50,12 +51,14 @@ const ScannerDraggableComponent = ({
 
     if (e.id === "number") {
       if (e.data) {
+
         setNumberModalInput({
           indicatorName: e.id,
           element: e,
           value: e.data.value,
         });
       } else {
+
         setNumberModalInput({
           indicatorName: e.id,
           element: e,
@@ -68,15 +71,19 @@ const ScannerDraggableComponent = ({
     }
 
     if (e.data) {
+
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
         settings: e.data.setting,
+        timeframe: e.data.timeframe
       });
     } else {
+
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
+        timeframe: '1-min',
         settings: [
           { name: "Length", value: 14 },
           {
@@ -101,6 +108,7 @@ const ScannerDraggableComponent = ({
   };
 
   useEffect(() => {
+
     let e = Array.from(
       document.getElementsByClassName("scanner-draggable-component-name")
     )[indicatorLength - 1];
