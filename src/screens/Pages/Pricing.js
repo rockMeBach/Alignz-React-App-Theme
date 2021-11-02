@@ -5,6 +5,7 @@ import PageHeader from "../../components/PageHeader";
 import Plane from "../../assets/images/plane.png";
 import SpaceShip from "../../assets/images/space-ship.png";
 import PaperPlane from "../../assets/images/paper-plane.png";
+import BACKEND_URL from "../../Backend_url";
 import axios from "axios";
 
 const Pricing = () => {
@@ -17,7 +18,7 @@ const Pricing = () => {
   const tier = auth.user.tier;
   let res;
   useEffect(async () => {
-    res = await axios.get("http://localhost/api/payment/paymentDatabase");
+    res = await axios.get(`http://${BACKEND_URL}/api/payment/paymentDatabase`);
     setTier1(res.data[0]);
     setTier2(res.data[1]);
     setTier3(res.data[2]);
