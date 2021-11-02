@@ -8,7 +8,7 @@ import image5 from "../../assets/images/features.png";
 const Home = () => {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg pt-3">
+      <nav className="navbar navbar-expand-lg pt-3 sticky-top">
         <div className="container" style={{ width: "1100px" }}>
           <a className="navbar-brand1" href="#">
             UnFluke
@@ -427,6 +427,27 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <div class="footer-newsletter">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-12 text-center">
+              <h4>Our Newsletter</h4>
+              <p>
+                Tamen quem nulla quae legam multos aute sint culpa legam noster
+                magna
+              </p>
+            </div>
+            <div class="col-lg-6">
+              <form action="" method="post">
+                <input type="email" name="email" />
+                <input type="submit" value="Subscribe" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* FOOTER */}
       <div
         className="container-fluid"

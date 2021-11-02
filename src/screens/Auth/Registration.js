@@ -55,7 +55,7 @@ const Registration = () => {
         referral,
       });
 
-      setUser({ ...user, err: "", success: "Verification Email Send" });
+      setUser({ ...user, err: "", success: "Verification Email Sent" });
     } catch (err) {
       err.response.data.msg &&
         setUser({ ...user, err: err.response.data.msg, success: "" });

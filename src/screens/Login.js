@@ -34,9 +34,12 @@ const Login = () => {
         password,
       });
       const rf_token = res.data.refresh_token;
-      const temp = await axios.post(`http://${BACKEND_URL}/api/user/refresh_token`, {
-        rf_token,
-      });
+      const temp = await axios.post(
+        `http://${BACKEND_URL}/api/user/refresh_token`,
+        {
+          rf_token,
+        }
+      );
       setUser({ ...user, err: "", success: res.data.msg });
       localStorage.setItem("access", temp.data.access_token);
       localStorage.setItem("firstLogin", true);
@@ -122,7 +125,7 @@ const Login = () => {
                       <span className="helper-text m-b-10">
                         <i className="fa fa-lock"></i>{" "}
                         <a href={`${process.env.PUBLIC_URL}/forgotpassword`}>
-                          Forgot password?
+                          Forgot Password?
                         </a>
                       </span>
                       <span>

@@ -4,6 +4,7 @@ import Logo from "../../assets/images/logo-white.svg";
 import { isEmail } from "./Validation";
 import axios from "axios";
 import BACKEND_URL from "../../Backend_url";
+import { showErrMsg, showSuccessMsg } from "./Notification/Notification";
 
 const initialState = {
   email: "",
@@ -52,7 +53,8 @@ const ForgotPassword = () => {
                   style={{ height: "40px", margin: "10px" }}
                 />
               </div>
-
+              {err && showErrMsg(err)}
+              {success && showSuccessMsg(success)}
               <div className="card">
                 <div className="header">
                   <p className="lead">Recover my password</p>
