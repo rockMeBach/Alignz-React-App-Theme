@@ -36,7 +36,7 @@ const Pricing = () => {
   console.log("tier3", tier3);
   const createOrder = async (a) => {
     const res = await axios
-      .get(`http://localhost/api/payment/createOrder?amount=${a}`)
+      .get(`http://${BACKEND_URL}/api/payment/createOrder?amount=${a}`)
       .then((res) => res)
       .catch((err) => console.log(err));
     if (res) {
@@ -51,7 +51,7 @@ const Pricing = () => {
 
   const showRazorPay = () => {
     const form = document.createElement("form");
-    form.setAttribute("action", "http://localhost/api/payment/callback");
+    form.setAttribute("action", `http://${BACKEND_URL}/api/payment/callback`);
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
