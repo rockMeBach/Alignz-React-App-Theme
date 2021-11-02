@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 import NumberModal from "../NumberModal/NumberModal";
-import CrossIcon from "../../../assets/icons/cross-icon.svg"
-import './ScannerDraggableComponent.scss'
+import CrossIcon from "../../../assets/icons/cross-icon.svg";
+import "./ScannerDraggableComponent.scss";
 
-const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent }) => {
+const ScannerDraggableComponent = ({
+  id,
+  indicatorLength,
+  i,
+  j,
+  deleteComponent,
+}) => {
   const [indicatorModalOpen, setIndicatorModalOpen] = useState(false);
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
   const [numberModalInput, setNumberModalInput] = useState({});
   const [numberModalOpen, setNumberModalOpen] = useState(false);
 
   const closeIndicatorModal = (indicatorSetting) => {
-
     let tmpSetting = indicatorModalInput;
     tmpSetting.settings = indicatorSetting.setting;
     indicatorModalInput.element.data = indicatorSetting;
@@ -43,24 +48,18 @@ const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent 
     )
       return;
 
-
-    if(e.id === "number") {
-
-      if(e.data) {
-
+    if (e.id === "number") {
+      if (e.data) {
         setNumberModalInput({
-
           indicatorName: e.id,
           element: e,
-          value: e.data.value
+          value: e.data.value,
         });
       } else {
-
         setNumberModalInput({
-
           indicatorName: e.id,
           element: e,
-          value: 0
+          value: 0,
         });
       }
 
@@ -69,14 +68,12 @@ const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent 
     }
 
     if (e.data) {
-
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
         settings: e.data.setting,
       });
     } else {
-
       setIndicatorModalInput({
         indicatorName: e.id,
         element: e,
@@ -94,23 +91,20 @@ const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent 
   };
 
   const closeNumberModal = (numberSettings) => {
-
     numberModalInput.element.data = numberSettings;
     setNumberModalOpen(false);
-  }
+  };
 
-  const deleteDraggableComponent = e => {
-
+  const deleteDraggableComponent = (e) => {
     // console.log(e.target.parentNode.remove())
     deleteComponent(i, j);
-  }
+  };
 
   useEffect(() => {
-
     let e = Array.from(
       document.getElementsByClassName("scanner-draggable-component-name")
     )[indicatorLength - 1];
-    
+
     openIndicatorModal(e);
   }, []);
 
@@ -125,12 +119,12 @@ const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent 
         }}
         onDoubleClick={(e) => openIndicatorModal(e.target)}
       >
-
-        <img 
-          src={CrossIcon} 
-          alt=''
-          className="cross-icon" 
+        <img
+          src={CrossIcon}
+          alt=""
+          className="cross-icon"
           onClick={deleteDraggableComponent}
+          style={{ top: "-70%", left: "-1.4rem" }}
         />
 
         {indicatorModalOpen && (
@@ -147,24 +141,22 @@ const ScannerDraggableComponent = ({ id, indicatorLength, i, j, deleteComponent 
           />
         )}
 
-        {
-          id === "number" && Array.from(
-                document.getElementsByClassName("scanner-draggable-component-name")
-          ) && 
-          Array.from(
-              document.getElementsByClassName("scanner-draggable-component-name")
-          )[indicatorLength - 1] && 
-          Array.from(
-                document.getElementsByClassName("scanner-draggable-component-name")
-          )[indicatorLength - 1].data 
-          ? 
-          Array.from(
-              document.getElementsByClassName("scanner-draggable-component-name")
-          )[indicatorLength - 1].data.value 
-          : 
-          id.toUpperCase()
-        }
-
+        {id === "number" &&
+        Array.from(
+          document.getElementsByClassName("scanner-draggable-component-name")
+        ) &&
+        Array.from(
+          document.getElementsByClassName("scanner-draggable-component-name")
+        )[indicatorLength - 1] &&
+        Array.from(
+          document.getElementsByClassName("scanner-draggable-component-name")
+        )[indicatorLength - 1].data
+          ? Array.from(
+              document.getElementsByClassName(
+                "scanner-draggable-component-name"
+              )
+            )[indicatorLength - 1].data.value
+          : id.toUpperCase()}
       </div>
     </>
   );
