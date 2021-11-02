@@ -5,6 +5,7 @@ import PageHeader from "../../components/PageHeader";
 import Plane from "../../assets/images/plane.png";
 import SpaceShip from "../../assets/images/space-ship.png";
 import PaperPlane from "../../assets/images/paper-plane.png";
+import BACKEND_URL from "../../Backend_url";
 import axios from "axios";
 
 const Pricing = () => {
@@ -17,7 +18,7 @@ const Pricing = () => {
   const tier = auth.user.tier;
   let res;
   useEffect(async () => {
-    res = await axios.get("http://localhost/api/payment/paymentDatabase");
+    res = await axios.get(`http://${BACKEND_URL}/api/payment/paymentDatabase`);
     setTier1(res.data[0]);
     setTier2(res.data[1]);
     setTier3(res.data[2]);
@@ -35,7 +36,7 @@ const Pricing = () => {
   console.log("tier3", tier3);
   const createOrder = async (a) => {
     const res = await axios
-      .get(`http://localhost/api/payment/createOrder?amount=${a}`)
+      .get(`http://${BACKEND_URL}/api/payment/createOrder?amount=${a}`)
       .then((res) => res)
       .catch((err) => console.log(err));
     if (res) {
@@ -50,7 +51,7 @@ const Pricing = () => {
 
   const showRazorPay = () => {
     const form = document.createElement("form");
-    form.setAttribute("action", "http://localhost/api/payment/callback");
+    form.setAttribute("action", `http://${BACKEND_URL}/api/payment/callback`);
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";

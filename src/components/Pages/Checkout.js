@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
 
 const Checkout = ({ match }) => {
   const auth = useSelector((state) => state.auth);
@@ -9,7 +10,7 @@ const Checkout = ({ match }) => {
   const getPaymentStatus = async (payment_id, i) => {
     console.log("Suhas", i);
     const payment_status = await axios
-      .get(`http://localhost/api/payment/status/${payment_id}/?id=${i}`)
+      .get(`http://${BACKEND_URL}/api/payment/status/${payment_id}/?id=${i}`)
       .then((res) => {
         return res.data;
       })
