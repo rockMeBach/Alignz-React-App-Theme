@@ -82,6 +82,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
       segment: document.getElementById("scanner-segment").value,
       segment1a: document.getElementById("scanner-segment-1a").value,
+      timeframe: document.getElementById("scanner-timeframe").value,
       comparison: comparison,
       LHS: LHS,
       RHS: RHS,
@@ -263,6 +264,25 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           id="duplicate-switch"
           style={{marginTop: '0.3rem', marginLeft: '1rem'}}
         />
+      </div>
+      <div className="form-check form-switch" style={{margin: '1rem'}}>
+        <label className="form-check-label">
+          Timeframe
+        </label>
+        <select
+          style={{width: '20%', display: 'inline-block', marginLeft: '1rem'}}
+          className="form-control scanner-condition-option"
+          name="candelstick-timeframe"
+          id="scanner-timeframe"
+        >
+          <option value="1-min">1 min</option>
+          <option value="2-min">2 min</option>
+          <option value="3-min">3 min</option>
+          <option value="5-min">5 min</option>
+          <option value="10-min">10 min</option>
+          <option value="15-min">15 min</option>
+        </select>
+            {/* </div> */}
       </div>
 
       <button className="btn submit-btn" onClick={submitScanner}>
