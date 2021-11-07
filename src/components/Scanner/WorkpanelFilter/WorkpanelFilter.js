@@ -33,6 +33,7 @@ const WorkpanelFilter = () => {
           {indicators.map((e) => (
             <div
               className="scanner-indicator-name"
+              style={{ paddingLeft: "1rem" }}
               id={e.id}
               draggable="true"
               onDragStart={dragStart}
