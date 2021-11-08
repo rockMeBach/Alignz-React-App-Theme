@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import BACKEND_URL from "../../Backend_url";
+
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 
 const Subscription = ({ tier, name, email }) => {
+  const auth = useSelector((state) => state.auth);
+  var points = auth.user.points;
   const [checkerTier, setCheckerTier] = useState(tier);
   const [values, setValues] = useState({
     amount: 0,
@@ -26,12 +30,13 @@ const Subscription = ({ tier, name, email }) => {
       });
     }
   };
-  const razorModalOpen = () => {
-    createOrder(tier.price);
-  };
   const showRazorPay = () => {
+    const t = checkerTier.tier;
     const form = document.createElement("form");
-    form.setAttribute("action", `http://${BACKEND_URL}/api/payment/callback`);
+    form.setAttribute(
+      "action",
+      `http://${BACKEND_URL}/api/payment/callback?tier=${t}`
+    );
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -126,7 +131,8 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "20px", opacity: "0.6" }}
                 >
-                  ₹ 00
+                  {points} * 0.1 ={" "}
+                  <span style={{ color: "#DC3545" }}> - ₹ {points * 0.1}</span>
                 </div>
               </div>
               <div className="row">
@@ -144,7 +150,7 @@ const Subscription = ({ tier, name, email }) => {
                   style={{ color: "#DC3545", fontSize: "20px" }}
                 >
                   {" "}
-                  ₹ 00
+                  - ₹ {checkerTier.discount}
                 </div>
               </div>
               <div className="row">
@@ -161,7 +167,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price}
+                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
                 </div>
               </div>
               {/* <div className="row">
@@ -200,7 +206,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price}
+                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
                 </div>
               </div>
             </div>
@@ -257,7 +263,8 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "20px", opacity: "0.6" }}
                 >
-                  ₹ 00
+                  {points} * 0.1 ={" "}
+                  <span style={{ color: "#DC3545" }}> - ₹ {points * 0.1}</span>
                 </div>
               </div>
               <div className="row">
@@ -275,7 +282,7 @@ const Subscription = ({ tier, name, email }) => {
                   style={{ color: "#DC3545", fontSize: "20px" }}
                 >
                   {" "}
-                  ₹ 00
+                  - ₹ {checkerTier.discount}
                 </div>
               </div>
               <div className="row">
@@ -292,7 +299,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price}
+                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
                 </div>
               </div>
               {/* <div className="row">
@@ -331,7 +338,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price}
+                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
                 </div>
               </div>
             </div>
@@ -374,7 +381,11 @@ const Subscription = ({ tier, name, email }) => {
                     fontWeight: "bold",
                     fontSize: "20px",
                   }}
-                  onClick={() => razorModalOpen()}
+                  onClick={() =>
+                    createOrder(
+                      checkerTier.price - checkerTier.discount - points * 0.1
+                    )
+                  }
                 >
                   Pay Now
                 </button>

@@ -8,20 +8,19 @@ const Checkout = ({ match }) => {
   const auth = useSelector((state) => state.auth);
   const [paymentStatus, setPaymentStatus] = useState(null);
   const getPaymentStatus = async (payment_id, i) => {
-    console.log("Suhas", i);
     const payment_status = await axios
-      .get(`http://${BACKEND_URL}/api/payment/status/${payment_id}/?id=${i}`)
+      .get(
+        `http://${BACKEND_URL}/api/payment/status/${payment_id}/?id=${i}&tier={tier}`
+      )
       .then((res) => {
         return res.data;
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log("Payment Status: ", payment_status);
-    setPaymentStatus(paymentStatus);
+    setPaymentStatus(payment_status);
     return payment_status;
   };
-
   useEffect(() => {
     const i = auth.user._id;
     if (i !== undefined) getPaymentStatus(match.params.paymentId, i);
