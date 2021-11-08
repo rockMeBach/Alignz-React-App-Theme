@@ -6,6 +6,7 @@ import Plane from "../../assets/images/plane.png";
 import SpaceShip from "../../assets/images/space-ship.png";
 import PaperPlane from "../../assets/images/paper-plane.png";
 import BACKEND_URL from "../../Backend_url";
+import Subscription from "../../components/Pages/Subscription";
 import axios from "axios";
 
 const Pricing = () => {
@@ -13,6 +14,7 @@ const Pricing = () => {
   const [tier1, setTier1] = useState([]);
   const [tier2, setTier2] = useState([]);
   const [tier3, setTier3] = useState([]);
+  const [subvalue, setSubvalue] = useState(1);
   const name = auth.user.name;
   const email = auth.user.email;
   const tier = auth.user.tier;
@@ -24,60 +26,6 @@ const Pricing = () => {
     setTier3(res.data[2]);
   }, []);
 
-  const [values, setValues] = useState({
-    amount: 0,
-    orderID: "",
-    error: "",
-    success: false,
-  });
-  const { amount, orderID, error, success } = values;
-  console.log("tier1", tier1);
-  console.log("tier2", tier2);
-  console.log("tier3", tier3);
-  const createOrder = async (a) => {
-    const res = await axios
-      .get(`http://${BACKEND_URL}/api/payment/createOrder?amount=${a}`)
-      .then((res) => res)
-      .catch((err) => console.log(err));
-    if (res) {
-      setValues({
-        error: "",
-        success: true,
-        orderID: res.data.id,
-        amount: res.data.amount,
-      });
-    }
-  };
-
-  const showRazorPay = () => {
-    const form = document.createElement("form");
-    form.setAttribute("action", `http://${BACKEND_URL}/api/payment/callback`);
-    form.setAttribute("method", "POST");
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.setAttribute("data-key", "rzp_test_yPJvTUYJKWzCa6");
-    script.setAttribute("data-amount", amount);
-    script.setAttribute("data-name", "Unfluke");
-    // script.setAttribute("data-prefill.contact", "9650324051");
-    script.setAttribute("data-prefill.email", email);
-    script.setAttribute("data-order_id", orderID);
-    script.setAttribute("data-prefill.name", name);
-    document.getElementById("root").appendChild(form);
-    form.appendChild(script);
-    console.log(form);
-
-    script.onload = () => {
-      console.log(form.childNodes[1]);
-      form.childNodes[1].click();
-      form.childNodes[1].style.display = "none";
-    };
-  };
-
-  useEffect(() => {
-    if (amount && orderID && amount > 0 && orderID !== "") {
-      showRazorPay();
-    }
-  }, [values]);
   return (
     <div
       style={{ flex: 1 }}
@@ -246,7 +194,10 @@ const Pricing = () => {
                     ) : (
                       <a
                         className="btn btn-primary"
-                        onClick={() => createOrder(tier2.price)}
+                        onClick={() =>
+                          //createOrder(tier2.price)
+                          setSubvalue(2)
+                        }
                       >
                         Buy Now
                       </a>
@@ -332,7 +283,10 @@ const Pricing = () => {
                     ) : (
                       <a
                         className="btn btn-primary"
-                        onClick={() => createOrder(tier3.price)}
+                        onClick={() =>
+                          //createOrder(tier3.price)
+                          setSubvalue(3)
+                        }
                       >
                         Buy Now
                       </a>
@@ -341,6 +295,53 @@ const Pricing = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="container">
+          <div className="row clearfix">
+            {subvalue === 1 && (
+              <div
+                className="col-12"
+                style={{
+                  border: "1px solid rgba(0, 0, 0, 0.125)",
+                  borderRadius: "16px",
+                  opacity: "1",
+                  marginBottom: "50px",
+                  paddingBottom: "40px",
+                  display: "none",
+                }}
+              >
+                <Subscription tier={tier1} email={email} name={name} />
+              </div>
+            )}
+            {subvalue === 2 && (
+              <div
+                className="col-12"
+                style={{
+                  border: "1px solid rgba(0, 0, 0, 0.125)",
+                  borderRadius: "16px",
+                  opacity: "1",
+                  marginBottom: "50px",
+                  paddingBottom: "40px",
+                }}
+              >
+                <Subscription tier={tier2} email={email} name={name} />
+              </div>
+            )}
+            {subvalue === 3 && (
+              <div
+                className="col-12"
+                style={{
+                  border: "1px solid rgba(0, 0, 0, 0.125)",
+                  borderRadius: "16px",
+                  opacity: "1",
+                  marginBottom: "50px",
+                  paddingBottom: "40px",
+                }}
+              >
+                <Subscription tier={tier3} email={email} name={name} />
+              </div>
+            )}
           </div>
         </div>
       </div>
