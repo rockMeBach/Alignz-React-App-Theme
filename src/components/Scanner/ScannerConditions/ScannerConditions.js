@@ -107,6 +107,7 @@ const ScannerConditions = () => {
             <ScannerDraggableComponent id={e} index={index} />
           </div>
         ))} */}
+
       </div>
     </div>
   );
