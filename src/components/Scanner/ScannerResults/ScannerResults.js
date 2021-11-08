@@ -30,6 +30,8 @@ const ScannerResults = ({ scannerResults }) => {
                 <th scope="col">Volume</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
+                <th scope="col">lvalue</th>
+                <th scope="col">rvalue</th>
               </tr>
             </thead>
             <tbody>

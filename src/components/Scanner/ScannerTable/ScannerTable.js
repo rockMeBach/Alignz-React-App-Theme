@@ -28,6 +28,8 @@ const ScannerTable = ({key, value, index}) => {
                         <td>{e.volume}</td>
                         <td>{e.date}</td>
                         <td>{e.time}</td>
+                        <td>{e.lvalue}</td>
+                        <td>{e.rvalue}</td>
                     </tr>
                 ))
                 :
@@ -39,6 +41,8 @@ const ScannerTable = ({key, value, index}) => {
                     <td>{value[0].volume}</td>
                     <td>{value[0].date}</td>
                     <td>{value[0].time}</td>
+                    <td>{value[0].lvalue}</td>
+                    <td>{value[0].rvalue}</td>
                 </tr>
             
             }

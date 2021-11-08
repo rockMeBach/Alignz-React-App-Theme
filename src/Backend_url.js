@@ -1,3 +1,3 @@
-const BACKEND_URL = "ec2-65-1-111-119.ap-south-1.compute.amazonaws.com";
+const BACKEND_URL = "localhost";
 
-export default BACKEND_URL;
+export default BACKEND_URL
