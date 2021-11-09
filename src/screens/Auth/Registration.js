@@ -13,12 +13,13 @@ const initialState = {
   cf_password: "",
   err: "",
   success: "",
-  referral: "",
+  referralGot: "",
 };
 
 const Registration = () => {
   const [user, setUser] = useState(initialState);
-  const { name, email, password, cf_password, err, success, referral } = user;
+  const { name, email, password, cf_password, err, success, referralGot } =
+    user;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -52,7 +53,7 @@ const Registration = () => {
         name,
         email,
         password,
-        referral,
+        referralGot,
       });
 
       setUser({ ...user, err: "", success: "Verification Email Sent" });
@@ -138,11 +139,11 @@ const Registration = () => {
                       </label>
                       <input
                         className="form-control"
-                        id="referral"
-                        name="referral"
+                        id="referralGot"
+                        name="referralGot"
                         placeholder="Referral Code"
                         type="name"
-                        value={referral}
+                        value={referralGot}
                         onChange={handleChangeInput}
                       />
                     </div>

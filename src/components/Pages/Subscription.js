@@ -9,6 +9,7 @@ const Subscription = ({ tier, name, email }) => {
   const auth = useSelector((state) => state.auth);
   var points = auth.user.points;
   const [checkerTier, setCheckerTier] = useState(tier);
+  const [couponCode, setCouponCode] = useState("");
   const [values, setValues] = useState({
     amount: 0,
     orderID: "",
@@ -16,6 +17,16 @@ const Subscription = ({ tier, name, email }) => {
     success: false,
   });
   const { amount, orderID, error, success } = values;
+
+  const couponChecker = async () => {
+    const res = await axios
+      .post(`http://${BACKEND_URL}/api/payment/coupon`, { couponCode })
+      .then((res) => res)
+      .catch((err) => console.log(err));
+
+    console.log(res);
+  };
+
   const createOrder = async (a) => {
     const res = await axios
       .get(`http://${BACKEND_URL}/api/payment/createOrder?amount=${a}`)
@@ -30,12 +41,13 @@ const Subscription = ({ tier, name, email }) => {
       });
     }
   };
+
   const showRazorPay = () => {
     const t = checkerTier.tier;
     const form = document.createElement("form");
     form.setAttribute(
       "action",
-      `http://${BACKEND_URL}/api/payment/callback?tier=${t}`
+      `http://${BACKEND_URL}/api/payment/callback?tier=${t}&points=${points}`
     );
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
@@ -106,16 +118,7 @@ const Subscription = ({ tier, name, email }) => {
                 </div>
               </div>
               <div className="row">
-                <div
-                  className="col-12"
-                  style={{
-                    fontSize: "18px",
-                    opacity: "0.6",
-                  }}
-                >
-                  100 points add on
-                  <hr />
-                </div>
+                <hr />
               </div>
               <div className="row">
                 <div
@@ -131,8 +134,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "20px", opacity: "0.6" }}
                 >
-                  {points} * 0.1 ={" "}
-                  <span style={{ color: "#DC3545" }}> - ₹ {points * 0.1}</span>
+                  <span style={{ color: "#DC3545" }}> - ₹ {points}</span>
                 </div>
               </div>
               <div className="row">
@@ -167,7 +169,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
+                  ₹ {checkerTier.price - checkerTier.discount - points}
                 </div>
               </div>
               {/* <div className="row">
@@ -238,16 +240,7 @@ const Subscription = ({ tier, name, email }) => {
                 </div>
               </div>
               <div className="row">
-                <div
-                  className="col-12"
-                  style={{
-                    fontSize: "18px",
-                    opacity: "0.6",
-                  }}
-                >
-                  200 points add on
-                  <hr />
-                </div>
+                <hr />
               </div>
               <div className="row">
                 <div
@@ -263,8 +256,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "20px", opacity: "0.6" }}
                 >
-                  {points} * 0.1 ={" "}
-                  <span style={{ color: "#DC3545" }}> - ₹ {points * 0.1}</span>
+                  <span style={{ color: "#DC3545" }}> - ₹ {points}</span>
                 </div>
               </div>
               <div className="row">
@@ -299,7 +291,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
+                  ₹ {checkerTier.price - checkerTier.discount - points}
                 </div>
               </div>
               {/* <div className="row">
@@ -338,34 +330,44 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
+                  ₹ {checkerTier.price - checkerTier.discount - points}
                 </div>
               </div>
             </div>
           )}
           <div className="col-sm-12 col-md-4 ">
             <div className="col-12">
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter Coupon Code"
-                />
-                <div class="input-group-append">
-                  <button
-                    className="btn"
-                    type="button"
-                    style={{
-                      backgroundColor: "#E27498",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "13px",
+              <form>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Coupon Code"
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
                     }}
-                  >
-                    Apply Coupon Code
-                  </button>
+                    value={couponCode}
+                  />
+                  <div class="input-group-append">
+                    <button
+                      className="btn"
+                      type="submit"
+                      style={{
+                        backgroundColor: "#E27498",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "13px",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        couponChecker();
+                      }}
+                    >
+                      Apply Coupon Code
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
             <hr style={{ marginTop: "30px", marginBottom: "30px" }} />
             <div className="row">
@@ -383,7 +385,7 @@ const Subscription = ({ tier, name, email }) => {
                   }}
                   onClick={() =>
                     createOrder(
-                      checkerTier.price - checkerTier.discount - points * 0.1
+                      checkerTier.price - checkerTier.discount - points
                     )
                   }
                 >
