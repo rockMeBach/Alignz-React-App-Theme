@@ -213,7 +213,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - coupon - points * 0.1}
+                  ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
             </div>

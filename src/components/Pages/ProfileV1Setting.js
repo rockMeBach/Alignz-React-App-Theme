@@ -1,8 +1,33 @@
 import React from "react";
 import { connect } from "react-redux";
 import imageuser from "../../assets/images/user.png";
-
+import { useSelector } from "react-redux";
 const ProfileV1Setting = () => {
+  const auth = useSelector((state) => state.auth);
+  var backtestWidth;
+  var emailWidth;
+  var telegramWidth;
+  var whatsappWidth;
+  var virtualWidth;
+  if (auth.user.tier === 0) {
+    backtestWidth = (auth.user.backtest / 2) * 100;
+    emailWidth = (auth.user.emailNotification / 5) * 100;
+    telegramWidth = (auth.user.telegramNotification / 5) * 100;
+    whatsappWidth = (auth.user.whatsappNotification / 5) * 100;
+    virtualWidth = (auth.user.virtualTradesNotification / 200) * 100;
+  } else if (auth.user.tier === 2) {
+    backtestWidth = (auth.user.backtest / 10) * 100;
+    emailWidth = (auth.user.emailNotification / 50) * 100;
+    telegramWidth = (auth.user.telegramNotification / 50) * 100;
+    whatsappWidth = (auth.user.whatsappNotification / 50) * 100;
+    virtualWidth = (auth.user.virtualTradesNotification / 500) * 100;
+  } else if (auth.user.tier === 3) {
+    backtestWidth = (auth.user.backtest / 50) * 100;
+    emailWidth = (auth.user.emailNotification / 150) * 100;
+    telegramWidth = (auth.user.telegramNotification / 150) * 100;
+    whatsappWidth = (auth.user.whatsappNotification / 150) * 100;
+    virtualWidth = -1;
+  }
   return (
     <div>
       <div className="container">
@@ -21,7 +46,7 @@ const ProfileV1Setting = () => {
               style={{ borderRadius: "50%" }}
               alt=" "
             />
-            <h3>Suhas Malhotra</h3>
+            <h3>{auth.user.name}</h3>
           </div>
 
           <div className="col-12 col-md-9 pl-4">
@@ -36,16 +61,14 @@ const ProfileV1Setting = () => {
 
               <form className="p-3">
                 <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputEmail4">Name</label>
-                    <input type="email" class="form-control" id="inputEmail4" />
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputPassword4">Email</label>
+                  <div class="form-group col-md-12">
+                    <label for="email">Email</label>
                     <input
-                      type="password"
+                      type="email"
                       class="form-control"
-                      id="inputPassword4"
+                      id="email"
+                      value={auth.user.email}
+                      disabled
                     />
                   </div>
                 </div>
@@ -99,7 +122,7 @@ const ProfileV1Setting = () => {
               <h3 className="px-3 pt-3">Account Information</h3>
               <div className="p-3">
                 <div style={{ fontSize: "30px", fontWeight: "bold" }}>
-                  Your Tier : 0
+                  Your Tier : {auth.user.tier}
                 </div>
                 <p style={{ marginBottom: "0" }} className="pt-3">
                   Backtests
@@ -108,26 +131,31 @@ const ProfileV1Setting = () => {
                   <div
                     class="progress-bar"
                     role="progressbar"
-                    style={{ width: "25%" }}
-                    aria-valuenow="25"
+                    style={{ width: `${backtestWidth}%` }}
+                    aria-valuenow="20"
                     aria-valuemin="0"
                     aria-valuemax="100"
                   ></div>
                 </div>
+                {virtualWidth !== -1 && (
+                  <>
+                    {" "}
+                    <p style={{ marginBottom: "0" }} className="pt-3">
+                      Virtual Trades
+                    </p>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style={{ width: `${virtualWidth}%` }}
+                        aria-valuenow="35"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </>
+                )}
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
-                  Virtual Trading
-                </p>
-                <div class="progress">
-                  <div
-                    class="progress-bar"
-                    role="progressbar"
-                    style={{ width: "35%" }}
-                    aria-valuenow="35"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  ></div>
-                </div>
                 <p style={{ marginBottom: "0" }} className="pt-3">
                   Email Alerts
                 </p>
@@ -135,21 +163,34 @@ const ProfileV1Setting = () => {
                   <div
                     class="progress-bar"
                     role="progressbar"
-                    style={{ width: "35%" }}
+                    style={{ width: `${emailWidth}%` }}
                     aria-valuenow="35"
                     aria-valuemin="0"
                     aria-valuemax="100"
                   ></div>
                 </div>
+
                 <p style={{ marginBottom: "0" }} className="pt-3">
                   Whatsapp Alerts
                 </p>
                 <div class="progress">
                   <div
-                    class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar "
-                    style={{ width: "85%" }}
-                    aria-valuenow="85"
+                    class="progress-bar"
+                    role="progressbar"
+                    style={{ width: `${whatsappWidth}%` }}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+                <p style={{ marginBottom: "0" }} className="pt-3">
+                  Telegram Alerts
+                </p>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style={{ width: `${telegramWidth}%` }}
+                    aria-valuenow="35"
                     aria-valuemin="0"
                     aria-valuemax="100"
                   ></div>
@@ -178,7 +219,7 @@ const ProfileV1Setting = () => {
                 className="p-3 text-center"
                 style={{ fontSize: "40px", fontWeight: "bold", color: "green" }}
               >
-                SUH!@#
+                {auth.user.hisReferral}
               </p>
             </div>
           </div>

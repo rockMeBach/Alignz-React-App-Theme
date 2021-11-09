@@ -107,6 +107,7 @@ const App = () => {
     }
   }, [token, dispatch]);
 
+
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;
   baseUrl = baseUrl.split("/");
