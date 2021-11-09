@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
 import { useParams } from "react-router-dom";
 import { isMatch, isLength } from "./Validation";
+import { showErrMsg, showSuccessMsg } from "./Notification/Notification";
 import axios from "axios";
 import BACKEND_URL from "../../Backend_url";
 
@@ -14,7 +15,8 @@ const initialState = {
 };
 const ResetPassword = () => {
   const [data, setData] = useState(initialState);
-  const { token } = useParams();
+  const { id } = useParams();
+  console.log(id);
   const { password, cf_password, err, success } = data;
 
   const handleChangeInput = (e) => {
@@ -39,7 +41,7 @@ const ResetPassword = () => {
         `http://${BACKEND_URL}/api/user/reset-password`,
         { password },
         {
-          headers: { Authorization: token },
+          headers: { Authorization: id },
         }
       );
 
@@ -62,7 +64,8 @@ const ResetPassword = () => {
                   style={{ height: "40px", margin: "10px" }}
                 />
               </div>
-
+              {err && showErrMsg(err)}
+              {success && showSuccessMsg(success)}
               <div className="card">
                 <div className="header">
                   <p className="lead">Enter Your Details</p>

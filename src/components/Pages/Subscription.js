@@ -10,6 +10,7 @@ const Subscription = ({ tier, name, email }) => {
   var points = auth.user.points;
   const [checkerTier, setCheckerTier] = useState(tier);
   const [couponCode, setCouponCode] = useState("");
+  const [coupon, setCoupon] = useState(0);
   const [values, setValues] = useState({
     amount: 0,
     orderID: "",
@@ -23,8 +24,9 @@ const Subscription = ({ tier, name, email }) => {
       .post(`http://${BACKEND_URL}/api/payment/coupon`, { couponCode })
       .then((res) => res)
       .catch((err) => console.log(err));
-
-    console.log(res);
+    if (res) {
+      setCoupon(res.data[0].discount);
+    }
   };
 
   const createOrder = async (a) => {
@@ -137,24 +139,27 @@ const Subscription = ({ tier, name, email }) => {
                   <span style={{ color: "#DC3545" }}> - ₹ {points}</span>
                 </div>
               </div>
-              <div className="row">
-                <div
-                  className="col-8"
-                  style={{
-                    fontSize: "20px",
-                    opacity: "0.6",
-                  }}
-                >
-                  Offer Discount
+              {coupon !== 0 && (
+                <div className="row">
+                  <div
+                    className="col-8"
+                    style={{
+                      fontSize: "20px",
+                      opacity: "0.6",
+                    }}
+                  >
+                    Offer Discount
+                  </div>
+                  <div
+                    className="col-4 text-right"
+                    style={{ color: "#DC3545", fontSize: "20px" }}
+                  >
+                    {" "}
+                    - ₹ {coupon}
+                  </div>
                 </div>
-                <div
-                  className="col-4 text-right"
-                  style={{ color: "#DC3545", fontSize: "20px" }}
-                >
-                  {" "}
-                  - ₹ {checkerTier.discount}
-                </div>
-              </div>
+              )}
+
               <div className="row">
                 <div
                   className="col-8"
@@ -169,7 +174,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points}
+                  ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
               {/* <div className="row">
@@ -208,7 +213,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points * 0.1}
+                  ₹ {checkerTier.price - coupon - points * 0.1}
                 </div>
               </div>
             </div>
@@ -259,24 +264,26 @@ const Subscription = ({ tier, name, email }) => {
                   <span style={{ color: "#DC3545" }}> - ₹ {points}</span>
                 </div>
               </div>
-              <div className="row">
-                <div
-                  className="col-8"
-                  style={{
-                    fontSize: "20px",
-                    opacity: "0.6",
-                  }}
-                >
-                  Offer Discount
+              {coupon !== 0 && (
+                <div className="row">
+                  <div
+                    className="col-8"
+                    style={{
+                      fontSize: "20px",
+                      opacity: "0.6",
+                    }}
+                  >
+                    Offer Discount
+                  </div>
+                  <div
+                    className="col-4 text-right"
+                    style={{ color: "#DC3545", fontSize: "20px" }}
+                  >
+                    {" "}
+                    - ₹ {coupon}
+                  </div>
                 </div>
-                <div
-                  className="col-4 text-right"
-                  style={{ color: "#DC3545", fontSize: "20px" }}
-                >
-                  {" "}
-                  - ₹ {checkerTier.discount}
-                </div>
-              </div>
+              )}
               <div className="row">
                 <div
                   className="col-8"
@@ -291,7 +298,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "24px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points}
+                  ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
               {/* <div className="row">
@@ -330,7 +337,7 @@ const Subscription = ({ tier, name, email }) => {
                   className="col-4 text-right"
                   style={{ fontSize: "26px", fontWeight: "bold" }}
                 >
-                  ₹ {checkerTier.price - checkerTier.discount - points}
+                  ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
             </div>
@@ -384,9 +391,7 @@ const Subscription = ({ tier, name, email }) => {
                     fontSize: "20px",
                   }}
                   onClick={() =>
-                    createOrder(
-                      checkerTier.price - checkerTier.discount - points
-                    )
+                    createOrder(checkerTier.price - coupon - points)
                   }
                 >
                   Pay Now
