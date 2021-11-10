@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import imageuser from "../../assets/images/user.png";
 import { useSelector } from "react-redux";
 const ProfileV1Setting = () => {
   const auth = useSelector((state) => state.auth);
+  const [d, setD] = useState([]);
+  var de;
+  var t = [1, 2];
+  useEffect(() => {
+    if (auth.user.tierEnded) {
+      de = auth.user.tierEnded;
+      t = de.split(" ");
+      setD([t[2], t[1]]);
+    }
+  }, [auth.user]);
+  // var tierEnd =  auth.user.tierEnded;
   var backtestWidth;
   var emailWidth;
   var telegramWidth;
@@ -199,7 +211,10 @@ const ProfileV1Setting = () => {
                   style={{ fontSize: "30px", fontWeight: "bold" }}
                   className="pt-3"
                 >
-                  Days Left : <span style={{ color: "green" }}>25 Days</span>
+                  Last Date :{" "}
+                  <span style={{ color: "green" }}>
+                    {d[0]} {d[1]}
+                  </span>
                 </div>
               </div>
             </div>
