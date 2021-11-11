@@ -1,10 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import user from "../assets/images/user.png";
 import Logo from "../assets/images/logo.svg";
 import LogoWhite from "../assets/images/logo-white.svg";
+import coin from "../assets/images/coin/coin.png";
 
 const NavbarMenu = () => {
+  const auth = useSelector((state) => state.auth);
   return (
     <div>
       <nav className="navbar navbar-fixed-top ">
@@ -101,6 +104,22 @@ const NavbarMenu = () => {
                     </svg>
                   </a>
                 </li>
+                <li>
+                  <div>
+                    <img
+                      src={coin}
+                      alt="coin"
+                      className="img-fluid"
+                      style={{
+                        height: "20px",
+                      }}
+                    ></img>
+                  </div>
+                </li>
+                <li>
+                  <p>{auth.user.points}</p>
+                </li>
+
                 <li className="mx-4">
                   <a href="/profile">
                     <img
