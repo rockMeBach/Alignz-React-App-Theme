@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import imageuser from "../../assets/images/user.png";
 import { useSelector } from "react-redux";
 const ProfileV1Setting = () => {
   const auth = useSelector((state) => state.auth);
+  const [d, setD] = useState([]);
+  var de;
+  var t = [1, 2];
+  useEffect(() => {
+    if (auth.user.tierEnded) {
+      de = auth.user.tierEnded;
+      t = de.split(" ");
+      setD([t[2], t[1]]);
+    }
+  }, [auth.user]);
+  // var tierEnd =  auth.user.tierEnded;
   var backtestWidth;
   var emailWidth;
   var telegramWidth;
@@ -32,24 +44,7 @@ const ProfileV1Setting = () => {
     <div>
       <div className="container">
         <div className="row">
-          <div
-            className="col-12 col-md-3 text-center p-3"
-            style={{
-              border: "1px solid rgba(0, 0, 0, 0.125)",
-              borderRadius: "20px",
-              height: "250px",
-            }}
-          >
-            <img
-              src={imageuser}
-              className="img-fluid mt-4"
-              style={{ borderRadius: "50%" }}
-              alt=" "
-            />
-            <h3>{auth.user.name}</h3>
-          </div>
-
-          <div className="col-12 col-md-9 pl-4">
+          <div className="col-12 col-md-12 pl-4">
             <div
               style={{
                 border: "1px solid rgba(0, 0, 0, 0.125)",
@@ -60,6 +55,18 @@ const ProfileV1Setting = () => {
               <h3 className="p-3">Personal Information</h3>
 
               <form className="p-3">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label for="name">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      value={auth.user.name}
+                      disabled
+                    />
+                  </div>
+                </div>
                 <div class="form-row">
                   <div class="form-group col-md-12">
                     <label for="email">Email</label>
@@ -199,7 +206,10 @@ const ProfileV1Setting = () => {
                   style={{ fontSize: "30px", fontWeight: "bold" }}
                   className="pt-3"
                 >
-                  Days Left : <span style={{ color: "green" }}>25 Days</span>
+                  Last Date :{" "}
+                  <span style={{ color: "green" }}>
+                    {d[0]} {d[1]}
+                  </span>
                 </div>
               </div>
             </div>

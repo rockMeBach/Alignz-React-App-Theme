@@ -18,6 +18,14 @@ const Pricing = () => {
   const name = auth.user.name;
   const email = auth.user.email;
   const tier = auth.user.tier;
+
+  const handleScroll = () => {
+    window.scroll({
+      top: 1000,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
   let res;
   useEffect(async () => {
     res = await axios.get(`http://${BACKEND_URL}/api/payment/paymentDatabase`);
@@ -25,6 +33,10 @@ const Pricing = () => {
     setTier2(res.data[1]);
     setTier3(res.data[2]);
   }, []);
+
+  useEffect(() => {
+    handleScroll();
+  }, [subvalue]);
 
   return (
     <div
@@ -293,10 +305,9 @@ const Pricing = () => {
                           color: "white",
                           fontWeight: "bold",
                         }}
-                        onClick={() =>
-                          //createOrder(tier3.price)
-                          setSubvalue(3)
-                        }
+                        onClick={() => {
+                          setSubvalue(3);
+                        }}
                       >
                         Buy Now
                       </a>
