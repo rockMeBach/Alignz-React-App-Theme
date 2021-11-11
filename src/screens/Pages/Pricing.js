@@ -193,7 +193,12 @@ const Pricing = () => {
                       </button>
                     ) : (
                       <a
-                        className="btn btn-primary"
+                        className="btn"
+                        style={{
+                          background: "#E27498",
+                          color: "white",
+                          fontWeight: "bold",
+                        }}
                         onClick={() =>
                           //createOrder(tier2.price)
                           setSubvalue(2)
@@ -282,7 +287,12 @@ const Pricing = () => {
                       </button>
                     ) : (
                       <a
-                        className="btn btn-primary"
+                        className="btn"
+                        style={{
+                          background: "#E27498",
+                          color: "white",
+                          fontWeight: "bold",
+                        }}
                         onClick={() =>
                           //createOrder(tier3.price)
                           setSubvalue(3)
