@@ -15,6 +15,7 @@ const ScannerDraggableComponent = ({
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
   const [numberModalInput, setNumberModalInput] = useState({});
   const [numberModalOpen, setNumberModalOpen] = useState(false);
+  const [element, setElement] = useState(undefined);
 
   const closeIndicatorModal = (indicatorSetting) => {
     let tmpSetting = indicatorModalInput;
@@ -109,6 +110,7 @@ const ScannerDraggableComponent = ({
     )[indicatorLength - 1];
 
     openIndicatorModal(e);
+    setElement(e);
   }, []);
 
   return (
@@ -144,22 +146,12 @@ const ScannerDraggableComponent = ({
           />
         )}
 
-        {id === "number" &&
-        Array.from(
-          document.getElementsByClassName("scanner-draggable-component-name")
-        ) &&
-        Array.from(
-          document.getElementsByClassName("scanner-draggable-component-name")
-        )[indicatorLength - 1] &&
-        Array.from(
-          document.getElementsByClassName("scanner-draggable-component-name")
-        )[indicatorLength - 1].data
-          ? Array.from(
-              document.getElementsByClassName(
-                "scanner-draggable-component-name"
-              )
-            )[indicatorLength - 1].data.value
-          : id.toUpperCase()}
+        {id === "number" && element && element.data ? 
+          element.data.value
+          : 
+          id.toUpperCase()
+        }
+        
       </div>
     </>
   );
