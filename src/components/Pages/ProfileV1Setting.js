@@ -44,24 +44,7 @@ const ProfileV1Setting = () => {
     <div>
       <div className="container">
         <div className="row">
-          <div
-            className="col-12 col-md-3 text-center p-3"
-            style={{
-              border: "1px solid rgba(0, 0, 0, 0.125)",
-              borderRadius: "20px",
-              height: "250px",
-            }}
-          >
-            <img
-              src={imageuser}
-              className="img-fluid mt-4"
-              style={{ borderRadius: "50%" }}
-              alt=" "
-            />
-            <h3>{auth.user.name}</h3>
-          </div>
-
-          <div className="col-12 col-md-9 pl-4">
+          <div className="col-12 col-md-12 pl-4">
             <div
               style={{
                 border: "1px solid rgba(0, 0, 0, 0.125)",
@@ -72,6 +55,18 @@ const ProfileV1Setting = () => {
               <h3 className="p-3">Personal Information</h3>
 
               <form className="p-3">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label for="name">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      value={auth.user.name}
+                      disabled
+                    />
+                  </div>
+                </div>
                 <div class="form-row">
                   <div class="form-group col-md-12">
                     <label for="email">Email</label>
