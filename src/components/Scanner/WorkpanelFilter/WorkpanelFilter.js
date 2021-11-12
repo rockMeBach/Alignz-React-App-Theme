@@ -9,12 +9,35 @@ const WorkpanelFilter = () => {
     e.dataTransfer.setData("text/plain", e.target.id);
   };
   const [indicators, setIndicators] = useState([]);
+  const [searchedIndicators, setSearchedIndicators] = useState([]);
+  const [searchedText, setSearchedText] = useState("");
+
   useEffect(() => {
     axios
       .get(`http://${BACKEND_URL}/api/scanner/overlap-studies`)
-      .then((res) => setIndicators(res.data))
+      .then((res) => {
+        setIndicators(res.data)
+        setSearchedIndicators(res.data)
+      })
       .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+
+    // console.log(searchedText);
+    let searchText = searchedText.toLowerCase();
+    let finalIndicators = [];
+    indicators.forEach(e => {
+
+      // console.log(e)
+      if(e.id.toLowerCase().includes(searchText) || e.name.toLowerCase().includes(searchText)) {
+        finalIndicators.push(e);
+      }
+    })
+
+    setSearchedIndicators(finalIndicators);
+  }, [searchedText]);
+
   return (
     <div className="scanner-filter-component">
       <div className="scanner-indicator-component">
@@ -23,6 +46,8 @@ const WorkpanelFilter = () => {
             className="form-control scanner-indicator-search"
             placeholder="Search"
             type="text"
+            value={searchedText}
+            onChange={e => setSearchedText(e.target.value)}
           />
           <button type="button" className="btn btn-default">
             <i className="icon-magnifier"></i>
@@ -30,7 +55,7 @@ const WorkpanelFilter = () => {
         </form>
         <hr />
         <div style={{ height: "35rem", overflow: "auto" }}>
-          {indicators.map((e) => (
+          {searchedIndicators.map((e) => (
             <div
               className="scanner-indicator-name"
               style={{ paddingLeft: "1rem" }}
