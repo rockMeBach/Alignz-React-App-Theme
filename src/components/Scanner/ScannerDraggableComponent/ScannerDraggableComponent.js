@@ -86,7 +86,7 @@ const ScannerDraggableComponent = ({
           {
             name: "Source",
             options: ["Open", "High", "Low", "Close"],
-            value: "Open",
+            value: "Close",
           },
         ],
       });

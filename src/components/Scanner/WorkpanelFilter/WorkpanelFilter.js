@@ -63,7 +63,7 @@ const WorkpanelFilter = () => {
               draggable="true"
               onDragStart={dragStart}
             >
-              {e.name}
+              {e.name} ({e.id})
             </div>
           ))}
         </div>
