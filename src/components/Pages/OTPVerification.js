@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const OTPVerification = () => {
+const OTPVerification = ({closeModalUpper}) => {
+
   const closeModal = () => {
       
-    document.getElementById("staticBackdropLive").style.display = "none";
+    closeModalUpper();
+    // document.getElementById("staticBackdropLive").style.display = "none";
   };
+
+  useEffect(() => {
+
+    document.getElementById("staticBackdropLive").style.background =
+      "rgba(0, 0, 0, 0.9)";
+  }, []);
 
   return (
     <div>

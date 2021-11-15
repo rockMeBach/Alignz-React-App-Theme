@@ -6,6 +6,8 @@ const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const auth = useSelector((state) => state.auth);
   const [d, setD] = useState([]);
+
+  const closeModalUpper = () => setModalOpen(false);
   var de;
   var t = [1, 2];
   useEffect(() => {
@@ -112,7 +114,7 @@ const ProfileV1Setting = () => {
                     <input type="text" class="form-control" id="inputZip" />
                   </div>
                 </div> */}
-                {modalOpen && <OTPVerification />}
+                {modalOpen && <OTPVerification closeModalUpper={closeModalUpper} />}
                 <button
                   class="btn"
                   style={{
