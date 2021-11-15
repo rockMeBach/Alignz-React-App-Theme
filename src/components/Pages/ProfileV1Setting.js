@@ -15,13 +15,9 @@ const ProfileV1Setting = () => {
       t = de.split(" ");
       setD([t[2], t[1]]);
     }
+    setPhoneCode(auth.user.phoneNos);
   }, [auth.user]);
 
-  const phoneChecker = () => {
-    if (!phoneCode) {
-      setPhoneCode(auth.user.phoneNos);
-    }
-  };
   // var tierEnd =  auth.user.tierEnded;
   var backtestWidth;
   var emailWidth;
@@ -92,7 +88,6 @@ const ProfileV1Setting = () => {
                     type="phone"
                     class="form-control"
                     id="phone"
-                    placeholder={auth.user.phoneNos}
                     onChange={(e) => {
                       setPhoneCode(e.target.value);
                     }}
@@ -109,9 +104,7 @@ const ProfileV1Setting = () => {
                   }}
                   onClick={(e) => {
                     e.preventDefault();
-                    phoneChecker();
                     setModalOpen(true);
-                    console.log(phoneCode);
                   }}
                 >
                   Verify Phone Number
