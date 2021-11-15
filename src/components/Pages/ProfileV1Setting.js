@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import OTPVerification from "./OTPVerification";
 import { useSelector } from "react-redux";
+import BACKEND_URL from "../../Backend_url";
+import axios from "axios";
 const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const auth = useSelector((state) => state.auth);
+  const [phoneData, setPhoneData] = useState([]);
   const [d, setD] = useState([]);
   const [phoneCode, setPhoneCode] = useState("");
+  const closeModalUpper = () => setModalOpen(false);
   var de;
   var t = [1, 2];
   useEffect(() => {
@@ -17,8 +21,6 @@ const ProfileV1Setting = () => {
     }
     setPhoneCode(auth.user.phoneNos);
   }, [auth.user]);
-
-  // var tierEnd =  auth.user.tierEnded;
   var backtestWidth;
   var emailWidth;
   var telegramWidth;
@@ -43,6 +45,15 @@ const ProfileV1Setting = () => {
     whatsappWidth = (auth.user.whatsappNotification / 150) * 100;
     virtualWidth = -1;
   }
+  let res;
+  const codeSender = async () => {
+    res = await axios.post(`http://${BACKEND_URL}/api/phone/sendOTP`, {
+      phone: phoneCode,
+    });
+    console.log(res);
+    setPhoneData(res.data);
+    setModalOpen(true);
+  };
   return (
     <div>
       <div className="container">
@@ -82,33 +93,54 @@ const ProfileV1Setting = () => {
                     />
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="phone">Phone Number</label>
-                  <input
-                    type="phone"
-                    class="form-control"
-                    id="phone"
-                    onChange={(e) => {
-                      setPhoneCode(e.target.value);
-                    }}
-                    value={phoneCode}
+                {auth.user.phoneVerified === true && (
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                      type="phone"
+                      class="form-control"
+                      id="phone"
+                      value={phoneCode}
+                      disabled
+                    />
+                  </div>
+                )}
+                {auth.user.phoneVerified === false && (
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                      type="phone"
+                      class="form-control"
+                      id="phone"
+                      onChange={(e) => {
+                        setPhoneCode(e.target.value);
+                      }}
+                      value={phoneCode}
+                    />
+                  </div>
+                )}
+                {modalOpen && (
+                  <OTPVerification
+                    closeModalUpper={closeModalUpper}
+                    data1={phoneData}
                   />
-                </div>
-                {modalOpen && <OTPVerification />}
-                <button
-                  class="btn"
-                  style={{
-                    background: "rgb(226, 116, 152)",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setModalOpen(true);
-                  }}
-                >
-                  Verify Phone Number
-                </button>
+                )}
+                {auth.user.phoneVerified === false && (
+                  <button
+                    class="btn"
+                    style={{
+                      background: "rgb(226, 116, 152)",
+                      color: "white",
+                      fontWeight: "bold",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      codeSender();
+                    }}
+                  >
+                    Verify Phone Number
+                  </button>
+                )}
               </form>
             </div>
             <div
