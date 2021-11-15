@@ -6,6 +6,7 @@ const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const auth = useSelector((state) => state.auth);
   const [d, setD] = useState([]);
+  const [phoneCode, setPhoneCode] = useState("");
   var de;
   var t = [1, 2];
   useEffect(() => {
@@ -15,6 +16,12 @@ const ProfileV1Setting = () => {
       setD([t[2], t[1]]);
     }
   }, [auth.user]);
+
+  const phoneChecker = () => {
+    if (!phoneCode) {
+      setPhoneCode(auth.user.phoneNos);
+    }
+  };
   // var tierEnd =  auth.user.tierEnded;
   var backtestWidth;
   var emailWidth;
@@ -86,32 +93,12 @@ const ProfileV1Setting = () => {
                     class="form-control"
                     id="phone"
                     placeholder={auth.user.phoneNos}
+                    onChange={(e) => {
+                      setPhoneCode(e.target.value);
+                    }}
+                    value={phoneCode}
                   />
                 </div>
-                {/* <div class="form-group">
-                  <label for="phone">Address</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputAddress"
-                    placeholder="1234 Main St"
-                  />
-                </div> */}
-
-                {/* <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputCity">City</label>
-                    <input type="text" class="form-control" id="inputCity" />
-                  </div>
-                  <div class="form-group col-md-4">
-                    <label for="inputCity">State</label>
-                    <input type="text" class="form-control" id="inputCity" />
-                  </div>
-                  <div class="form-group col-md-2">
-                    <label for="inputZip">Zip</label>
-                    <input type="text" class="form-control" id="inputZip" />
-                  </div>
-                </div> */}
                 {modalOpen && <OTPVerification />}
                 <button
                   class="btn"
@@ -122,7 +109,9 @@ const ProfileV1Setting = () => {
                   }}
                   onClick={(e) => {
                     e.preventDefault();
+                    phoneChecker();
                     setModalOpen(true);
+                    console.log(phoneCode);
                   }}
                 >
                   Verify Phone Number
