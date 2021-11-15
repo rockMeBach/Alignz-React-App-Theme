@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { connect } from "react-redux";
-import imageuser from "../../assets/images/user.png";
+import OTPVerification from "./OTPVerification";
 import { useSelector } from "react-redux";
 const ProfileV1Setting = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const auth = useSelector((state) => state.auth);
   const [d, setD] = useState([]);
   var de;
@@ -80,25 +80,25 @@ const ProfileV1Setting = () => {
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="inputAddress">Phone Number</label>
+                  <label for="phone">Phone Number</label>
                   <input
                     type="phone"
                     class="form-control"
-                    id="inputAddress"
-                    placeholder="12342456"
+                    id="phone"
+                    placeholder={auth.user.phoneNos}
                   />
                 </div>
-                <div class="form-group">
-                  <label for="inputAddress">Address</label>
+                {/* <div class="form-group">
+                  <label for="phone">Address</label>
                   <input
                     type="text"
                     class="form-control"
                     id="inputAddress"
                     placeholder="1234 Main St"
                   />
-                </div>
+                </div> */}
 
-                <div class="form-row">
+                {/* <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="inputCity">City</label>
                     <input type="text" class="form-control" id="inputCity" />
@@ -111,10 +111,21 @@ const ProfileV1Setting = () => {
                     <label for="inputZip">Zip</label>
                     <input type="text" class="form-control" id="inputZip" />
                   </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                  Update
+                </div> */}
+                {modalOpen && <OTPVerification />}
+                <button
+                  class="btn"
+                  style={{
+                    background: "rgb(226, 116, 152)",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setModalOpen(true);
+                  }}
+                >
+                  Verify Phone Number
                 </button>
               </form>
             </div>

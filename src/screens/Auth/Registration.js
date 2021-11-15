@@ -3,7 +3,7 @@ import axios from "axios";
 import { showErrMsg, showSuccessMsg } from "../Auth/Notification/Notification";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../assets/images/logo-white.svg";
-import { isEmpty, isLength, isEmail, isMatch } from "./Validation";
+import { isEmpty, isLength, isEmail, isMatch, isPhone } from "./Validation";
 import BACKEND_URL from "../../Backend_url";
 
 const initialState = {
@@ -14,12 +14,21 @@ const initialState = {
   err: "",
   success: "",
   referralGot: "",
+  phone: "",
 };
 
 const Registration = () => {
   const [user, setUser] = useState(initialState);
-  const { name, email, password, cf_password, err, success, referralGot } =
-    user;
+  const {
+    name,
+    email,
+    password,
+    cf_password,
+    err,
+    success,
+    referralGot,
+    phone,
+  } = user;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -38,6 +47,14 @@ const Registration = () => {
     if (!isEmail(email))
       return setUser({ ...user, err: "Invalid emails.", success: "" });
 
+    if (!isPhone(phone)) {
+      return setUser({
+        ...user,
+        err: "Invalid Phone Number",
+        success: "",
+      });
+    }
+
     if (isLength(password))
       return setUser({
         ...user,
@@ -54,6 +71,7 @@ const Registration = () => {
         email,
         password,
         referralGot,
+        phone,
       });
 
       setUser({ ...user, err: "", success: "Verification Email Sent" });
@@ -104,6 +122,20 @@ const Registration = () => {
                         placeholder="Enter Email Address"
                         type="email"
                         value={email}
+                        onChange={handleChangeInput}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="control-label sr-only">
+                        Phone Number
+                      </label>
+                      <input
+                        className="form-control"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter Phone Number"
+                        type="phone"
+                        value={phone}
                         onChange={handleChangeInput}
                       />
                     </div>

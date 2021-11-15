@@ -16,3 +16,9 @@ export const isMatch = (password, cf_password) => {
   if (password === cf_password) return true;
   return false;
 };
+
+export const isPhone = (phone) => {
+  var phoneno = /^\d{10}$/;
+  if (phone.match(phoneno)) return true;
+  return false;
+};
