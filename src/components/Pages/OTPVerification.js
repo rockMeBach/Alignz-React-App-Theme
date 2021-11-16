@@ -16,6 +16,7 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
     );
     if (res.status === 200) {
       closeModalUpper();
+      window.location.reload();
     }
   };
 
