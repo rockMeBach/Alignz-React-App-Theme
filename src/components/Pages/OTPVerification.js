@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import BACKEND_URL from "../../Backend_url";
+import {
+  showErrMsg,
+  showSuccessMsg,
+} from "../../screens/Auth/Notification/Notification";
 import axios from "axios";
 const OTPVerification = ({ closeModalUpper, data1 }) => {
   const [otpCode, setOtpCode] = useState("");
+  const [errorHandling, setErrorHandling] = useState("");
   const auth = useSelector((state) => state.auth);
-  //   const closeModal = () => {
-  //     closeModalUpper();
-  //   };
   console.log("suhas", data1);
   const OTPVerify = async () => {
-    const res = await axios.post(
-      `http://${BACKEND_URL}/api/phone/verifyOTP?id=${auth.user._id}&otp=${otpCode}`,
-      { phone: data1.phone, hash: data1.hash }
-    );
-    if (res.status === 200) {
+    try {
+      const res = await axios.post(
+        `http://${BACKEND_URL}/api/phone/verifyOTP?id=${auth.user._id}&otp=${otpCode}`,
+        { phone: data1.phone, hash: data1.hash }
+      );
       closeModalUpper();
       window.location.reload();
+    } catch (err) {
+      err.response.data.msg && setErrorHandling(err.response.data.msg);
     }
   };
 
@@ -44,6 +48,7 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
             class="modal-content"
             style={{ width: "max-content", padding: "0.5rem 1.5rem" }}
           >
+            {errorHandling && showErrMsg(errorHandling)}
             <div class="modal-header">
               <h1>Enter the Verification Code</h1>
             </div>

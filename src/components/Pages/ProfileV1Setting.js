@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import OTPVerification from "./OTPVerification";
+import { showErrMsg } from "../../screens/Auth/Notification/Notification";
+import { isPhone } from "../../screens/Auth/Validation";
 import { useSelector } from "react-redux";
 import BACKEND_URL from "../../Backend_url";
 import axios from "axios";
 const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [errorHandling, setHandlingError] = useState("");
   const auth = useSelector((state) => state.auth);
   const [phoneData, setPhoneData] = useState([]);
   const [d, setD] = useState([]);
@@ -47,17 +50,24 @@ const ProfileV1Setting = () => {
   }
   let res;
   const codeSender = async () => {
-    res = await axios.post(`http://${BACKEND_URL}/api/phone/sendOTP`, {
-      phone: phoneCode,
-    });
-    console.log(res);
-    setPhoneData(res.data);
-    setModalOpen(true);
+    if (!isPhone(phoneCode)) {
+      return setHandlingError("Invalid Phone Number");
+    }
+    try {
+      res = await axios.post(`http://${BACKEND_URL}/api/phone/sendOTP`, {
+        phone: phoneCode,
+      });
+      setPhoneData(res.data);
+      setModalOpen(true);
+    } catch (err) {
+      err.response.data.msg && setHandlingError(err.response.data.msg);
+    }
   };
   return (
     <div>
       <div className="container">
         <div className="row">
+          {errorHandling && showErrMsg(errorHandling)}
           <div className="col-12 col-md-12 pl-4">
             <div
               style={{
