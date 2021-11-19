@@ -98,15 +98,18 @@ const App = () => {
     if (token) {
       const getUser = () => {
         dispatch(dispatchLogin());
-
         return fetchUser(token).then((res) => {
+          if (!res) {
+            localStorage.removeItem("firstLogin");
+            localStorage.removeItem("access");
+            return (window.location.href = "http://localhost:3000/login");
+          }
           dispatch(dispatchGetUser(res));
         });
       };
       getUser();
     }
   }, [token, dispatch]);
-
 
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;

@@ -36,8 +36,12 @@ const ForgotPassword = () => {
 
       return setData({ ...data, err: "", success: res.data.msg });
     } catch (err) {
-      err.response.data.msg &&
-        setData({ ...data, err: err.response.data.msg, success: "" });
+      if (!err.response) {
+        setData({ ...data, err: "Server Error from Unfluke", success: "" });
+      } else {
+        err.response.data.msg &&
+          setData({ ...data, err: err.response.data.msg, success: "" });
+      }
     }
   };
   return (

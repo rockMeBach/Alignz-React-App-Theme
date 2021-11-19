@@ -9,13 +9,26 @@ export const dispatchLogin = () => {
 };
 
 export const fetchUser = async (token) => {
-  const res = await axios.get(`http://${BACKEND_URL}/api/user/info`, {
-    headers: { Authorization: token },
-  });
-  return res;
+  let res;
+  try {
+    res = await axios.get(`http://${BACKEND_URL}/api/user/info`, {
+      headers: { Authorization: token },
+    });
+    return res;
+  } catch (err) {
+    localStorage.removeItem("firstLogin");
+    localStorage.removeItem("access");
+  }
+
+  console.log("suhas", res);
 };
 
 export const dispatchGetUser = (res) => {
+  if (!res) {
+    localStorage.removeItem("firstLogin");
+    localStorage.removeItem("access");
+    return (window.location.href = "http://localhost:3000/login");
+  }
   return {
     type: ACTIONS.GET_USER,
     payload: {

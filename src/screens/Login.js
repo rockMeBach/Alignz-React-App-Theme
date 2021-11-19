@@ -47,7 +47,12 @@ const Login = () => {
       dispatch(dispatchLogin());
       history.push("/dashboard");
     } catch (err) {
-      setUser({ ...user, err: err.response.data.msg, success: "" });
+      if (!err.response) {
+        setUser({ ...user, err: "Server Error from Unfluke", success: "" });
+      } else {
+        err.response.data.msg &&
+          setUser({ ...user, err: err.response.data.msg, success: "" });
+      }
     }
   };
 
