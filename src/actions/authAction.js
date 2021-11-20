@@ -24,7 +24,7 @@ export const fetchUser = async (token) => {
 };
 
 export const dispatchGetUser = (res) => {
-  if (!res) {
+  if (!res || !res.data || !res.data.role) {
     localStorage.removeItem("firstLogin");
     localStorage.removeItem("access");
     return (window.location.href = "http://localhost:3000/login");
