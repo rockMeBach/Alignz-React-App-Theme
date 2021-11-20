@@ -19,15 +19,13 @@ export const fetchUser = async (token) => {
     localStorage.removeItem("firstLogin");
     localStorage.removeItem("access");
   }
-
-  console.log("suhas", res);
 };
 
 export const dispatchGetUser = (res) => {
-  if (!res || !res.data || !res.data.role) {
+  if (!res.data || !res.data.role) {
     localStorage.removeItem("firstLogin");
     localStorage.removeItem("access");
-    return (window.location.href = "http://localhost:3000/login");
+    return (window.location.href = "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/login");
   }
   return {
     type: ACTIONS.GET_USER,
