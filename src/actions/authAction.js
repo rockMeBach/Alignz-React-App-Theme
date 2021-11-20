@@ -22,10 +22,11 @@ export const fetchUser = async (token) => {
 };
 
 export const dispatchGetUser = (res) => {
-  if (res.data===undefined || res.data.role === undefined) {
+  if (res.data === null || res.data.role === undefined) {
     localStorage.removeItem("firstLogin");
     localStorage.removeItem("access");
-    return (window.location.href = "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/login");
+    return (window.location.href =
+      "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/login");
   }
   return {
     type: ACTIONS.GET_USER,
