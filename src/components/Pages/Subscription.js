@@ -57,7 +57,7 @@ const Subscription = ({ tier, name, email }) => {
     script.setAttribute("data-key", "rzp_test_yPJvTUYJKWzCa6");
     script.setAttribute("data-amount", amount);
     script.setAttribute("data-name", "Unfluke");
-    // script.setAttribute("data-prefill.contact", "9650324051");
+    script.setAttribute("data-prefill.contact", auth.user.phoneNos);
     script.setAttribute("data-prefill.email", email);
     script.setAttribute("data-order_id", orderID);
     script.setAttribute("data-prefill.name", name);

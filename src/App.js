@@ -69,6 +69,7 @@ import CandlestickScanner from "./screens/CandlestickScanner/CandlestickScanner"
 import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
 import Checkout from "./components/Pages/Checkout";
 import Home from "./screens/Home/Home";
+import Telegram from "./screens/Pages/Telegram";
 import {
   dispatchLogin,
   fetchUser,
@@ -176,6 +177,7 @@ const App = () => {
             path={`${process.env.PUBLIC_URL}/user/activate/:activation_token`}
             component={ActivationEmail}
           />
+
           <Route
             exact
             path={`${process.env.PUBLIC_URL}/user/reset/:id`}
@@ -238,6 +240,13 @@ const App = () => {
                 path={`${process.env.PUBLIC_URL}/appinbox`}
                 component={appInbox}
               />
+              {isLoggedIn && (
+                <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/activate/telegram`}
+                  component={Telegram}
+                />
+              )}
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/appchat`}

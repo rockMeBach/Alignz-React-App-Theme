@@ -13,6 +13,9 @@ const ProfileV1Setting = () => {
   const [phoneData, setPhoneData] = useState([]);
   const [d, setD] = useState([]);
   const [phoneCode, setPhoneCode] = useState("");
+  const [alertWhatsapp, setAlertWhatsapp] = useState();
+  const [alertTelegram, setAlertTelegram] = useState();
+  const [alertEmail, setAlertEmail] = useState();
   const closeModalUpper = () => setModalOpen(false);
   var de;
   var t = [1, 2];
@@ -22,6 +25,16 @@ const ProfileV1Setting = () => {
       t = de.split(" ");
       setD([t[2], t[1]]);
     }
+    if (auth.user.alertWhatsapp) {
+      setAlertWhatsapp(auth.user.alertWhatsapp);
+    }
+    if (auth.user.alertEmail) {
+      setAlertEmail(auth.user.alertEmail);
+    }
+    if (auth.user.alertTelegram) {
+      setAlertTelegram(auth.user.alertTelegram);
+    }
+
     setPhoneCode(auth.user.phoneNos);
   }, [auth.user]);
   var backtestWidth;
@@ -63,6 +76,16 @@ const ProfileV1Setting = () => {
       err.response.data.msg && setHandlingError(err.response.data.msg);
     }
   };
+
+  const updateAlertType = async () => {
+    const res = await axios.post(`http://${BACKEND_URL}/api/alert/alertFlag`, {
+      userId: auth.user._id,
+      whatsapp: alertWhatsapp,
+      email: alertEmail,
+      telegram: alertTelegram,
+    });
+    console.log(res);
+  };
   return (
     <div>
       <div className="container">
@@ -77,7 +100,6 @@ const ProfileV1Setting = () => {
               }}
             >
               <h3 className="p-3">Personal Information</h3>
-
               <form className="p-3">
                 <div class="form-row">
                   <div class="form-group col-md-12">
@@ -245,6 +267,104 @@ const ProfileV1Setting = () => {
                   <span style={{ color: "green" }}>
                     {d[0]} {d[1]}
                   </span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="mt-4"
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+                borderRadius: "20px",
+                marginBottom: "30px",
+              }}
+            >
+              <h3 className="px-3 pt-3">Alerts</h3>
+              <div className="container">
+                <div className="row mt-4">
+                  <div className="col-6 col-md-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefault"
+                      />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Whatsapp
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <button
+                      class="btn"
+                      style={{
+                        background: "rgb(226, 116, 152)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Activate
+                    </button>
+                  </div>
+                </div>
+
+                <div className="row mt-4">
+                  <div className="col-6 col-md-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefault"
+                      />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Telegram
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <a href="/activate/telegram">
+                      <button
+                        class="btn"
+                        style={{
+                          background: "rgb(226, 116, 152)",
+                          color: "white",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Activate
+                      </button>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="row mt-4 mb-4">
+                  <div className="col-6 col-md-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefault"
+                      />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Email
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <button
+                      class="btn"
+                      style={{
+                        background: "rgb(226, 116, 152)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Activate
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
