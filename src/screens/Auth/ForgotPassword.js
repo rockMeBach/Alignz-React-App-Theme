@@ -27,10 +27,11 @@ const ForgotPassword = () => {
       return setData({ ...data, err: "Invalid emails.", success: "" });
 
     try {
+      var temp = email.toLowerCase();
       const res = await axios.post(
         `http://${BACKEND_URL}/api/user/forgot-password`,
         {
-          email,
+          email: temp,
         }
       );
 

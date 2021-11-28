@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import BACKEND_URL from "../../Backend_url";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 import step1 from "../../assets/images/STEP1.jpg";
 import step2 from "../../assets/images/STEP2.jpg";
 import step3 from "../../assets/images/STEP3.jpg";
 const Telegram = () => {
+  const auth = useSelector((state) => state.auth);
+  const [username, setUsername] = useState("");
+  const submitUsername = async () => {
+    const res = await axios.post(
+      `http://${BACKEND_URL}/api/alert/addUsername`,
+      { username: username, userId: auth.user._id }
+    );
+    if (res.status === 200) {
+      console.log(res);
+      return (window.location.href =
+        "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/profile");
+    }
+  };
   return (
     <div>
       <div className="container">
@@ -14,6 +31,10 @@ const Telegram = () => {
                 class="form-control"
                 id="exampleFormControlInput1"
                 placeholder="Enter your Telegram username"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                value={username}
               />
             </div>
           </div>
@@ -25,6 +46,10 @@ const Telegram = () => {
                 color: "white",
                 fontWeight: "bold",
                 width: "300px",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                submitUsername();
               }}
             >
               Submit

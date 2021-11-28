@@ -19,7 +19,7 @@ const Login = () => {
   const [user, setUser] = useState(initialState);
   const dispatch = useDispatch();
   const history = useHistory();
-  const { email, password, err, success } = user;
+  var { email, password, err, success } = user;
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -29,8 +29,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      var tempEmail = email.toLowerCase();
+      console.log(tempEmail);
       const res = await axios.post(`http://${BACKEND_URL}/api/user/login`, {
-        email,
+        email: tempEmail,
         password,
       });
       const rf_token = res.data.refresh_token;

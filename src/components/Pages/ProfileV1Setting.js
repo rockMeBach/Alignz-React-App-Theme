@@ -23,7 +23,8 @@ const ProfileV1Setting = () => {
     if (auth.user.tierEnded) {
       de = auth.user.tierEnded;
       t = de.split(" ");
-      setD([t[2], t[1]]);
+      console.log(t);
+      setD([t[2], t[1], t[3]]);
     }
     if (auth.user.alertWhatsapp) {
       setAlertWhatsapp(auth.user.alertWhatsapp);
@@ -42,19 +43,35 @@ const ProfileV1Setting = () => {
   var telegramWidth;
   var whatsappWidth;
   var virtualWidth;
+  var totalAlerts;
+  var totalVirtual;
+  var totalbacktest;
+  var plan;
   if (auth.user.tier === 0) {
+    plan = "Basic";
+    totalAlerts = 5;
+    totalVirtual = 200;
+    totalbacktest = 2;
     backtestWidth = (auth.user.backtest / 2) * 100;
     emailWidth = (auth.user.emailNotification / 5) * 100;
     telegramWidth = (auth.user.telegramNotification / 5) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 5) * 100;
     virtualWidth = (auth.user.virtualTradesNotification / 200) * 100;
   } else if (auth.user.tier === 2) {
+    plan = "Advanced";
+    totalAlerts = 50;
+    totalVirtual = 500;
+    totalbacktest = 10;
     backtestWidth = (auth.user.backtest / 10) * 100;
     emailWidth = (auth.user.emailNotification / 50) * 100;
     telegramWidth = (auth.user.telegramNotification / 50) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 50) * 100;
     virtualWidth = (auth.user.virtualTradesNotification / 500) * 100;
   } else if (auth.user.tier === 3) {
+    plan = "Pro";
+    totalAlerts = 150;
+    totalVirtual = -1;
+    totalbacktest = 50;
     backtestWidth = (auth.user.backtest / 50) * 100;
     emailWidth = (auth.user.emailNotification / 150) * 100;
     telegramWidth = (auth.user.telegramNotification / 150) * 100;
@@ -86,6 +103,7 @@ const ProfileV1Setting = () => {
     });
     console.log(res);
   };
+
   return (
     <div>
       <div className="container">
@@ -185,12 +203,20 @@ const ProfileV1Setting = () => {
             >
               <h3 className="px-3 pt-3">Account Information</h3>
               <div className="p-3">
-                <div style={{ fontSize: "30px", fontWeight: "bold" }}>
-                  Your Tier : {auth.user.tier}
+                <div
+                  style={{
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Your Plan :{" "}
+                  <a style={{ color: "rgb(226, 116, 152)" }}>{plan}</a>
                 </div>
+
                 <p style={{ marginBottom: "0" }} className="pt-3">
-                  Backtests
+                  Backtests ({auth.user.backtest}/{totalbacktest})
                 </p>
+
                 <div class="progress">
                   <div
                     class="progress-bar"
@@ -205,7 +231,7 @@ const ProfileV1Setting = () => {
                   <>
                     {" "}
                     <p style={{ marginBottom: "0" }} className="pt-3">
-                      Virtual Trades
+                      Virtual Trades ({auth.user.virtualTrades}/{totalVirtual})
                     </p>
                     <div class="progress">
                       <div
@@ -221,7 +247,7 @@ const ProfileV1Setting = () => {
                 )}
 
                 <p style={{ marginBottom: "0" }} className="pt-3">
-                  Email Alerts
+                  Email Alerts ({auth.user.emailNotification}/{totalAlerts})
                 </p>
                 <div class="progress">
                   <div
@@ -235,7 +261,8 @@ const ProfileV1Setting = () => {
                 </div>
 
                 <p style={{ marginBottom: "0" }} className="pt-3">
-                  Whatsapp Alerts
+                  Whatsapp Alerts ({auth.user.whatsappNotification}/
+                  {totalAlerts})
                 </p>
                 <div class="progress">
                   <div
@@ -247,7 +274,8 @@ const ProfileV1Setting = () => {
                   ></div>
                 </div>
                 <p style={{ marginBottom: "0" }} className="pt-3">
-                  Telegram Alerts
+                  Telegram Alerts ({auth.user.telegramNotification}/
+                  {totalAlerts})
                 </p>
                 <div class="progress">
                   <div
@@ -264,8 +292,8 @@ const ProfileV1Setting = () => {
                   className="pt-3"
                 >
                   Last Date :{" "}
-                  <span style={{ color: "green" }}>
-                    {d[0]} {d[1]}
+                  <span style={{ color: "rgb(226, 116, 152)" }}>
+                    {d[0]} {d[1]} {d[2]}
                   </span>
                 </div>
               </div>
@@ -289,10 +317,9 @@ const ProfileV1Setting = () => {
                         type="checkbox"
                         value=""
                         id="flexCheckDefault"
+                        disabled
                       />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        Whatsapp
-                      </label>
+                      <label style={{ color: "black" }}>Whatsapp</label>
                     </div>
                   </div>
                   <div className="col-6 col-md-3">
@@ -308,36 +335,65 @@ const ProfileV1Setting = () => {
                     </button>
                   </div>
                 </div>
-
-                <div className="row mt-4">
-                  <div className="col-6 col-md-3">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        id="flexCheckDefault"
-                      />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        Telegram
-                      </label>
+                {auth.user.telegramUsername && (
+                  <div className="row mt-4">
+                    <div className="col-6 col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexCheckDefault"
+                          checked
+                          disabled
+                        />
+                        <label style={{ color: "black" }}>Telegram</label>
+                      </div>
+                    </div>
+                    <div className="col-6 col-md-3">
+                      <a href="https://t.me/unflukebotbot">
+                        <button
+                          class="btn btn-success"
+                          style={{
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Open Telegram
+                        </button>
+                      </a>
                     </div>
                   </div>
-                  <div className="col-6 col-md-3">
-                    <a href="/activate/telegram">
-                      <button
-                        class="btn"
-                        style={{
-                          background: "rgb(226, 116, 152)",
-                          color: "white",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Activate
-                      </button>
-                    </a>
+                )}
+
+                {!auth.user.telegramUsername && (
+                  <div className="row mt-4">
+                    <div className="col-6 col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                          disabled
+                        />
+                        <label style={{ color: "black" }}>Telegram</label>
+                      </div>
+                    </div>
+                    <div className="col-6 col-md-3">
+                      <a href="/activate/telegram">
+                        <button
+                          class="btn"
+                          style={{
+                            background: "rgb(226, 116, 152)",
+                            color: "white",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Activate
+                        </button>
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="row mt-4 mb-4">
                   <div className="col-6 col-md-3">
@@ -347,10 +403,9 @@ const ProfileV1Setting = () => {
                         type="checkbox"
                         value=""
                         id="flexCheckDefault"
+                        disabled
                       />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        Email
-                      </label>
+                      <label style={{ color: "black" }}>Email</label>
                     </div>
                   </div>
                   <div className="col-6 col-md-3">
@@ -382,7 +437,11 @@ const ProfileV1Setting = () => {
               </p>
               <p
                 className="p-3 text-center"
-                style={{ fontSize: "40px", fontWeight: "bold", color: "green" }}
+                style={{
+                  fontSize: "40px",
+                  fontWeight: "bold",
+                  color: "rgb(226, 116, 152)",
+                }}
               >
                 {auth.user.hisReferral}
               </p>

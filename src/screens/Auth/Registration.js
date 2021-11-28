@@ -66,9 +66,10 @@ const Registration = () => {
       return setUser({ ...user, err: "Password did not match.", success: "" });
 
     try {
+      var tempEmail = email.toLowerCase();
       const res = await axios.post(`http://${BACKEND_URL}/api/user/register`, {
         name,
-        email,
+        email: tempEmail,
         password,
         referralGot,
         phone,

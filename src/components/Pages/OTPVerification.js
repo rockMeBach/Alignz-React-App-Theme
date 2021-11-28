@@ -69,12 +69,33 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="btn btn-danger"
                 data-bs-dismiss="modal"
-                onClick={OTPVerify}
+                onClick={() => closeModalUpper()}
               >
-                Verify
+                Cancle
               </button>
+              {otpCode.length === 6 && (
+                <button
+                  type="button"
+                  class="btn"
+                  style={{ background: "rgb(226, 116, 152)", color: "white" }}
+                  data-bs-dismiss="modal"
+                  onClick={OTPVerify}
+                >
+                  Verify
+                </button>
+              )}
+              {otpCode.length !== 6 && (
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={OTPVerify}
+                >
+                  Verify
+                </button>
+              )}
             </div>
           </div>
         </div>

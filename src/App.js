@@ -103,7 +103,8 @@ const App = () => {
           if (!res) {
             localStorage.removeItem("firstLogin");
             localStorage.removeItem("access");
-            return (window.location.href = "http://localhost:3000/login");
+            return (window.location.href =
+              "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/login");
           }
           dispatch(dispatchGetUser(res));
         });

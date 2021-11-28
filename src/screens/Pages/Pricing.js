@@ -57,7 +57,7 @@ const Pricing = () => {
                 <div className="body">
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={PaperPlane} />
-                    <h2 className="pricing-header">Tier 1</h2>
+                    <h2 className="pricing-header">Basic</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
@@ -97,21 +97,21 @@ const Pricing = () => {
                           >
                             {tier1.backtest} per month
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier1.email} per month
                           </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier1.whatsapp} per month
                           </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
@@ -134,7 +134,7 @@ const Pricing = () => {
                 <div className="body">
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={Plane} />
-                    <h2 className="pricing-header">Tier 2</h2>
+                    <h2 className="pricing-header">Advanced</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
@@ -174,21 +174,21 @@ const Pricing = () => {
                           >
                             {tier2.backtest} per month
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier2.email} per month
                           </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier2.whatsapp} per month
                           </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
@@ -228,7 +228,7 @@ const Pricing = () => {
                 <div className="body">
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={SpaceShip} />
-                    <h2 className="pricing-header">Tier 3</h2>
+                    <h2 className="pricing-header">Pro</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
@@ -268,21 +268,21 @@ const Pricing = () => {
                           >
                             {tier3.backtest} per month
                           </div>
-                          <div className="col-6 text-left">Emails ALerts</div>
+                          <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier3.email} per month
                           </div>
-                          <div className="col-6 text-left">Whatsapp ALerts</div>
+                          <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
                           >
                             {tier3.whatsapp} per month
                           </div>
-                          <div className="col-6 text-left">Telegram ALerts</div>
+                          <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
                             style={{ fontWeight: "800" }}
