@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import user from "../assets/images/user.png";
+import user from "../assets/images/monkey.jpg";
 import coin from "../assets/images/coin/coin.png";
 
 const NavbarMenu = () => {
