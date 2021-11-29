@@ -64,57 +64,89 @@ const Pricing = () => {
                           <div className="col-6 text-left">Live Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             5 mins delay
                           </div>
                           <div className="col-6 text-left">Historic Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
-                            upto {tier1.scans}
+                            Upto {tier1.scans}
                           </div>
 
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.trades} per month
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.backtest} per month
                           </div>
                           <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.email} per month
                           </div>
                           <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.whatsapp} per month
                           </div>
                           <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier1.telegram} per month
                           </div>
@@ -122,7 +154,7 @@ const Pricing = () => {
                       </div>
                     </ul>
                     <span className="pricing-price">FREE</span>
-                    <a className="btn disable" style={{ color: "white" }}>
+                    <a className="btn disable" style={{ color: "white" }} href>
                       Buy Now
                     </a>
                   </div>
@@ -141,57 +173,89 @@ const Pricing = () => {
                           <div className="col-6 text-left">Live Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             No Delay
                           </div>
                           <div className="col-6 text-left">Historic Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
-                            upto {tier2.scans}
+                            Upto {tier2.scans}
                           </div>
 
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.trades} per month
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.backtest} per month
                           </div>
                           <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.email} per month
                           </div>
                           <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.whatsapp} per month
                           </div>
                           <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier2.telegram} per month
                           </div>
@@ -215,6 +279,7 @@ const Pricing = () => {
                           //createOrder(tier2.price)
                           setSubvalue(2)
                         }
+                        href
                       >
                         Buy Now
                       </a>
@@ -235,57 +300,89 @@ const Pricing = () => {
                           <div className="col-6 text-left">Live Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             No Delay
                           </div>
                           <div className="col-6 text-left">Historic Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
-                            upto {tier3.scans}
+                            Upto {tier3.scans}
                           </div>
 
                           <div className="col-6 text-left">Virtual Trading</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.trades}
                           </div>
                           <div className="col-6 text-left">Historic Charts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.charts} old
                           </div>
                           <div className="col-6 text-left">Backtests</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.backtest} per month
                           </div>
                           <div className="col-6 text-left">Emails Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.email} per month
                           </div>
                           <div className="col-6 text-left">Whatsapp Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.whatsapp} per month
                           </div>
                           <div className="col-6 text-left">Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{ fontWeight: "800" }}
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
                           >
                             {tier3.telegram} per month
                           </div>
@@ -308,6 +405,7 @@ const Pricing = () => {
                         onClick={() => {
                           setSubvalue(3);
                         }}
+                        href
                       >
                         Buy Now
                       </a>

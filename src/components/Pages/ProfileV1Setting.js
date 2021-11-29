@@ -94,14 +94,18 @@ const ProfileV1Setting = () => {
     }
   };
 
-  const updateAlertType = async () => {
-    const res = await axios.post(`http://${BACKEND_URL}/api/alert/alertFlag`, {
-      userId: auth.user._id,
-      whatsapp: alertWhatsapp,
-      email: alertEmail,
-      telegram: alertTelegram,
-    });
-    console.log(res);
+  const deactivateTelegram = async () => {
+    console.log("hi");
+    const res = await axios.post(
+      `http://${BACKEND_URL}/api/alert/deactivateTelegram`,
+      {
+        userId: auth.user._id,
+      }
+    );
+    if (res.status === 200) {
+      window.location.href =
+        "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/profile";
+    }
   };
 
   return (
@@ -210,7 +214,9 @@ const ProfileV1Setting = () => {
                   }}
                 >
                   Your Plan :{" "}
-                  <a style={{ color: "rgb(226, 116, 152)" }}>{plan}</a>
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    {plan}
+                  </a>
                 </div>
 
                 <p style={{ marginBottom: "0" }} className="pt-3">
@@ -350,16 +356,24 @@ const ProfileV1Setting = () => {
                       </div>
                     </div>
                     <div className="col-6 col-md-3">
-                      <a href="https://t.me/unflukebotbot">
-                        <button
-                          class="btn btn-success"
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Open Telegram
-                        </button>
+                      <a
+                        class="btn btn-success"
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                        href="https://t.me/unflukebotbot"
+                      >
+                        Open Telegram
                       </a>
+                      <button
+                        class="btn btn-danger ms-3"
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                        onClick={() => deactivateTelegram()}
+                      >
+                        Deactivate
+                      </button>
                     </div>
                   </div>
                 )}

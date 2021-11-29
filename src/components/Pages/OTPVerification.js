@@ -73,7 +73,7 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
                 data-bs-dismiss="modal"
                 onClick={() => closeModalUpper()}
               >
-                Cancle
+                Cancel
               </button>
               {otpCode.length === 6 && (
                 <button

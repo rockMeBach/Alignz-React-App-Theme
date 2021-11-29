@@ -16,8 +16,7 @@ const Telegram = () => {
     );
     if (res.status === 200) {
       console.log(res);
-      return (window.location.href =
-        "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/profile");
+      return (window.location.href = "https://t.me/unflukebotbot");
     }
   };
   return (

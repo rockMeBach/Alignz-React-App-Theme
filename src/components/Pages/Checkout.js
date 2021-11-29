@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import BACKEND_URL from "../../Backend_url";
-
+import Logo from "../../assets/images/after_payment.jpg";
 const Checkout = ({ match }) => {
   const auth = useSelector((state) => state.auth);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -25,22 +25,24 @@ const Checkout = ({ match }) => {
     const i = auth.user._id;
     if (i !== undefined) getPaymentStatus(match.params.paymentId, i);
   }, [auth]);
-
+  console.log(auth.user);
   return (
     <div>
       <div className="container">
         <div className="row mt-5 px-5">
           <div className="col-12">
             <div className="row">
-              <div className="col-sm-12 col-md-6">er</div>
               <div className="col-sm-12 col-md-6">
+                <img src={Logo} className="img-fluid" alt="" />
+              </div>
+              <div className="col-sm-12 col-md-6 my-auto">
                 <h1
                   style={{
                     color: "#28A745",
                     fontWeight: "bold",
                   }}
                 >
-                  You're Successfully Subscribed to starter Pack
+                  You're Successfully Subscribed to our package
                 </h1>
                 <h1
                   style={{
@@ -52,7 +54,7 @@ const Checkout = ({ match }) => {
                   investing
                 </h1>
 
-                <div className="row">
+                {/* <div className="row">
                   <div
                     className="col-6"
                     style={{
@@ -72,8 +74,8 @@ const Checkout = ({ match }) => {
                   >
                     ₹ 5,500
                   </div>
-                </div>
-                <div className="row">
+                </div> */}
+                {/* <div className="row">
                   <div
                     className="col-12"
                     style={{
@@ -84,9 +86,9 @@ const Checkout = ({ match }) => {
                     10,000 points add on
                     <hr />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="row py-1">
+                {/* <div className="row py-1">
                   <div
                     className="col-8"
                     style={{
@@ -102,8 +104,8 @@ const Checkout = ({ match }) => {
                   >
                     ₹ 500
                   </div>
-                </div>
-                <div className="row py-1">
+                </div> */}
+                {/* <div className="row py-1">
                   <div
                     className="col-8"
                     style={{
@@ -120,8 +122,8 @@ const Checkout = ({ match }) => {
                     {" "}
                     - ₹ 100
                   </div>
-                </div>
-                <div className="row py-1">
+                </div> */}
+                {/* <div className="row py-1">
                   <div
                     className="col-8"
                     style={{
@@ -137,8 +139,8 @@ const Checkout = ({ match }) => {
                   >
                     ₹ 4900
                   </div>
-                </div>
-                <div className="row py-1">
+                </div> */}
+                {/* <div className="row py-1">
                   <div
                     className="col-8"
                     style={{
@@ -237,7 +239,7 @@ const Checkout = ({ match }) => {
                   >
                     ₹ 5,500
                   </div>
-                </div>
+                </div> */}
                 <div className="row">
                   <div className="col-12 mt-2">
                     <a href="/dashboard">
