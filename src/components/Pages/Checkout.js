@@ -9,9 +9,7 @@ const Checkout = ({ match }) => {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const getPaymentStatus = async (payment_id, i) => {
     const payment_status = await axios
-      .get(
-        `http://${BACKEND_URL}/api/payment/status/${payment_id}/?id=${i}&tier={tier}`
-      )
+      .get(`http://${BACKEND_URL}/api/payment/status/${payment_id}/?id=${i}`)
       .then((res) => {
         return res.data;
       })

@@ -49,7 +49,7 @@ const Subscription = ({ tier, name, email }) => {
     const form = document.createElement("form");
     form.setAttribute(
       "action",
-      `http://${BACKEND_URL}/api/payment/callback?tier=${t}&points=${points}`
+      `http://${BACKEND_URL}/api/payment/callback?tier=${t}&points=${points}&userId=${auth.user._id}&coupon=${couponCode}`
     );
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
