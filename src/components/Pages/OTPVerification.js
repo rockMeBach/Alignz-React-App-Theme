@@ -9,20 +9,29 @@ import axios from "axios";
 const OTPVerification = ({ closeModalUpper, data1 }) => {
   const [otpCode, setOtpCode] = useState("");
   const [errorHandling, setErrorHandling] = useState("");
+  const [successHandling, setSuccessHandling] = useState("");
   const auth = useSelector((state) => state.auth);
-  console.log("suhas", data1);
   const OTPVerify = async () => {
     try {
       const res = await axios.post(
         `http://${BACKEND_URL}/api/phone/verifyOTP?id=${auth.user._id}&otp=${otpCode}`,
         { phone: data1.phone, hash: data1.hash }
       );
-      closeModalUpper();
-      window.location.reload();
+      if (res.status === 200) {
+        setSuccessHandling(
+          "Phone Number Verified. You have also received 100 points."
+        );
+      }
+      setTimeout(console.log("hi"), 3000);
+      setTimeout(cloe, 3000);
     } catch (err) {
       err.response.data.msg && setErrorHandling(err.response.data.msg);
     }
   };
+  function cloe() {
+    closeModalUpper();
+    window.location.reload();
+  }
 
   useEffect(() => {
     document.getElementById("staticBackdropLive").style.background =
@@ -49,6 +58,7 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
             style={{ width: "max-content", padding: "0.5rem 1.5rem" }}
           >
             {errorHandling && showErrMsg(errorHandling)}
+            {successHandling && showSuccessMsg(successHandling)}
             <div class="modal-header">
               <h1>Enter the Verification Code</h1>
             </div>

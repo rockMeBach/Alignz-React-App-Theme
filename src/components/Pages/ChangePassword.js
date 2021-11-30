@@ -38,7 +38,7 @@ const ChangePassword = () => {
       return setError("The password must be of length 6");
     }
     if (!isMatch(newPassword, confirmPassword))
-      return setError("Password did not match.");
+      return setError("New and Confirm Passwords do not match");
     try {
       const res = await axios.post(
         `http://${BACKEND_URL}/api/user/changePassword`,

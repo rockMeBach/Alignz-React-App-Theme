@@ -5,6 +5,7 @@ import { showErrMsg } from "../../screens/Auth/Notification/Notification";
 import { isPhone } from "../../screens/Auth/Validation";
 import { useSelector } from "react-redux";
 import BACKEND_URL from "../../Backend_url";
+import coin from "../../assets/images/coin/coin.jpg";
 import axios from "axios";
 const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -219,7 +220,14 @@ const ProfileV1Setting = () => {
                   </a>
                 </div>
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
                   Backtests ({auth.user.backtest}/{totalbacktest})
                 </p>
 
@@ -236,7 +244,14 @@ const ProfileV1Setting = () => {
                 {virtualWidth !== -1 && (
                   <>
                     {" "}
-                    <p style={{ marginBottom: "0" }} className="pt-3">
+                    <p
+                      style={{
+                        marginBottom: "0",
+                        color: "#35baf6",
+                        fontWeight: "600",
+                      }}
+                      className="pt-3"
+                    >
                       Virtual Trades ({auth.user.virtualTrades}/{totalVirtual})
                     </p>
                     <div class="progress">
@@ -252,7 +267,14 @@ const ProfileV1Setting = () => {
                   </>
                 )}
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
                   Email Alerts ({auth.user.emailNotification}/{totalAlerts})
                 </p>
                 <div class="progress">
@@ -266,7 +288,14 @@ const ProfileV1Setting = () => {
                   ></div>
                 </div>
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
                   Whatsapp Alerts ({auth.user.whatsappNotification}/
                   {totalAlerts})
                 </p>
@@ -279,7 +308,14 @@ const ProfileV1Setting = () => {
                     aria-valuemax="100"
                   ></div>
                 </div>
-                <p style={{ marginBottom: "0" }} className="pt-3">
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
                   Telegram Alerts ({auth.user.telegramNotification}/
                   {totalAlerts})
                 </p>
@@ -458,6 +494,29 @@ const ProfileV1Setting = () => {
                 }}
               >
                 {auth.user.hisReferral}
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+                borderRadius: "20px",
+                marginBottom: "30px",
+              }}
+            >
+              <h3 className="p-3">Your Points</h3>
+              <p className="pl-3">Use your points to avail discounts !!</p>
+              <p
+                className="p-3 text-center"
+                style={{
+                  fontSize: "40px",
+                  fontWeight: "bold",
+                  color: "rgb(226, 116, 152)",
+                }}
+              >
+                <div>
+                  <img src={coin} height="80px" />
+                  {auth.user.points}
+                </div>
               </p>
             </div>
           </div>

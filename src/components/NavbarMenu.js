@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import user from "../assets/images/monkey.jpg";
-import coin from "../assets/images/coin/coin.png";
+import coin from "../assets/images/coin/coin.jpeg";
 
 const NavbarMenu = () => {
   const auth = useSelector((state) => state.auth);
@@ -38,7 +38,7 @@ const NavbarMenu = () => {
                       alt="coin"
                       className="img-fluid mt-1"
                       style={{
-                        height: "20px",
+                        height: "25px",
                       }}
                     ></img>
                   </div>
@@ -74,7 +74,7 @@ const NavbarMenu = () => {
                 >
                   <li>
                     <a class="dropdown-item" href="/profile">
-                      My profile
+                      My Profile
                     </a>
                   </li>
                   <li>
