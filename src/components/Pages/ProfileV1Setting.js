@@ -17,9 +17,17 @@ const ProfileV1Setting = () => {
   const [alertWhatsapp, setAlertWhatsapp] = useState();
   const [alertTelegram, setAlertTelegram] = useState();
   const [alertEmail, setAlertEmail] = useState();
+  const [scroller, setScroller] = useState(false);
   const closeModalUpper = () => setModalOpen(false);
   var de;
   var t = [1, 2];
+  const handleScroll = () => {
+    window.scroll({
+      top: -1000,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
   useEffect(() => {
     if (auth.user.tierEnded) {
       de = auth.user.tierEnded;
@@ -94,7 +102,6 @@ const ProfileV1Setting = () => {
       err.response.data.msg && setHandlingError(err.response.data.msg);
     }
   };
-
   const deactivateTelegram = async () => {
     console.log("hi");
     const res = await axios.post(
@@ -505,6 +512,15 @@ const ProfileV1Setting = () => {
             >
               <h3 className="p-3">Your Points</h3>
               <p className="pl-3">Use your points to avail discounts !!</p>
+              {!auth.user.phoneVerified && (
+                <button
+                  className="pl-3 btn"
+                  style={{ color: "rgb(226, 116, 152)", fontWeight: "600" }}
+                  onClick={() => handleScroll()}
+                >
+                  Verify your phone number to avail points
+                </button>
+              )}
               <p
                 className="p-3 text-center"
                 style={{

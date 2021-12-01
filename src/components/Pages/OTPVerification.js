@@ -18,9 +18,7 @@ const OTPVerification = ({ closeModalUpper, data1 }) => {
         { phone: data1.phone, hash: data1.hash }
       );
       if (res.status === 200) {
-        setSuccessHandling(
-          "Phone Number Verified. You have also received 100 points."
-        );
+        setSuccessHandling("Phone Number Verified");
       }
       setTimeout(console.log("hi"), 3000);
       setTimeout(cloe, 3000);
