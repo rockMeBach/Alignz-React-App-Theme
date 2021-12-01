@@ -65,7 +65,7 @@ const ProfileV1Setting = () => {
     emailWidth = (auth.user.emailNotification / 5) * 100;
     telegramWidth = (auth.user.telegramNotification / 5) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 5) * 100;
-    virtualWidth = (auth.user.virtualTradesNotification / 200) * 100;
+    virtualWidth = (auth.user.virtualTrades / 200) * 100;
   } else if (auth.user.tier === 2) {
     plan = "Advanced";
     totalAlerts = 50;
@@ -75,7 +75,7 @@ const ProfileV1Setting = () => {
     emailWidth = (auth.user.emailNotification / 50) * 100;
     telegramWidth = (auth.user.telegramNotification / 50) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 50) * 100;
-    virtualWidth = (auth.user.virtualTradesNotification / 500) * 100;
+    virtualWidth = (auth.user.virtualTrades / 500) * 100;
   } else if (auth.user.tier === 3) {
     plan = "Pro";
     totalAlerts = 150;
@@ -103,7 +103,6 @@ const ProfileV1Setting = () => {
     }
   };
   const deactivateTelegram = async () => {
-    console.log("hi");
     const res = await axios.post(
       `http://${BACKEND_URL}/api/alert/deactivateTelegram`,
       {
@@ -115,7 +114,7 @@ const ProfileV1Setting = () => {
         "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/profile";
     }
   };
-
+  console.log("suhas", virtualWidth);
   return (
     <div>
       <div className="container">
@@ -235,7 +234,10 @@ const ProfileV1Setting = () => {
                   }}
                   className="pt-3"
                 >
-                  Backtests ({auth.user.backtest}/{totalbacktest})
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Backtests{" "}
+                  </a>
+                  ({auth.user.backtest}/{totalbacktest} Left)
                 </p>
 
                 <div class="progress">
@@ -259,7 +261,10 @@ const ProfileV1Setting = () => {
                       }}
                       className="pt-3"
                     >
-                      Virtual Trades ({auth.user.virtualTrades}/{totalVirtual})
+                      <a style={{ color: "rgb(226, 116, 152)" }} href>
+                        Virtual Trades
+                      </a>{" "}
+                      ({auth.user.virtualTrades}/{totalVirtual} Left)
                     </p>
                     <div class="progress">
                       <div
@@ -282,7 +287,11 @@ const ProfileV1Setting = () => {
                   }}
                   className="pt-3"
                 >
-                  Email Alerts ({auth.user.emailNotification}/{totalAlerts})
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    {" "}
+                    Email Alerts{" "}
+                  </a>
+                  ({auth.user.emailNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
@@ -303,8 +312,10 @@ const ProfileV1Setting = () => {
                   }}
                   className="pt-3"
                 >
-                  Whatsapp Alerts ({auth.user.whatsappNotification}/
-                  {totalAlerts})
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Whatsapp Alerts
+                  </a>{" "}
+                  ({auth.user.whatsappNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
@@ -323,8 +334,10 @@ const ProfileV1Setting = () => {
                   }}
                   className="pt-3"
                 >
-                  Telegram Alerts ({auth.user.telegramNotification}/
-                  {totalAlerts})
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Telegram Alerts
+                  </a>{" "}
+                  ({auth.user.telegramNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
