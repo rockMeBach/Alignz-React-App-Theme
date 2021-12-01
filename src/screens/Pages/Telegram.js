@@ -25,16 +25,22 @@ const Telegram = () => {
         <div className="row">
           <div className="col-12 mt-5">
             <div class="mb-3 mx-auto" style={{ width: "500px" }}>
-              <input
-                type="email"
-                class="form-control"
-                id="exampleFormControlInput1"
-                placeholder="Enter your Telegram username"
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-                value={username}
-              />
+              <div class="input-group flex-nowrap">
+                <span class="input-group-text" id="addon-wrapping">
+                  @
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter your Telegram username"
+                  aria-label="Username"
+                  aria-describedby="addon-wrapping"
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
+                  value={username}
+                />
+              </div>
             </div>
           </div>
           <div className="col-12 text-center">
