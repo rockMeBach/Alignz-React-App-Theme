@@ -70,6 +70,7 @@ import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
 import Checkout from "./components/Pages/Checkout";
 import Home from "./screens/Home/Home";
 import Telegram from "./screens/Pages/Telegram";
+import Trading from "./screens/Trading/Trading"
 import {
   dispatchLogin,
   fetchUser,
@@ -214,6 +215,7 @@ const App = () => {
                   path={`${process.env.PUBLIC_URL}/dashboard`}
                   component={dashboard}
                 />
+                
               ) : (
                 <Redirect to="/login" />
               )}
@@ -236,6 +238,12 @@ const App = () => {
                   component={Checkout}
                 />
               )}
+              <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/trading`}
+                  component={Trading}
+                />
+                
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/appinbox`}

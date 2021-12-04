@@ -200,8 +200,8 @@ const NavbarMenu = () => {
                     Positions
                   </a>
 
-                  <a class="dropdown-item" href="#" style={{ color: "black" }}>
-                    Trainings
+                  <a class="dropdown-item" href="/trading" style={{ color: "black" }}>
+                    Traidings
                   </a>
                 </div>
               </li>

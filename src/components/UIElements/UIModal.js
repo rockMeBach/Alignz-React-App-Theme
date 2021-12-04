@@ -4,11 +4,11 @@ import { Button, Modal } from "react-bootstrap";
 
 class UIModalComponent extends React.Component {
   render() {
-    const { title, bodyText, onClose, onSave, size, show } = this.props;
+    const { title, bodyText, onClose, onSave, size, show,footerContent } = this.props;
     return (
       <Modal size={size} show={show} onHide={onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          {title}
         </Modal.Header>
 
         <Modal.Body>
@@ -16,6 +16,7 @@ class UIModalComponent extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
+          {footerContent}
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
