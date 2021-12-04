@@ -69,6 +69,7 @@ import CandlestickScanner from "./screens/CandlestickScanner/CandlestickScanner"
 import TopLovedScanners from "./screens/TopLovedScanners/TopLovedScanners";
 import Checkout from "./components/Pages/Checkout";
 import Home from "./screens/Home/Home";
+import ChangePassword from "./components/Pages/ChangePassword";
 import Telegram from "./screens/Pages/Telegram";
 import Trading from "./screens/Trading/Trading"
 import {
@@ -433,6 +434,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/profile`}
                 component={profile}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/change-password`}
+                component={ChangePassword}
               />
               <Route
                 exact

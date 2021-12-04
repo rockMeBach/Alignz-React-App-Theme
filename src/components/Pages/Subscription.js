@@ -49,7 +49,11 @@ const Subscription = ({ tier, name, email }) => {
     const form = document.createElement("form");
     form.setAttribute(
       "action",
-      `http://${BACKEND_URL}/api/payment/callback?tier=${t}&points=${points}`
+      `http://${BACKEND_URL}/api/payment/callback?tier=${t}&points=${points}&userId=${
+        auth.user._id
+      }&coupon=${couponCode}&amountpayed=${
+        checkerTier.price - coupon - points
+      }&totalamount=${checkerTier.price}`
     );
     form.setAttribute("method", "POST");
     const script = document.createElement("script");
@@ -177,28 +181,7 @@ const Subscription = ({ tier, name, email }) => {
                   ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
-              {/* <div className="row">
-                <div
-                  className="col-8"
-                  style={{
-                    fontSize: "24px",
-                    opacity: "0.6",
-                  }}
-                >
-                  GST ( 18% )
-                </div>
-                <div
-                  className="col-4 text-right"
-                  style={{
-                    color: "#28A745",
-                    fontSize: "24px",
-                    opacity: "0.6",
-                    fontWeight: "500",
-                  }}
-                >
-                  + ₹ 1000
-                </div>
-              </div> */}
+
               <div className="row">
                 <div
                   className="col-8"
@@ -301,28 +284,7 @@ const Subscription = ({ tier, name, email }) => {
                   ₹ {checkerTier.price - coupon - points}
                 </div>
               </div>
-              {/* <div className="row">
-                <div
-                  className="col-8"
-                  style={{
-                    fontSize: "24px",
-                    opacity: "0.6",
-                  }}
-                >
-                  GST ( 18% )
-                </div>
-                <div
-                  className="col-4 text-right"
-                  style={{
-                    color: "#28A745",
-                    fontSize: "24px",
-                    opacity: "0.6",
-                    fontWeight: "500",
-                  }}
-                >
-                  + ₹ 1000
-                </div>
-              </div> */}
+
               <div className="row">
                 <div
                   className="col-8"

@@ -54,7 +54,7 @@ const Home = () => {
               </li>
               <li>
                 {" "}
-                <a className="btn btn-signup" href="/register">
+                <a className="btn btn-signup" href="/registration">
                   Sign Up
                 </a>
               </li>

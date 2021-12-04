@@ -5,6 +5,7 @@ import { showErrMsg } from "../../screens/Auth/Notification/Notification";
 import { isPhone } from "../../screens/Auth/Validation";
 import { useSelector } from "react-redux";
 import BACKEND_URL from "../../Backend_url";
+import coin from "../../assets/images/coin/coin.jpg";
 import axios from "axios";
 const ProfileV1Setting = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -16,9 +17,17 @@ const ProfileV1Setting = () => {
   const [alertWhatsapp, setAlertWhatsapp] = useState();
   const [alertTelegram, setAlertTelegram] = useState();
   const [alertEmail, setAlertEmail] = useState();
+  const [scroller, setScroller] = useState(false);
   const closeModalUpper = () => setModalOpen(false);
   var de;
   var t = [1, 2];
+  const handleScroll = () => {
+    window.scroll({
+      top: -1000,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
   useEffect(() => {
     if (auth.user.tierEnded) {
       de = auth.user.tierEnded;
@@ -56,7 +65,7 @@ const ProfileV1Setting = () => {
     emailWidth = (auth.user.emailNotification / 5) * 100;
     telegramWidth = (auth.user.telegramNotification / 5) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 5) * 100;
-    virtualWidth = (auth.user.virtualTradesNotification / 200) * 100;
+    virtualWidth = (auth.user.virtualTrades / 200) * 100;
   } else if (auth.user.tier === 2) {
     plan = "Advanced";
     totalAlerts = 50;
@@ -66,7 +75,7 @@ const ProfileV1Setting = () => {
     emailWidth = (auth.user.emailNotification / 50) * 100;
     telegramWidth = (auth.user.telegramNotification / 50) * 100;
     whatsappWidth = (auth.user.whatsappNotification / 50) * 100;
-    virtualWidth = (auth.user.virtualTradesNotification / 500) * 100;
+    virtualWidth = (auth.user.virtualTrades / 500) * 100;
   } else if (auth.user.tier === 3) {
     plan = "Pro";
     totalAlerts = 150;
@@ -93,17 +102,19 @@ const ProfileV1Setting = () => {
       err.response.data.msg && setHandlingError(err.response.data.msg);
     }
   };
-
-  const updateAlertType = async () => {
-    const res = await axios.post(`http://${BACKEND_URL}/api/alert/alertFlag`, {
-      userId: auth.user._id,
-      whatsapp: alertWhatsapp,
-      email: alertEmail,
-      telegram: alertTelegram,
-    });
-    console.log(res);
+  const deactivateTelegram = async () => {
+    const res = await axios.post(
+      `http://${BACKEND_URL}/api/alert/deactivateTelegram`,
+      {
+        userId: auth.user._id,
+      }
+    );
+    if (res.status === 200) {
+      window.location.href =
+        "http://ec2-13-235-48-197.ap-south-1.compute.amazonaws.com:3000/profile";
+    }
   };
-
+  console.log("suhas", virtualWidth);
   return (
     <div>
       <div className="container">
@@ -210,11 +221,23 @@ const ProfileV1Setting = () => {
                   }}
                 >
                   Your Plan :{" "}
-                  <a style={{ color: "rgb(226, 116, 152)" }}>{plan}</a>
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    {plan}
+                  </a>
                 </div>
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
-                  Backtests ({auth.user.backtest}/{totalbacktest})
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Backtests{" "}
+                  </a>
+                  ({auth.user.backtest}/{totalbacktest} Left)
                 </p>
 
                 <div class="progress">
@@ -230,8 +253,18 @@ const ProfileV1Setting = () => {
                 {virtualWidth !== -1 && (
                   <>
                     {" "}
-                    <p style={{ marginBottom: "0" }} className="pt-3">
-                      Virtual Trades ({auth.user.virtualTrades}/{totalVirtual})
+                    <p
+                      style={{
+                        marginBottom: "0",
+                        color: "#35baf6",
+                        fontWeight: "600",
+                      }}
+                      className="pt-3"
+                    >
+                      <a style={{ color: "rgb(226, 116, 152)" }} href>
+                        Virtual Trades
+                      </a>{" "}
+                      ({auth.user.virtualTrades}/{totalVirtual} Left)
                     </p>
                     <div class="progress">
                       <div
@@ -246,8 +279,19 @@ const ProfileV1Setting = () => {
                   </>
                 )}
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
-                  Email Alerts ({auth.user.emailNotification}/{totalAlerts})
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    {" "}
+                    Email Alerts{" "}
+                  </a>
+                  ({auth.user.emailNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
@@ -260,9 +304,18 @@ const ProfileV1Setting = () => {
                   ></div>
                 </div>
 
-                <p style={{ marginBottom: "0" }} className="pt-3">
-                  Whatsapp Alerts ({auth.user.whatsappNotification}/
-                  {totalAlerts})
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Whatsapp Alerts
+                  </a>{" "}
+                  ({auth.user.whatsappNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
@@ -273,9 +326,18 @@ const ProfileV1Setting = () => {
                     aria-valuemax="100"
                   ></div>
                 </div>
-                <p style={{ marginBottom: "0" }} className="pt-3">
-                  Telegram Alerts ({auth.user.telegramNotification}/
-                  {totalAlerts})
+                <p
+                  style={{
+                    marginBottom: "0",
+                    color: "#35baf6",
+                    fontWeight: "600",
+                  }}
+                  className="pt-3"
+                >
+                  <a style={{ color: "rgb(226, 116, 152)" }} href>
+                    Telegram Alerts
+                  </a>{" "}
+                  ({auth.user.telegramNotification}/{totalAlerts} Left)
                 </p>
                 <div class="progress">
                   <div
@@ -350,16 +412,24 @@ const ProfileV1Setting = () => {
                       </div>
                     </div>
                     <div className="col-6 col-md-3">
-                      <a href="https://t.me/unflukebotbot">
-                        <button
-                          class="btn btn-success"
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Open Telegram
-                        </button>
+                      <a
+                        class="btn btn-success"
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                        href="https://t.me/unflukebotbot"
+                      >
+                        Open Telegram
                       </a>
+                      <button
+                        class="btn btn-danger ms-3"
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                        onClick={() => deactivateTelegram()}
+                      >
+                        Deactivate
+                      </button>
                     </div>
                   </div>
                 )}
@@ -444,6 +514,38 @@ const ProfileV1Setting = () => {
                 }}
               >
                 {auth.user.hisReferral}
+              </p>
+            </div>
+            <div
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+                borderRadius: "20px",
+                marginBottom: "30px",
+              }}
+            >
+              <h3 className="p-3">Your Points</h3>
+              <p className="pl-3">Use your points to avail discounts !!</p>
+              {!auth.user.phoneVerified && (
+                <button
+                  className="pl-3 btn"
+                  style={{ color: "rgb(226, 116, 152)", fontWeight: "600" }}
+                  onClick={() => handleScroll()}
+                >
+                  Verify your phone number to avail points
+                </button>
+              )}
+              <p
+                className="p-3 text-center"
+                style={{
+                  fontSize: "40px",
+                  fontWeight: "bold",
+                  color: "rgb(226, 116, 152)",
+                }}
+              >
+                <div>
+                  <img src={coin} height="80px" />
+                  {auth.user.points}
+                </div>
               </p>
             </div>
           </div>
