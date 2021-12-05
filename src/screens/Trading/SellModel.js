@@ -44,8 +44,8 @@ const BuyModal = ({ show, onClose, instrument }) => {
             size={'40%'}
             title={
                 <div className="container">
-                    <h3 className="text-success">
-                        BUY
+                    <h3 className="text-danger">
+                        SELL
                     </h3>
                     <div className="row">
                         <div className="col-md-12">
@@ -61,12 +61,12 @@ const BuyModal = ({ show, onClose, instrument }) => {
                             <div class="form-check d-flex justify-content-between">
                                 <div>
                                     <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setTradeTerm('intraday')} checked={tradeTerm == 'intraday'} />
-                                    <label class="form-check-label text-success" for="intraday">
+                                    <label class="form-check-label text-danger" for="intraday">
                                         Intraday <span>MIS</span>
                                     </label>
                                 </div><div>
                                     <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longterm')} />
-                                    <label class="form-check-label text-success" for="longterm">
+                                    <label class="form-check-label text-danger" for="longterm">
                                         Longterm <span>CNC</span>
                                     </label>
                                 </div>
@@ -92,18 +92,18 @@ const BuyModal = ({ show, onClose, instrument }) => {
                             <div class="form-check d-flex justify-content-between">
                                 <div >
                                     <input class="form-check-input" type="radio" name="stoploss" id="market" onChange={() => setMarket('market')} checked={market == 'market'} />
-                                    <label class="market-label-trading text-success" for="market">
+                                    <label class="market-label-trading text-danger" for="market">
                                         Market
                                     </label>
                                 </div>
                                 <div >
                                     <input class="form-check-input" type="radio" name="stoploss" id="limit" onChange={() => setMarket('limit')} />
-                                    <label class="market-label-trading text-success" for="limit" >
+                                    <label class="market-label-trading text-danger" for="limit" >
                                         Limit
                                     </label>
                                 </div><div >
                                     <input class="form-check-input" type="radio" name="stoploss" id="sl-m" onChange={() => setMarket('sl-m')} />
-                                    <label class="market-label-trading text-success" for="sl-m">
+                                    <label class="market-label-trading text-danger" for="sl-m">
                                         SL-M
                                     </label>
                                 </div>
@@ -114,7 +114,7 @@ const BuyModal = ({ show, onClose, instrument }) => {
             }
             footerContent={
                 <span className="text-start" style={{width:'50%'}}>
-                    Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
+                    Margin Required <InfoOutlinedIcon className="text-danger" /> &#8377;
                     {
                         market == 'market' && <span>
                             {qty * price / leverage}

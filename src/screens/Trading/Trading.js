@@ -9,12 +9,14 @@ import axios from "axios"
 import "./Trading.css"
 import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
+import SellModel from "./SellModel"
 
 
 const Trading = () => {
     const [search, setSearch] = useState('')
     const [selectMarket, setSelectMarket] = useState()
     const [buyModelOpen, setBuyModelOpen] = useState(false)
+    const [sellModelOpen, setSellModelOpen] = useState(false)
     const [marketList, setMarketList] = useState([])
     const [tradeWatch, selectTradeWatch] = useState([])
     const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
@@ -94,7 +96,7 @@ const Trading = () => {
                                             <div className="text-danger col-md-3 text-end">40.73</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
                                                 <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
-                                                <Button variant="danger">SELL</Button>
+                                                <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
                                                 <Button variant="dark" index={index} onClick={() => selectTradeWatch(tradeWatch.splice(index, 1))}><DeleteIcon /></Button>
                                             </div>
                                         </div>
@@ -109,6 +111,10 @@ const Trading = () => {
             <BuyModel show={buyModelOpen}
                 onClose={()=>setBuyModelOpen(false)}
                 instrument={buyInstrument}
+            />
+            <SellModel show={sellModelOpen}
+                onClose={()=>setSellModelOpen(false)}
+                instrument={sellInstrument}
             />
         </div >
     )
