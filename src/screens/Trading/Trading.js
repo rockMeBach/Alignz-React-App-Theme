@@ -31,6 +31,7 @@ const Trading = () => {
 
     const futureLiveData = (futureData) =>{
         console.log(futureData)
+        document.getElementById(futureData.instrument_token).innerHTML = futureData.last_trade_price
     }
 
     const getSearchResults = (e) => {
@@ -52,7 +53,7 @@ const Trading = () => {
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
             <div className="row clearfix">
-                <div className="col-lg-6 col-md-12">
+                <div className="col-lg-4 col-md-12">
                     <div className="row">
                         <div className="col-md-6">
                             <h5 className="d-inline me-1">Nifty 50</h5>
@@ -103,7 +104,7 @@ const Trading = () => {
                                             <div class="col-md-3">{tradeWatchItem[selectMarket].split(":")[1]}</div>
                                             <div class="col-md-3 ">{tradeWatchItem[selectMarket].split(":")[0]}</div>
                                             <div className="col-md-3 text-md-end">-0.22% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="text-danger col-md-3  text-md-end">40.73</div>
+                                            <div className="text-danger col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>40.73</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
                                                 <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
                                                 <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
