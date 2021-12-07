@@ -133,6 +133,10 @@ const BuyModal = ({ show, onClose, instrument }) => {
                 </span>
             }
             onClose={onClose}
+            closeButtonVariant="outline-success"
+            saveButtonVariant="success"
+            closeButtonContent="Cancel"
+            saveButtonContent="BUY"
         />
     )
 }

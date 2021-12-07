@@ -4,7 +4,7 @@ import { Button, Modal } from "react-bootstrap";
 
 class UIModalComponent extends React.Component {
   render() {
-    const { title, bodyText, onClose, onSave, size, show,footerContent } = this.props;
+    const { title, bodyText, onClose, onSave, size, show,footerContent,closeButtonVariant,saveButtonVariant,closeButtonContent,saveButtonContent } = this.props;
     return (
       <Modal size={size} show={show} onHide={onClose}>
         <Modal.Header closeButton>
@@ -17,11 +17,11 @@ class UIModalComponent extends React.Component {
 
         <Modal.Footer>
           {footerContent}
-          <Button variant="secondary" onClick={onClose}>
-            Close
+          <Button variant={saveButtonVariant} onClick={onSave}>
+            {saveButtonContent}
           </Button>
-          <Button variant="primary" onClick={onSave}>
-            Save changes
+          <Button variant={closeButtonVariant} onClick={onClose}>
+            {closeButtonContent}
           </Button>
         </Modal.Footer>
       </Modal>

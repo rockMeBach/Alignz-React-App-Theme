@@ -11,6 +11,7 @@ import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
 import io from 'socket.io-client';
+import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 
 
 const Trading = () => {
@@ -52,7 +53,7 @@ const Trading = () => {
                 HeaderText="Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
-            <div className="row clearfix">
+            <div className="row clearfix" style={{height:'100%'}}>
                 <div className="col-lg-4 col-md-12">
                     <div className="row">
                         <div className="col-md-6">
@@ -117,6 +118,13 @@ const Trading = () => {
                         })
                     }
 
+                </div>
+                <div className="col-lg-8 col-md-12">
+                <TradingViewWidget 
+                symbol="NASDAQ:AAPL"
+                theme={Themes.DARK}
+                
+                />
                 </div>
             </div>
             <BuyModel show={buyModelOpen}
