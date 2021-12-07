@@ -10,6 +10,7 @@ import "./Trading.css"
 import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
+import io from 'socket.io-client';
 
 
 const Trading = () => {
@@ -22,6 +23,15 @@ const Trading = () => {
     const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
     const [sellInstrument,setSellInstrument] = useState({instrument_token:'',market:''})
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
+
+    useEffect(()=>{
+        const socket = io(`http://${BACKEND_URL}`);
+        socket.on("futureData",futureLiveData);
+    },[])
+
+    const futureLiveData = (futureData) =>{
+        console.log(futureData)
+    }
 
     const getSearchResults = (e) => {
         setSearch(e)
