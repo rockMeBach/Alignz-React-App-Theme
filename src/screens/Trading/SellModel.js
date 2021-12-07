@@ -49,7 +49,7 @@ const BuyModal = ({ show, onClose, instrument }) => {
                     </h3>
                     <div className="row">
                         <div className="col-md-12">
-                            <h6>{instrumentData[instrument.market]}</h6>
+                            <h6>{instrumentData[instrument.market]} X {qty} QTY</h6>
                         </div>
 
                     </div>

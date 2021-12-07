@@ -91,13 +91,13 @@ const Trading = () => {
                                     <div className="col-md-12">
                                         <div class="row border-bottom border-top p-3 stock-row">
                                             <div class="col-md-3">{tradeWatchItem[selectMarket].split(":")[1]}</div>
-                                            <div class="col-md-3">{tradeWatchItem[selectMarket].split(":")[0]}</div>
-                                            <div className="col-md-3 text-end">-0.22% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="text-danger col-md-3 text-end">40.73</div>
+                                            <div class="col-md-3 ">{tradeWatchItem[selectMarket].split(":")[0]}</div>
+                                            <div className="col-md-3 text-md-end">-0.22% <KeyboardArrowDownIcon className="text-danger" /> </div>
+                                            <div className="text-danger col-md-3  text-md-end">40.73</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
                                                 <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
                                                 <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
-                                                <Button variant="dark" index={index} onClick={() => selectTradeWatch(tradeWatch.splice(index, 1))}><DeleteIcon /></Button>
+                                                <Button variant="dark" index={index} onClick={() => {selectTradeWatch(tradeWatch.splice(index, 1))}}><DeleteIcon /></Button>
                                             </div>
                                         </div>
                                     </div>
