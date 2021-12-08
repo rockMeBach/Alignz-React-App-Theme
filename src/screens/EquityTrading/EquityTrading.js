@@ -4,43 +4,43 @@ import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Form, FormControl, InputGroup, Button, ListGroup } from "react-bootstrap";
+import { Form, FormControl, InputGroup, Button, ListGroup, Spinner } from "react-bootstrap";
 import axios from "axios"
-import "./Trading.css"
+import "./EquityTrading.css"
 import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
 import io from 'socket.io-client';
+import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 
 
-const Trading = () => {
+const EquityTrading = () => {
     const [search, setSearch] = useState('')
-    const [selectMarket, setSelectMarket] = useState()
+    const [selectMarket, setSelectMarket] = useState('equity')
     const [buyModelOpen, setBuyModelOpen] = useState(false)
     const [sellModelOpen, setSellModelOpen] = useState(false)
     const [marketList, setMarketList] = useState([])
     const [tradeWatch, selectTradeWatch] = useState([])
     const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
     const [sellInstrument,setSellInstrument] = useState({instrument_token:'',market:''})
-    var market = ["future", "option", "mcx", "currency", "crypto"]
 
     useEffect(()=>{
         const socket = io(`http://${BACKEND_URL}`);
-        socket.on("futureData",futureLiveData);
+        socket.on("equityData",equityLiveData);
     },[])
 
-    const futureLiveData = (futureData) =>{
-        // console.log(futureData)
-        if(document.getElementById(futureData.instrument_token))
+    const equityLiveData = (equityData) =>{
+        
+        if(document.getElementById(equityData.instrument_token))
         {
-            var change =futureData.change.toFixed(2)
-            document.getElementById(futureData.instrument_token).innerHTML = futureData.last_price.toFixed(2)
-            document.getElementById(futureData.instrument_token).style.color = change<0?"red":"green"
-            document.getElementById(futureData.instrument_token+"-change").innerHTML = change+"%"
-            document.getElementById(futureData.instrument_token+"-change").style.color = change<0?"red":"green"
+            console.log(equityData)
+            var change =equityData.change.toFixed(2)
+            document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)
+            document.getElementById(equityData.instrument_token).style.color = change<0?"red":"green"
+            document.getElementById(equityData.instrument_token+"-change").innerHTML = change+"%"
+            document.getElementById(equityData.instrument_token+"-change").style.color = change<0?"red":"green"
         }
     }
-
 
     const getSearchResults = (e) => {
         setSearch(e)
@@ -60,8 +60,8 @@ const Trading = () => {
     return (
         <div className="container">
             <PageHeader
-                HeaderText="Trading"
-                Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
+                HeaderText="Equity Trading"
+                Breadcrumb={[{ name: "Virtual Trading" }, { name: "Equity Trading" }]}
             />
             <div className="row clearfix" style={{height:'100%'}}>
                 <div className="col-lg-4 col-md-12">
@@ -78,18 +78,6 @@ const Trading = () => {
                     </div>
                     <div className="row">
                         <InputGroup className="mb-3 mt-3">
-                            <Form.Select className="col-md-2" aria-label="Default select example"
-                                onChange={(e) => setSelectMarket(e.target.value)}
-                            >
-                                <option selected disabled>Select</option>
-                                {
-                                    market.map(market => {
-                                        return (
-                                            <option value={market}>{market.charAt(0).toUpperCase() + market.slice(1)}</option>
-                                        )
-                                    })
-                                }
-                            </Form.Select>
                             <InputGroup.Text id="basic-addon1"><SearchIcon /></InputGroup.Text>
                             <FormControl aria-label="Search" value={search} onChange={(e) => { getSearchResults(e.target.value) }} placeholder="Search e.g. Nifty, Infy" />
                             {search && <ListGroup className="search-input">
@@ -114,8 +102,8 @@ const Trading = () => {
                                         <div class="row border-bottom border-top p-3 stock-row">
                                             <div class="col-md-3 text-break">{tradeWatchItem[tradeWatchItem.type].split(":")[1]}</div>
                                             <div class="col-md-3 ">{tradeWatchItem[tradeWatchItem.type].split(":")[0]}</div>
-                                            <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>-0.22% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>40.73</div>
+                                            <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}><Spinner animation="border" /> </div>
+                                            <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}><Spinner animation="border" /></div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
                                                 <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
                                                 <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
@@ -129,9 +117,12 @@ const Trading = () => {
                     }
 
                 </div>
-                <div className="col-lg-8 col-md-12">
+                <div className="col-lg-8 col-md-12 order-first order-lg-1">
+                <TradingViewWidget 
+                symbol="BSE:SENSEX"
+                theme={Themes.DARK}
                 
-                
+                />
                 </div>
             </div>
             <BuyModel show={buyModelOpen}
@@ -146,5 +137,5 @@ const Trading = () => {
     )
 }
 
-export default Trading;
+export default EquityTrading;
 

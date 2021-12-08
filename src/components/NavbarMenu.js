@@ -165,6 +165,9 @@ const NavbarMenu = () => {
                   <a class="dropdown-item" href="/trading" style={{ color: "black" }}>
                     Tradings
                   </a>
+                  <a class="dropdown-item" href="/equitytrading" style={{ color: "black" }}>
+                   Equity Tradings
+                  </a>
                 </div>
               </li>
               <li class="nav-item">

@@ -1,0 +1,17 @@
+.exchange-row-trade{
+    position: absolute;
+    display: none!important;
+}
+.stock-row:hover>.exchange-row-trade{
+    display: flex!important;
+}
+.stock-row:hover>div{
+    color: #00000034!important;
+    fill: #00000034!important;
+}
+.market-label-trading{
+    font-size: 0.9rem;
+}
+.search-input{
+    width: 100%!important;
+}

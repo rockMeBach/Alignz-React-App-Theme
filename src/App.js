@@ -72,6 +72,7 @@ import Home from "./screens/Home/Home";
 import ChangePassword from "./components/Pages/ChangePassword";
 import Telegram from "./screens/Pages/Telegram";
 import Trading from "./screens/Trading/Trading"
+import EquityTrading from "./screens/EquityTrading/EquityTrading"
 import {
   dispatchLogin,
   fetchUser,
@@ -244,7 +245,11 @@ const App = () => {
                   path={`${process.env.PUBLIC_URL}/trading`}
                   component={Trading}
                 />
-                
+                              <Route
+                  exact
+                  path={`${process.env.PUBLIC_URL}/equitytrading`}
+                  component={EquityTrading}
+                />
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/appinbox`}
