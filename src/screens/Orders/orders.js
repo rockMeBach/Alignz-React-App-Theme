@@ -7,12 +7,16 @@ import DownloadIcon from '@mui/icons-material/Download';
 import axios from 'axios';
 import BACKEND_URL from "../../Backend_url";
 import moment from "moment"
+import ReactExport from "react-export-excel";
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 
 const Orders = () => {
     const auth = useSelector((state) => state.auth);
     const [orders, setOrders] = useState([])
-
 
 
     useEffect(() => {
@@ -22,7 +26,11 @@ const Orders = () => {
             }
         }).then(data => {
             console.log(data)
-            setOrders(data.data)
+            const updatedTimeData = data.data.map(order=>{
+                order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm")
+                return order;
+            })
+            setOrders(updatedTimeData)
         })
     }, [auth])
 
@@ -45,7 +53,29 @@ const Orders = () => {
                     </InputGroup>
                 </div>
                 <div className='col-lg-6 col-md-12 text-end'>
-                    <Button variant="outline-danger" style={{ borderColor: 'rgb(226, 116, 152)',color:'rgb(226, 116, 152)' }}><DownloadIcon/> Download Historical Orders</Button>
+                    <ExcelFile element={<Button variant="outline-danger" style={{ borderColor: 'rgb(226, 116, 152)', color: 'rgb(226, 116, 152)' }}>
+                        <DownloadIcon /> Download Historical Orders
+                    </Button>}>
+                        <ExcelSheet data={orders} name="orders">
+                            <ExcelColumn label="Instrument" value="name" />
+                            <ExcelColumn label="Type" value="type" />
+                            <ExcelColumn label="Exch"
+                                value="exchange" />
+                            <ExcelColumn label="Time"
+                                value="orderTime" />
+                            <ExcelColumn label="Product"
+                                value="product" />
+                            <ExcelColumn label="QTY"
+                                value="qty" />
+                            <ExcelColumn label="LTP"
+                                value="triggeredPrice" />
+                            <ExcelColumn label="Price"
+                                value="price" />
+                            <ExcelColumn label="Status"
+                                value="orderType" />
+                        </ExcelSheet>
+                    </ExcelFile>
+
                 </div>
             </div>
             <div className="row">
@@ -80,7 +110,7 @@ const Orders = () => {
                                             <td>{order.triggeredPrice}</td>
                                             <td>{order.price}</td>
                                             <td>
-                                                <span className={`p-1 rounded ${order.orderType == 'open' ? "bg-primary" :order.orderType == 'executed'?"bg-success": "bg-danger"} text-white`}>
+                                                <span className={`p-1 rounded ${order.orderType == 'open' ? "bg-primary" : order.orderType == 'executed' ? "bg-success" : "bg-danger"} text-white`}>
                                                     {order.orderType}
                                                 </span>
                                             </td>
