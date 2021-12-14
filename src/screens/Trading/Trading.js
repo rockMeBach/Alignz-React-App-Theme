@@ -22,11 +22,12 @@ const Trading = () => {
     const [tradeWatch, selectTradeWatch] = useState([])
     const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
     const [sellInstrument,setSellInstrument] = useState({instrument_token:'',market:''})
-    var market = ["future", "option", "mcx", "currency", "crypto"]
+    var market = ["equity","future", "option", "mcx", "currency", "crypto"]
 
     useEffect(()=>{
         const socket = io(`http://${BACKEND_URL}`);
         socket.on("futureData",futureLiveData);
+        socket.on("equityData",equityLiveData);
     },[])
 
     const futureLiveData = (futureData) =>{
@@ -38,6 +39,18 @@ const Trading = () => {
             document.getElementById(futureData.instrument_token).style.color = change<0?"red":"green"
             document.getElementById(futureData.instrument_token+"-change").innerHTML = change+"%"
             document.getElementById(futureData.instrument_token+"-change").style.color = change<0?"red":"green"
+        }
+    }
+    const equityLiveData = (equityData) =>{
+        
+        if(document.getElementById(equityData.instrument_token))
+        {
+            console.log(equityData)
+            var change =equityData.change.toFixed(2)
+            document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)
+            document.getElementById(equityData.instrument_token).style.color = change<0?"red":"green"
+            document.getElementById(equityData.instrument_token+"-change").innerHTML = change+"%"
+            document.getElementById(equityData.instrument_token+"-change").style.color = change<0?"red":"green"
         }
     }
 
@@ -114,8 +127,8 @@ const Trading = () => {
                                         <div class="row border-bottom border-top p-3 stock-row">
                                             <div class="col-md-3 text-break">{tradeWatchItem[tradeWatchItem.type].split(":")[1]}</div>
                                             <div class="col-md-3 ">{tradeWatchItem[tradeWatchItem.type].split(":")[0]}</div>
-                                            <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>-0.22% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>40.73</div>
+                                            <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
+                                            <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>0.00</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
                                                 <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
                                                 <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
@@ -135,10 +148,12 @@ const Trading = () => {
                 </div>
             </div>
             <BuyModel show={buyModelOpen}
+                setShow={setBuyModelOpen}
                 onClose={()=>setBuyModelOpen(false)}
                 instrument={buyInstrument}
             />
             <SellModel show={sellModelOpen}
+                setShow={setSellModelOpen}
                 onClose={()=>setSellModelOpen(false)}
                 instrument={sellInstrument}
             />
