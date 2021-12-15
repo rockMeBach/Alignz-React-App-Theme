@@ -1,62 +1,80 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux"
 import PageHeader from "../../components/PageHeader";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Form, FormControl, InputGroup, Button, ListGroup } from "react-bootstrap";
+import { Form, FormControl, InputGroup, Button, ListGroup, Spinner } from "react-bootstrap";
 import axios from "axios"
 import "./Trading.css"
 import BACKEND_URL from "../../Backend_url";
+import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
 import io from 'socket.io-client';
 
 
 const Trading = () => {
+
+    const auth = useSelector((state) => state.auth);
+
+
     const [search, setSearch] = useState('')
     const [selectMarket, setSelectMarket] = useState()
     const [buyModelOpen, setBuyModelOpen] = useState(false)
     const [sellModelOpen, setSellModelOpen] = useState(false)
     const [marketList, setMarketList] = useState([])
-    const [tradeWatch, selectTradeWatch] = useState([])
-    const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
-    const [sellInstrument,setSellInstrument] = useState({instrument_token:'',market:''})
-    var market = ["equity","future", "option", "mcx", "currency", "crypto"]
+    const [tradeWatch, setTradeWatch] = useState([])
+    const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: ''})
+    const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: ''})
+    var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
 
-    useEffect(()=>{
-        const socket = io(`http://${BACKEND_URL}`);
-        socket.on("futureData",futureLiveData);
-        socket.on("equityData",equityLiveData);
-    },[])
+    useEffect(() => {
+        console.log(auth)
+        axios.get(`http://${BACKEND_URL}/api/trading/getWatchlist`,{
+            params:{
+                userID:auth.user._id
+            }
+        }).then(data=>{
+            console.log(data)
+            if(data.data)
+            setTradeWatch(data.data.watchlist)
+        })
+    }, [auth])
 
-    const futureLiveData = (futureData) =>{
-        // console.log(futureData)
-        if(document.getElementById(futureData.instrument_token))
-        {
-            var change =futureData.change.toFixed(2)
+    useEffect(() => {
+        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
+        socket.on("futureData", futureLiveData);
+        socket.on("equityData", equityLiveData);
+    }, [])
+
+
+
+    const futureLiveData = (futureData) => {
+
+        if (document.getElementById(futureData.instrument_token)) {
+            var change = futureData.change.toFixed(2)
             document.getElementById(futureData.instrument_token).innerHTML = futureData.last_price.toFixed(2)
-            document.getElementById(futureData.instrument_token).style.color = change<0?"red":"green"
-            document.getElementById(futureData.instrument_token+"-change").innerHTML = change+"%"
-            document.getElementById(futureData.instrument_token+"-change").style.color = change<0?"red":"green"
+            document.getElementById(futureData.instrument_token).style.color = change < 0 ? "red" : "green"
+            document.getElementById(futureData.instrument_token + "-change").innerHTML = change + "%"
+            document.getElementById(futureData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
         }
     }
-    const equityLiveData = (equityData) =>{
-        
-        if(document.getElementById(equityData.instrument_token))
-        {
-            console.log(equityData)
-            var change =equityData.change.toFixed(2)
+    const equityLiveData = (equityData) => {
+
+        if (document.getElementById(equityData.instrument_token)) {
+            var change = equityData.change.toFixed(2)
             document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)
-            document.getElementById(equityData.instrument_token).style.color = change<0?"red":"green"
-            document.getElementById(equityData.instrument_token+"-change").innerHTML = change+"%"
-            document.getElementById(equityData.instrument_token+"-change").style.color = change<0?"red":"green"
+            document.getElementById(equityData.instrument_token).style.color = change < 0 ? "red" : "green"
+            document.getElementById(equityData.instrument_token + "-change").innerHTML = change + "%"
+            document.getElementById(equityData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
         }
     }
 
 
     const getSearchResults = (e) => {
-        setSearch(e)
+        setSearch(e);
         axios.get(`http://${BACKEND_URL}/api/trading/getSearchResults`, {
             params: {
                 market: selectMarket,
@@ -64,19 +82,45 @@ const Trading = () => {
             }
         }).then(data => {
             // console.log(data.data)
-            setMarketList(data.data)
+            const reduceRedundancyData = data.data.filter(listItem => {
+                if (!tradeWatch.some(trade => trade.instrument_token == listItem.instrument_token))
+                    return listItem;
+            })
+            setMarketList(reduceRedundancyData)
         })
     }
 
+    const addToWatchList = (marketListItem) => {
+        const data = {
+            userID: auth.user._id,
+            instrument_token: marketListItem.instrument_token,
+            name: marketListItem[marketListItem.type].split(":")[1],
+            exch: marketListItem[marketListItem.type].split(":")[0],
+            type: marketListItem.type
+        }
+        axios.post(`http://${BACKEND_URL}/api/trading/setWatchlist`, data).then(data => {
+            setTradeWatch(data.data.watchlist)
+        })
+    }
 
     
+    const deleteTrade = (instrument_token) => {
+        const data = {
+            userID: auth.user._id,
+            instrument_token: instrument_token
+        }
+        axios.put(`http://${BACKEND_URL}/api/trading/pullWatchlist`, data).then(data => {
+            setTradeWatch(data.data.watchlist)
+        })
+    }
+
     return (
         <div className="container">
             <PageHeader
                 HeaderText="Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
-            <div className="row clearfix" style={{height:'100%'}}>
+            <div className="row clearfix" style={{ height: '100%' }}>
                 <div className="col-lg-4 col-md-12">
                     <div className="row">
                         <div className="col-md-6">
@@ -105,18 +149,27 @@ const Trading = () => {
                             </Form.Select>
                             <InputGroup.Text id="basic-addon1"><SearchIcon /></InputGroup.Text>
                             <FormControl aria-label="Search" value={search} onChange={(e) => { getSearchResults(e.target.value) }} placeholder="Search e.g. Nifty, Infy" />
-                            {search && <ListGroup className="search-input">
-                                {
-                                    marketList.map(marketListItem => {
-                                        return (
-                                            <ListGroup.Item onClick={(e) => {
-                                                setSearch(''); selectTradeWatch([...tradeWatch, marketListItem])
-                                            }} action>
-                                                <AddCircleOutlineIcon /> {marketListItem[marketListItem.type]}
-                                            </ListGroup.Item>)
-                                    })
-                                }
-                            </ListGroup>}
+                            {search &&
+                                marketList.length == 0 ?
+                                <InputGroup className="justify-content-center mt-2">
+                                    <Spinner animation="border" variant="dark" />
+                                </InputGroup>
+                                :
+                                <ListGroup className="search-input">
+                                    {
+                                        marketList.map(marketListItem => {
+                                            return (
+                                                <ListGroup.Item onClick={(e) => {
+                                                    setSearch('');
+                                                    addToWatchList(marketListItem)
+                                                    setMarketList([]);
+                                                }} action>
+                                                    <AddCircleOutlineIcon /> {marketListItem[marketListItem.type]}
+                                                </ListGroup.Item>)
+                                        })
+                                    }
+                                </ListGroup>
+                            }
                         </InputGroup>
                     </div>
                     {
@@ -125,14 +178,14 @@ const Trading = () => {
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div class="row border-bottom border-top p-3 stock-row">
-                                            <div class="col-md-3 text-break">{tradeWatchItem[tradeWatchItem.type].split(":")[1]}</div>
-                                            <div class="col-md-3 ">{tradeWatchItem[tradeWatchItem.type].split(":")[0]}</div>
+                                            <div class="col-md-3 text-break">{tradeWatchItem.name}</div>
+                                            <div class="col-md-3 ">{tradeWatchItem.exch}</div>
                                             <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
                                             <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>0.00</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
-                                                <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
-                                                <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
-                                                <Button variant="dark" index={index} onClick={() => {selectTradeWatch(tradeWatch.splice(index, 1))}}><DeleteIcon /></Button>
+                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, }); setBuyModelOpen(true) }}>BUY</Button>
+                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, }); setSellModelOpen(true) }}>SELL</Button>
+                                                <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
                                             </div>
                                         </div>
                                     </div>
@@ -143,18 +196,18 @@ const Trading = () => {
 
                 </div>
                 <div className="col-lg-8 col-md-12">
-                
-                
+
+
                 </div>
             </div>
             <BuyModel show={buyModelOpen}
                 setShow={setBuyModelOpen}
-                onClose={()=>setBuyModelOpen(false)}
+                onClose={() => setBuyModelOpen(false)}
                 instrument={buyInstrument}
             />
             <SellModel show={sellModelOpen}
                 setShow={setSellModelOpen}
-                onClose={()=>setSellModelOpen(false)}
+                onClose={() => setSellModelOpen(false)}
                 instrument={sellInstrument}
             />
         </div >

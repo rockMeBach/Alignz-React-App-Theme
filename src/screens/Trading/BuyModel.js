@@ -6,6 +6,8 @@ import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
+import io from 'socket.io-client';
 
 const BuyModal = ({ show, onClose, instrument, setShow }) => {
 
@@ -28,67 +30,75 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     })
 
 
+
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
+
+    useEffect(()=>{
+        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
+        socket.on("futureData", futureLiveDataModal);
+        socket.on("equityData", equityLiveDataModal);
+    },[instrument])
+
+    const futureLiveDataModal = (futureData) => {
+        if(instrument.instrument_token==futureData.instrument_token)
+        setCurrentPrice(futureData.last_price.toFixed(2))
+        console.log(instrument)
+    }
+    const equityLiveDataModal = (equityData) => {
+        if(instrument.instrument_token==equityData.instrument_token)
+        setCurrentPrice(equityData.last_price.toFixed(2))
+        console.log(instrument)
+    }
+
 
     useEffect(() => {
         setPrice(0)
         setTriggeredPrice(0)
         setCurrentPrice(0)
-        axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
-            params: {
-                market: instrument.market,
-                instrument_token: instrument.instrument_token
-            }
-        }).then(data => {
-            console.log(data)
-            setInstrumentData(data.data)
-            setPrice(data.data.minutes.close)
-            setTriggeredPrice(data.data.minutes.close)
-            setCurrentPrice(data.data.minutes.close)
-        })
     }, [show])
 
 
     const buy = () => {
-        const data = { userID:auth.user._id,
-            type:'buy',
-            instrument_token:instrument.instrument_token,
-            marketSearch:instrument.market, // Equity, future, Crypto....
+        const data = {
+            userID: auth.user._id,
+            type: 'buy',
+            instrument_token: instrument.instrument_token,
+            marketSearch: instrument.market, // Equity, future, Crypto....
             qty,
             price,
             triggeredPrice,
-            intradayMIS:false,
-            longtermCNC:false,
-            market:false,
-            limit:false,
-            slm:false,
-            name:instrumentData[instrument.market].split(":")[1],
-            product:'product',
-            exchange:instrumentData[instrument.market].split(":")[0],
-            margin:qty * price / leverage ,
-            currentPrice:currentPrice
+            intradayMIS: false,
+            longtermCNC: false,
+            market: false,
+            limit: false,
+            slm: false,
+            name: instrumentData[instrument.market].split(":")[1],
+            product: 'product',
+            exchange: instrumentData[instrument.market].split(":")[0],
+            margin: qty * price / leverage,
+            currentPrice: currentPrice
         }
 
-            data[tradeTerm]=true;
-            data[orderTypes]=true;
-            if(orderTypes== 'slm')
+        data[tradeTerm] = true;
+        data[orderTypes] = true;
+        if (orderTypes == 'slm')
             data.margin = qty * triggeredPrice / leverage
 
-            axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`,data).then(data=>{
-                setShow(false)
-                return toast(data.data, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    type: "success"
-                });
-            }).catch(err=>{
-                console.log(err.response)
+        axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`, data).then(data => {
+            setShow(false)
+            return toast(data.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "success"
+            });
+        }).catch(err => {
+            console.log(err.response)
             return toast(err.response.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -129,7 +139,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                                             Intraday <span>MIS</span>
                                         </label>
                                     </div><div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longtermCNC')}  checked={tradeTerm == 'longtermCNC'}/>
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longtermCNC')} checked={tradeTerm == 'longtermCNC'} />
                                         <label class="form-check-label text-success" for="longterm">
                                             Longterm <span>CNC</span>
                                         </label>
@@ -140,19 +150,19 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                         <div className="row mt-2">
                             <div className="col-md-4">
                                 <label class="mb-2" for="qty">QTY</label>
-                                <input type="number" class="form-control" id="qty" min={0} 
-                                value={qty}
-                                onChange={(e) => 
-                                    setQty(parseFloat(e.target.value))} 
-                                    />
+                                <input type="number" class="form-control" id="qty" min={0}
+                                    value={qty}
+                                    onChange={(e) =>
+                                        setQty(parseFloat(e.target.value))}
+                                />
                             </div>
                             <div className="col-md-4">
                                 <label class="mb-2" for="price">Price</label>
-                                <input type="number" class="form-control" value={price} disabled={orderTypes== 'market' || orderTypes== 'slm'} id="price" onChange={(e) => setPrice(parseFloat(e.target.value))} step={0.05} />
+                                <input type="number" class="form-control" value={price} disabled={orderTypes == 'market' || orderTypes == 'slm'} id="price" onChange={(e) => setPrice(parseFloat(e.target.value))} step={0.05} />
                             </div>
                             <div className="col-md-4">
                                 <label class="mb-2" for="triggerPrice">Trigger Price</label>
-                                <input type="number" class="form-control" value={triggeredPrice} disabled={orderTypes== 'market' || orderTypes== 'limit'} id="triggerPrice"
+                                <input type="number" class="form-control" value={triggeredPrice} disabled={orderTypes == 'market' || orderTypes == 'limit'} id="triggerPrice"
                                     onChange={(e) => {
                                         setTriggeredPrice(parseFloat(e.target.value))
                                     }}
@@ -188,24 +198,24 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                     <span className="text-start" style={{ width: '50%' }}>
                         Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
                         {
-                            orderTypes== 'market' && <span>
+                            orderTypes == 'market' && <span>
                                 {qty * price / leverage}
                             </span>
                         }
                         {
-                            orderTypes== 'limit' && <span>
+                            orderTypes == 'limit' && <span>
                                 {qty * price / leverage}
                             </span>
                         }
                         {
-                            orderTypes== 'slm' && <span>
+                            orderTypes == 'slm' && <span>
                                 {qty * triggeredPrice / leverage}
                             </span>
                         }
                     </span>
                 }
                 onClose={onClose}
-                onSave={currentPrice==0?null:buy}
+                onSave={currentPrice == 0 ? null : buy}
                 closeButtonVariant="outline-success"
                 saveButtonVariant="success"
                 closeButtonContent="Cancel"
