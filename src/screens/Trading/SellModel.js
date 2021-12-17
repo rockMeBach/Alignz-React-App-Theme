@@ -6,6 +6,8 @@ import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
+import io from 'socket.io-client';
 
 const SellModal = ({ show, onClose, instrument,setShow }) => {
 
@@ -30,23 +32,43 @@ const SellModal = ({ show, onClose, instrument,setShow }) => {
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
-    useEffect(() => {
+    const [socket,setSocket] = useState(null);
+    useEffect(()=>{
         setPrice(0)
         setTriggeredPrice(0)
         setCurrentPrice(0)
-        axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
-            params: {
-                market: instrument.market,
-                instrument_token: instrument.instrument_token
+        if(show==true){
+        setSocket( io(`http://${BACKEND_URL_LIVE_TRADE}`));
+
+        }
+        else{
+
+            if(socket)
+            {
+                console.log("closed")
+            socket.disconnect()
             }
-        }).then(data => {
-            console.log(data)
-            setInstrumentData(data.data)
-            setPrice(data.data.minutes.close)
-            setTriggeredPrice(data.data.minutes.close)
-            setCurrentPrice(data.data.minutes.close)
-        })
-    }, [show])
+        }
+    },[show])
+
+    useEffect(()=>{
+        if(socket)
+        {
+        socket.on("futureData", futureLiveDataModal);
+        socket.on("equityData", equityLiveDataModal);
+        }
+    },[socket])
+
+    const futureLiveDataModal = (futureData) => {
+        if(instrument.instrument_token==futureData.instrument_token)
+        setCurrentPrice(futureData.last_price.toFixed(2))
+        console.log(instrument)
+    }
+    const equityLiveDataModal = (equityData) => {
+        if(instrument.instrument_token==equityData.instrument_token)
+        setCurrentPrice(equityData.last_price.toFixed(2))
+        console.log(instrument)
+    }
 
 
     const sell = () => {
@@ -62,9 +84,9 @@ const SellModal = ({ show, onClose, instrument,setShow }) => {
             market:false,
             limit:false,
             slm:false,
-            name:instrumentData[instrument.market].split(":")[1],
-            product:'product',
-            exchange:instrumentData[instrument.market].split(":")[0],
+            name: instrument.name,
+            product: 'product',
+            exchange: instrument.exchange,
             margin:qty * price / leverage,
             currentPrice
         }
@@ -111,10 +133,12 @@ const SellModal = ({ show, onClose, instrument,setShow }) => {
                             SELL
                         </h3>
                         <div className="row">
-                            <div className="col-md-12">
-                                <h6>{instrumentData[instrument.market]} X {qty} QTY</h6>
+                            <div className="col-md-6">
+                                <h6>{instrument.name} X {qty} QTY</h6>
                             </div>
-
+                            <div className="col-md-6">
+                                <h6>{currentPrice}</h6>
+                                </div>
                         </div>
                     </div>
                 } bodyText={
@@ -188,7 +212,7 @@ const SellModal = ({ show, onClose, instrument,setShow }) => {
                         Margin Required <InfoOutlinedIcon className="text-danger" /> &#8377;
                         {
                             orderTypes== 'market' && <span>
-                                {qty * price / leverage}
+                                {qty * currentPrice / leverage}
                             </span>
                         }
                         {

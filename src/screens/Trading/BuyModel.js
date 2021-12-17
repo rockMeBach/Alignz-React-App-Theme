@@ -18,27 +18,39 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     const [currentPrice, setCurrentPrice] = useState(0)
     const [tradeTerm, setTradeTerm] = useState('intradayMIS')
     const [leverage, setLeverage] = useState(1)
-    const [instrumentData, setInstrumentData] = useState({
-        market: "",
-        minutes: {
-            close: 0,
-            high: 0,
-            low: 0,
-            minute: "",
-            open: 0,
-        }
-    })
+    
 
 
 
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
+    const [socket,setSocket] = useState(null);
     useEffect(()=>{
-        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
+        setPrice(0)
+        setTriggeredPrice(0)
+        setCurrentPrice(0)
+        if(show==true){
+        setSocket( io(`http://${BACKEND_URL_LIVE_TRADE}`));
+
+        }
+        else{
+
+            if(socket)
+            {
+                console.log("closed")
+            socket.disconnect()
+            }
+        }
+    },[show])
+
+    useEffect(()=>{
+        if(socket)
+        {
         socket.on("futureData", futureLiveDataModal);
         socket.on("equityData", equityLiveDataModal);
-    },[instrument])
+        }
+    },[socket])
 
     const futureLiveDataModal = (futureData) => {
         if(instrument.instrument_token==futureData.instrument_token)
@@ -52,11 +64,6 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     }
 
 
-    useEffect(() => {
-        setPrice(0)
-        setTriggeredPrice(0)
-        setCurrentPrice(0)
-    }, [show])
 
 
     const buy = () => {
@@ -73,9 +80,9 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
             market: false,
             limit: false,
             slm: false,
-            name: instrumentData[instrument.market].split(":")[1],
+            name: instrument.name,
             product: 'product',
-            exchange: instrumentData[instrument.market].split(":")[0],
+            exchange: instrument.exchange,
             margin: qty * price / leverage,
             currentPrice: currentPrice
         }
@@ -122,10 +129,12 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                             BUY
                         </h3>
                         <div className="row">
-                            <div className="col-md-12">
-                                <h6>{instrumentData[instrument.market]} X {qty} QTY</h6>
+                            <div className="col-md-6">
+                                <h6>{instrument.name} X {qty} QTY</h6>
                             </div>
-
+                            <div className="col-md-6">
+                                <h6>{currentPrice}</h6>
+                                </div>
                         </div>
                     </div>
                 } bodyText={
@@ -199,7 +208,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                         Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
                         {
                             orderTypes == 'market' && <span>
-                                {qty * price / leverage}
+                                {qty * currentPrice / leverage}
                             </span>
                         }
                         {

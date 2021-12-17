@@ -8,6 +8,8 @@ import axios from 'axios';
 import BACKEND_URL from "../../Backend_url";
 import moment from "moment"
 import ReactExport from "react-export-excel";
+import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
+import io from 'socket.io-client';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -18,8 +20,40 @@ const Orders = () => {
     const auth = useSelector((state) => state.auth);
     const [search, setSearch] = useState('')
     const [orders, setOrders] = useState([])
+    const [todaysData,setTodaysData]=useState([])
     const ordersRef = useRef([])
 
+    useEffect(() => {
+        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
+        socket.on("futureData", futureLiveData);
+        socket.on("equityData", equityLiveData);
+    }, [])
+
+    const futureLiveData = (futureData) => {
+        if (document.getElementsByClassName(futureData.instrument_token)) {
+            var elements = document.getElementsByClassName(futureData.instrument_token)
+            var change = futureData.change< 0 ? "red" : "green"
+            var data = futureData.last_price.toFixed(2)
+            Array.from(elements).forEach(element => {
+                element.innerHTML = data
+                element.style.color = change 
+            });
+
+        }
+    }
+
+    const equityLiveData = (equityData) => {
+        if (document.getElementsByClassName(equityData.instrument_token)) {
+            var elements = document.getElementsByClassName(equityData.instrument_token)
+            var change = equityData.change< 0 ? "red" : "green"
+            var data = equityData.last_price.toFixed(2)
+            Array.from(elements).forEach(element => {
+                element.innerHTML = data
+                element.style.color = change 
+            });
+
+        }
+    }
 
     useEffect(() => {
         axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {
@@ -28,8 +62,8 @@ const Orders = () => {
             }
         }).then(data => {
             console.log(data)
-            const updatedTimeData = data.data.map(order => {
-                order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm")
+            ordersRef.current = data.data.map(order => {
+                order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm:ss")
                 if(order.market)
                 order.order = "Market"
                 if(order.limit)
@@ -40,16 +74,23 @@ const Orders = () => {
                 order.price = order.triggeredPrice
                 return order;
             })
-            setOrders(updatedTimeData)
-            ordersRef.current.values = updatedTimeData
+
+            const todaysData = ordersRef.current.map(order=>{
+                if(new Date(order.orderTime).getDate()==new Date().getDate()&&new Date(order.orderTime).getMonth()==new Date().getMonth()
+                &&new Date(order.orderTime).getFullYear()==new Date().getFullYear()
+                )
+                return order;
+            })
+            setOrders(todaysData)
+            setTodaysData(todaysData)
         })
     }, [auth])
 
     const getSearchResults = (order) => {
         if (order == '')
-            return setOrders(ordersRef.current.values)
+            return setOrders(todaysData)
         order = order.toUpperCase()
-        const results = ordersRef.current.values.filter(item => {
+        const results = todaysData.filter(item => {
             if (new RegExp(order).test(item.name))
                 return item;
         })
@@ -72,7 +113,7 @@ const Orders = () => {
                             aria-describedby="basic-addon1"
                             onChange={(e) => {
                                 if (e.target.value == '')
-                                    setOrders(ordersRef.current.values);
+                                    setOrders(ordersRef.current);
                                 setSearch(e.target.value)
                             }}
                         />
@@ -87,7 +128,7 @@ const Orders = () => {
                         style={{ borderColor: 'rgb(226, 116, 152)', color: 'rgb(226, 116, 152)' }}>
                         <DownloadIcon /> Download Historical Orders
                     </Button>}>
-                        <ExcelSheet data={orders} name="orders">
+                        <ExcelSheet data={ordersRef.current} name="orders">
                             <ExcelColumn label="Instrument" value="name" />
                             <ExcelColumn label="Type" value="type" />
                             <ExcelColumn label="Exch"
@@ -99,7 +140,7 @@ const Orders = () => {
                             <ExcelColumn label="QTY"
                                 value="qty" />
                             <ExcelColumn label="LTP"
-                                value="" />
+                                value="currentPrice" />
                             <ExcelColumn label="Price"
                                 value="price" />
                             <ExcelColumn label="Status"
@@ -133,12 +174,12 @@ const Orders = () => {
 
                                         <tr>
                                             <td>{order.name}</td>
-                                            <td>{order.type}</td>
+                                            <td>{order.type[0].toUpperCase()+order.type.slice(1)}</td>
                                             <td>{order.exchange}</td>
                                             <td>{order.orderTime}</td>
                                             <td>{order.order}</td>
                                             <td>{order.qty}</td>
-                                            <td>-</td>
+                                            <td className={`${order.instrument_token}`}>0.00</td>
                                             <td>{order.price}</td>
                                             <td>
                                                 <span className={`p-1 rounded ${order.orderType == 'open' ? "bg-primary" : order.orderType == 'executed' ? "bg-success" : "bg-danger"} text-white`}>

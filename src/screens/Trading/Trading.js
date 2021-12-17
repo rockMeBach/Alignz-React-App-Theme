@@ -13,6 +13,7 @@ import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
 import io from 'socket.io-client';
+import TVChartContainer from '../../components/TradingViewChart/TradingViewChart'
 
 
 const Trading = () => {
@@ -183,8 +184,8 @@ const Trading = () => {
                                             <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
                                             <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>0.00</div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
-                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, }); setBuyModelOpen(true) }}>BUY</Button>
-                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, }); setSellModelOpen(true) }}>SELL</Button>
+                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType,name:tradeWatchItem.name,exchange:tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
+                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType,name:tradeWatchItem.name,exchange:tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
                                                 <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
                                             </div>
                                         </div>
@@ -195,8 +196,11 @@ const Trading = () => {
                     }
 
                 </div>
-                <div className="col-lg-8 col-md-12">
-
+                <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart">
+                    <TVChartContainer
+                        id="trading-view-chart"
+                        style={{height:'500px'}}
+                    />
 
                 </div>
             </div>
