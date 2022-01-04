@@ -1,7 +1,7 @@
 // api/stream.js
 import historyProvider from './historyProvider.js'
 // we use Socket.io client to connect to cryptocompare's socket.io stream
-var io = require('socket.io-client')
+import io from 'socket.io-client';
 var socket_url = 'wss://streamer.cryptocompare.com'
 var socket = io(socket_url)
 // keep track of subscriptions
@@ -47,6 +47,7 @@ socket.on('m', (e) => {
  // here we get all events the CryptoCompare connection has subscribed to
  // we need to send this new data to our subscribed charts
  const _data= e.split('~')
+ console.log(_data)
  if (_data[0] === "3") {
   // console.log('Websocket Snapshot load event complete')
   return

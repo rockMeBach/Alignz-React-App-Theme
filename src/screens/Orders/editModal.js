@@ -9,14 +9,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import io from 'socket.io-client';
 
-const BuyModal = ({ show, onClose, instrument, setShow }) => {
+const EditModal = ({ show, onClose, order, setShow }) => {
 
-    const [orderTypes, setOrderTypes] = useState('market')
-    const [qty, setQty] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [triggeredPrice, setTriggeredPrice] = useState(0)
+    const [orderTypes, setOrderTypes] = useState(order['market']?'market':order['limit']?'limit':'slm')
+    const [qty, setQty] = useState(order.qty)
+    const [price, setPrice] = useState(order.price)
+    const [triggeredPrice, setTriggeredPrice] = useState(order.triggeredPrice)
     const [currentPrice, setCurrentPrice] = useState(0)
-    const [tradeTerm, setTradeTerm] = useState('intradayMIS')
+    const [tradeTerm, setTradeTerm] = useState(order['intradayMIS']?'intradayMIS':'longtermCNC')
     const [leverage, setLeverage] = useState(1)
     
 
@@ -27,12 +27,15 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
 
     const [socket,setSocket] = useState(null);
     useEffect(()=>{
-        setPrice(0)
-        setTriggeredPrice(0)
+        console.log(order)
         setCurrentPrice(0)
+        setOrderTypes(order['market']?'market':order['limit']?'limit':'slm')
+        setQty(order.qty)
+        setPrice(order.slm?0:order.price)
+        setTriggeredPrice(order.triggeredPrice)
+        setTradeTerm(order['intradayMIS']?'intradayMIS':'longtermCNC')
         if(show==true){
         setSocket( io(`http://${BACKEND_URL_LIVE_TRADE}`));
-
         }
         else{
 
@@ -69,36 +72,32 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     },[orderTypes])
 
     const futureLiveDataModal = (futureData) => {
-        if(instrument.instrument_token==futureData.instrument_token)
+        if(order.instrument_token==futureData.instrument_token)
         setCurrentPrice(futureData.last_price.toFixed(2))
-        console.log(instrument)
+        
     }
     const equityLiveDataModal = (equityData) => {
-        if(instrument.instrument_token==equityData.instrument_token)
+        if(order.instrument_token==equityData.instrument_token)
         setCurrentPrice(equityData.last_price.toFixed(2))
-        console.log(instrument)
+        
     }
 
 
 
 
-    const buy = () => {
+    const update = () => {
         const data = {
             userID: auth.user._id,
-            type: 'buy',
-            instrument_token: instrument.instrument_token,
-            marketSearch: instrument.market, // Equity, future, Crypto....
+            orderID:order._id,
             qty,
             price,
+            type:order.type,
             triggeredPrice,
             intradayMIS: false,
             longtermCNC: false,
             market: false,
             limit: false,
             slm: false,
-            name: instrument.name,
-            product: 'product',
-            exchange: instrument.exchange,
             margin: qty * price / leverage,
             currentPrice: currentPrice
         }
@@ -108,9 +107,9 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
         if (orderTypes == 'slm')
             data.margin = qty * triggeredPrice / leverage
 
-        axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`, data).then(data => {
+        axios.put(`http://${BACKEND_URL}/api/trading/updateOrder`, data).then(data => {
             setShow(false)
-            return toast(data.data, {
+            toast(data.data, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -120,8 +119,24 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                 progress: undefined,
                 type: "success"
             });
+
         }).catch(err => {
             console.log(err.response)
+            if(err.response.data=="Order can't be edited due to recent change in status")
+            {
+                toast(err.response.data, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    type: "error"
+                });
+                setShow(false)
+                
+            }
             return toast(err.response.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -141,12 +156,12 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                 size={'40%'}
                 title={
                     <div className="container">
-                        <h3 className="text-success">
-                            BUY
+                        <h3>
+                            Edit order
                         </h3>
                         <div className="row">
                             <div className="col-md-6">
-                                <h6>{instrument.name} X {qty} QTY</h6>
+                                <h6>{order.name} X {qty} QTY</h6>
                             </div>
                             <div className="col-md-6">
                                 <h6>{currentPrice}</h6>
@@ -240,15 +255,15 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                     </span>
                 }
                 onClose={onClose}
-                onSave={currentPrice == 0 ? null : buy}
-                closeButtonVariant="outline-success"
-                saveButtonVariant="success"
+                onSave={update}
+                closeButtonVariant="outline-primary"
+                saveButtonVariant="primary"
                 closeButtonContent="Cancel"
-                saveButtonContent="BUY"
+                saveButtonContent="Update"
             />
             <ToastContainer />
         </>
     )
 }
 
-export default BuyModal
+export default EditModal

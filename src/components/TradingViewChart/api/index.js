@@ -13,8 +13,18 @@ export default {
 		setTimeout(() => cb(config), 0)
 		
 	},
-	searchSymbols: (userInput, exchange, symbolType, onResultReadyCallback) => {
+	searchSymbols:async (userInput, exchange, symbolType, onResultReadyCallback) => {
 		console.log('====Search Symbols running')
+        console.log('[searchSymbols]: Method call');
+    const symbols = await getAllSymbols();
+    const newSymbols = symbols.filter(symbol => {
+        const isExchangeValid = exchange === '' || symbol.exchange === exchange;
+        const isFullSymbolContainsInput = symbol.full_name
+            .toLowerCase()
+            .indexOf(userInput.toLowerCase()) !== -1;
+        return isExchangeValid && isFullSymbolContainsInput;
+    });
+    onResultReadyCallback(newSymbols);
 	},
 	resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
 		// expects a symbolInfo object in response

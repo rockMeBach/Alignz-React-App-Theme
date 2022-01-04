@@ -2,16 +2,19 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux'
 import PageHeader from "../../components/PageHeader";
 import { InputGroup, FormControl, Button, Table } from 'react-bootstrap'
+import UIModal from "../../components/UIElements/UIModal"
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 import axios from 'axios';
 import BACKEND_URL from "../../Backend_url";
 import moment from "moment"
 import ReactExport from "react-export-excel";
+import { ToastContainer, toast } from 'react-toastify';
 import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import io from 'socket.io-client';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import EditModal from "./editModal"
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -25,7 +28,12 @@ const Orders = () => {
     const [ordersOpen, setOrdersOpen] = useState([])
     const [ordersExecuted, setOrdersExecuted] = useState([])
     const [todaysData, setTodaysData] = useState([])
+    const [editOrderDetail,setEditOrderDetail] = useState({})
+    const [deleteOrderID,setDeleteOrderID] = useState(null)
+    const [openEditModal,setOpenEditModal] = useState(false)
+    const [deleteModal,setDeleteModal] = useState(false)
     const ordersRef = useRef([])
+
 
     useEffect(() => {
         const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
@@ -60,6 +68,7 @@ const Orders = () => {
     }
 
     useEffect(() => {
+        if(!openEditModal||!deleteModal)
         axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {
             params: {
                 userID: auth.user._id
@@ -95,12 +104,12 @@ const Orders = () => {
                 if(order.orderType!='open'&&order.orderType!='trigger pending')
                 return order;
             })
-
+            console.log(openData)
             setOrdersOpen(openData)
             setOrdersExecuted(executedData)
             setTodaysData(todaysData)
         })
-    }, [auth])
+    }, [auth,openEditModal,deleteModal])
 
     const getSearchResultsOpen = (order) => {
         if (order == '')
@@ -133,6 +142,40 @@ const Orders = () => {
                 return item;
         })
         setOrdersExecuted(results);
+    }
+
+    const deleteOrder = ()=>{
+        const orderID=deleteOrderID
+        axios.delete(`http://${BACKEND_URL}/api/trading/deleteOrder`,
+            {
+                params:{
+                    orderID:orderID
+                }
+            }
+        ).then(data=>{
+            toast(data.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "success"
+            });
+            setDeleteModal(false)
+        }).catch(err=>{
+            toast(err.response.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "success"
+            });
+        })
     }
 
     return (
@@ -224,12 +267,12 @@ const Orders = () => {
                                             <td>{order.price}</td>
                                             <td>
                                                 <span className={`p-1 rounded bg-primary text-white`}>
-                                                    {order.orderType[0].toUpperCase() + order.orderType.slice(1)}
+                                                    {order.orderType=='trigger pending'?'Trigger Pending':'Open'}
                                                 </span>
                                             </td>
                                             <td>
-                                            <EditOutlinedIcon />
-                                            <DeleteOutlineOutlinedIcon />
+                                            <EditOutlinedIcon onClick = {()=>{setOpenEditModal(true);setEditOrderDetail(order)}}/>
+                                            <DeleteOutlineOutlinedIcon onClick={()=>{setDeleteOrderID(order._id);setDeleteModal(true);}}/>
                                              </td>
                                         </tr>
                                     )
@@ -307,6 +350,22 @@ const Orders = () => {
                     </Table>
                 </div>
             </div>
+            <ToastContainer />
+            <EditModal show={openEditModal}
+                setShow={setOpenEditModal}
+                onClose={() => setOpenEditModal(false)}
+                order={editOrderDetail}
+            />
+            <UIModal show={deleteModal}
+            title={<h4>Delete Order</h4>}
+            bodyText={<h6>Are you sure?</h6>}
+            onClose={()=>setDeleteModal(false)}
+            onSave={deleteOrder}
+            closeButtonVariant="outline-primary"
+            saveButtonVariant="danger"
+            closeButtonContent="Cancel"
+            saveButtonContent="Delete"
+            />
         </div>
     )
 }

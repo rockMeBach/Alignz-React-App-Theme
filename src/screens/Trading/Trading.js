@@ -115,6 +115,7 @@ const Trading = () => {
         })
     }
 
+    
     return (
         <div className="container">
             <PageHeader
@@ -197,10 +198,11 @@ const Trading = () => {
 
                 </div>
                 <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart">
-                    <TVChartContainer
-                        id="trading-view-chart"
+                    {/* <TVChartContainer
+                        containerId="trading-view-chart"
+                        fullScreen={false}
                         style={{height:'500px'}}
-                    />
+                    /> */}
 
                 </div>
             </div>

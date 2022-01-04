@@ -59,6 +59,22 @@ const SellModal = ({ show, onClose, instrument,setShow }) => {
         }
     },[socket])
 
+    useEffect(()=>{
+        if(orderTypes=='market')
+        {
+            setPrice(0);
+            setTriggeredPrice(0)
+        }
+        if(orderTypes=='limit')
+        {
+            setTriggeredPrice(0)
+        }
+        if(orderTypes=='slm')
+        {
+            setPrice(0)
+        }
+    },[orderTypes])
+
     const futureLiveDataModal = (futureData) => {
         if(instrument.instrument_token==futureData.instrument_token)
         setCurrentPrice(futureData.last_price.toFixed(2))
