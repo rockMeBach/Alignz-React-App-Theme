@@ -283,7 +283,7 @@ const Orders = () => {
                 </div>
             </div>
             {/* Executed Orders */}
-            <div className="row">
+            <div className="row mt-5">
                 <div className='col-lg-6 col-md-12'>
                     <h5>Executed Orders</h5>
                     <InputGroup className="mb-3">

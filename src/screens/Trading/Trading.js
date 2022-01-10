@@ -27,20 +27,20 @@ const Trading = () => {
     const [sellModelOpen, setSellModelOpen] = useState(false)
     const [marketList, setMarketList] = useState([])
     const [tradeWatch, setTradeWatch] = useState([])
-    const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: ''})
-    const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: ''})
+    const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: '' })
+    const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: '' })
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
 
     useEffect(() => {
         console.log(auth)
-        axios.get(`http://${BACKEND_URL}/api/trading/getWatchlist`,{
-            params:{
-                userID:auth.user._id
+        axios.get(`http://${BACKEND_URL}/api/trading/getWatchlist`, {
+            params: {
+                userID: auth.user._id
             }
-        }).then(data=>{
+        }).then(data => {
             console.log(data)
-            if(data.data)
-            setTradeWatch(data.data.watchlist)
+            if (data.data)
+                setTradeWatch(data.data.watchlist)
         })
     }, [auth])
 
@@ -104,7 +104,7 @@ const Trading = () => {
         })
     }
 
-    
+
     const deleteTrade = (instrument_token) => {
         const data = {
             userID: auth.user._id,
@@ -115,7 +115,7 @@ const Trading = () => {
         })
     }
 
-    
+
     return (
         <div className="container">
             <PageHeader
@@ -127,11 +127,11 @@ const Trading = () => {
                     <div className="row">
                         <div className="col-md-6">
                             <h5 className="d-inline me-1">Nifty 50</h5>
-                            <p className="d-inline text-danger">15814.70</p>
+                            <p className="d-inline text-primary">NSE</p>
                         </div>
                         <div className="col-md-6 text-end">
-                            <p className="d-inline me-1 text-success">52735.39</p>
-                            <p className="d-inline">0.36%</p>
+                            <p className="d-inline me-1" id={`256265-change`}>0</p>
+                            <p className="d-inline" id={`256265`}>0.0%</p>
                         </div>
 
                     </div>
@@ -180,13 +180,14 @@ const Trading = () => {
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div class="row border-bottom border-top p-3 stock-row">
-                                            <div class="col-md-3 text-break">{tradeWatchItem.name}</div>
-                                            <div class="col-md-3 ">{tradeWatchItem.exch}</div>
-                                            <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}>0.00</div>
+                                            <div class="col-6 col-md-3 text-break order-md-1">{tradeWatchItem.name}</div>
+                                            <div className="col-6 col-md-3 text-end order-md-6" id={tradeWatchItem.instrument_token}>0.00</div>
+                                            <div class="col-6 col-md-3 order-md-3">{tradeWatchItem.exch}</div>
+                                            <div className="col-6 col-md-3 text-end order-md-9" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
+                                            
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
-                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType,name:tradeWatchItem.name,exchange:tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
-                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType,name:tradeWatchItem.name,exchange:tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
+                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
+                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
                                                 <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
                                             </div>
                                         </div>
@@ -197,12 +198,11 @@ const Trading = () => {
                     }
 
                 </div>
-                <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart">
-                    {/* <TVChartContainer
+                <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart" style={{ height: '500px' }}>
+                    <TVChartContainer
                         containerId="trading-view-chart"
                         fullScreen={false}
-                        style={{height:'500px'}}
-                    /> */}
+                    />
 
                 </div>
             </div>
