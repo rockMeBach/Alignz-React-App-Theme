@@ -63,7 +63,7 @@ const Trading = () => {
         }
     }
     const equityLiveData = (equityData) => {
-
+        // console.log(equityData)
         if (document.getElementById(equityData.instrument_token)) {
             var change = equityData.change.toFixed(2)
             document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)

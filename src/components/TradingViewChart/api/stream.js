@@ -1,26 +1,25 @@
 // api/stream.js
 import historyProvider from './historyProvider.js'
-// we use Socket.io client to connect to cryptocompare's socket.io stream
+import BACKEND_URL_LIVE_TRADE from "../../../Backend_live_feed_url";
 import io from 'socket.io-client';
-var socket_url = 'wss://streamer.cryptocompare.com'
+var socket_url = `http://${BACKEND_URL_LIVE_TRADE}`
 var socket = io(socket_url)
 // keep track of subscriptions
 var _subs = []
 
 export default {
   subscribeBars: function (symbolInfo, resolution, updateCb, uid, resetCache) {
-    const channelString = createChannelString(symbolInfo)
-    socket.emit('SubAdd', { subs: [channelString] })
-
+    
     var newSub = {
-      channelString,
+      ...symbolInfo,
       uid,
       resolution,
       symbolInfo,
-      lastBar: historyProvider.history[symbolInfo.name].lastBar,
+      lastBar: historyProvider.history[symbolInfo.full_name].lastBar,
       listener: updateCb,
     }
     _subs.push(newSub)
+    console.log(_subs)
   },
   unsubscribeBars: function (uid) {
     var subIndex = _subs.findIndex(e => e.uid === uid)
@@ -29,7 +28,6 @@ export default {
       return
     }
     var sub = _subs[subIndex]
-    socket.emit('SubRemove', { subs: [sub.channelString] })
     _subs.splice(subIndex, 1)
   }
 }
@@ -43,37 +41,19 @@ socket.on('disconnect', (e) => {
 socket.on('error', err => {
   console.log('====socket error', err)
 })
-socket.on('m', (e) => {
+socket.on("equityData", (e) => {
   // here we get all events the CryptoCompare connection has subscribed to
   // we need to send this new data to our subscribed charts
-  const _data = e.split('~')
-  console.log(_data)
-  if (_data[0] === "3") {
-    // console.log('Websocket Snapshot load event complete')
-    return
-  }
-  const data = {
-    sub_type: parseInt(_data[0], 10),
-    exchange: _data[1],
-    to_sym: _data[2],
-    from_sym: _data[3],
-    trade_id: _data[5],
-    ts: parseInt(_data[6], 10),
-    volume: parseFloat(_data[7]),
-    price: parseFloat(_data[8])
-  }
 
-  const channelString = `${data.sub_type}~${data.exchange}~${data.to_sym}~${data.from_sym}`
-
-  const sub = _subs.find(e => e.channelString === channelString)
+  const sub = _subs.find(ele => ele.instrument_token === e.instrument_token)
 
   if (sub) {
     // disregard the initial catchup snapshot of trades for already closed candles
-    if (data.ts < sub.lastBar.time / 1000) {
+    if (new Date(e.last_trade_time).getTime() < sub.lastBar.time) {
       return
     }
 
-    var _lastBar = updateBar(data, sub)
+    var _lastBar = updateBar(e, sub)
 
     // send the most recent bar back to TV's realtimeUpdate callback
     sub.listener(_lastBar)
@@ -95,7 +75,7 @@ function updateBar(data, sub) {
   }
   var coeff = resolution * 60
   // console.log({coeff})
-  var rounded = Math.floor(data.ts / coeff) * coeff
+  var rounded = Math.floor(new Date(data.last_trade_time).getTime() / coeff) * coeff
   var lastBarSec = lastBar.time / 1000
   var _lastBar
 
@@ -106,20 +86,18 @@ function updateBar(data, sub) {
       open: lastBar.close,
       high: lastBar.close,
       low: lastBar.close,
-      close: data.price,
-      volume: data.volume
+      close: data.last_price,
     }
 
   } else {
     // update lastBar candle!
-    if (data.price < lastBar.low) {
-      lastBar.low = data.price
-    } else if (data.price > lastBar.high) {
-      lastBar.high = data.price
+    if (data.last_price < lastBar.low) {
+      lastBar.low = data.last_price
+    } else if (data.last_price > lastBar.high) {
+      lastBar.high = data.last_price
     }
 
-    lastBar.volume += data.volume
-    lastBar.close = data.price
+    lastBar.close = data.last_price
     _lastBar = lastBar
   }
   return _lastBar
@@ -127,8 +105,8 @@ function updateBar(data, sub) {
 
 // takes symbolInfo object as input and creates the subscription string to send to CryptoCompare
 function createChannelString(symbolInfo) {
-  var channel = symbolInfo.name.split(/[:/]/)
-  const exchange = channel[0] === 'GDAX' ? 'Coinbase' : channel[0]
+  var channel = symbolInfo.full_name.split(/[:/]/)
+  const exchange = channel[0]
   const to = channel[2]
   const from = channel[1]
   // subscribe to the CryptoCompare trade channel for the pair and exchange

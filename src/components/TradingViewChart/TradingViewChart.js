@@ -52,7 +52,6 @@ export default class TVChartContainer extends React.PureComponent {
 			autosize: this.props.autosize,
 			studies_overrides: this.props.studiesOverrides,
 			enabled_features: ["fix_left_edge"],
-			debug:true,
 			timezone:"Asia/Kolkata"
 		};
 

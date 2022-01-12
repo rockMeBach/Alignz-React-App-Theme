@@ -9,6 +9,7 @@ var symbolsData = [{
 	description: 'NSE:NIFTY50',
 	exchange: 'NSE',
 	type: 'equity',
+	instrument_token:256265
 }];
 async function getAllSymbols() {
 	const data = await makeApiRequest('api/historicData/data/v3/all/exchanges');
@@ -21,6 +22,7 @@ async function getAllSymbols() {
 			description: symbol.equity,
 			exchange: symbolInfo[0],
 			type: 'equity',
+			instrument_token:symbol.instrument_token
 		};
 	});
 	allSymbols = [...allSymbols, ...symbols];
@@ -69,7 +71,7 @@ export default {
 			type: symbolItem.type,
 			session: '24x7',
 			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			
+			instrument_token:symbolItem.instrument_token,
 			ticker: symbolItem.full_name,
 			exchange: symbolItem.exchange,
 			minmov: 1,
@@ -113,12 +115,12 @@ export default {
 	},
 	subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback) => {
 		console.log('=====subscribeBars runnning')
-		// stream.subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback)
+		stream.subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback)
 	},
 	unsubscribeBars: subscriberUID => {
 		console.log('=====unsubscribeBars running')
 
-		// stream.unsubscribeBars(subscriberUID)
+		stream.unsubscribeBars(subscriberUID)
 	},
 	calculateHistoryDepth: (resolution, resolutionBack, intervalBack) => {
 		//optional
