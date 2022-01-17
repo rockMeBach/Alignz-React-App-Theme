@@ -8,13 +8,14 @@ const history = {}
 export default {
 	history: history,
 	getBars: function (symbolInfo, resolution, from, to, first, limit) {
-		console.log(from, to)
 		const symbol = symbolInfo.full_name.split("/")
-		const url = 'api/historicData' + ((resolution === 'D') ? '/data/histoday' : resolution >= 60 ? '/data/histohour' : '/data/histominute')
+		console.log(symbolInfo)
+		const url = 'api/historicData/data/histominute'
 		const qs = {
 			e: symbol[0],
 			toTs: to ? to : '',
 			limit: limit ? limit : 2000,
+			type: symbolInfo.type
 		}
 		return axios.get(`${api_root}${url}`, {
 			params: qs,

@@ -9,21 +9,34 @@ var symbolsData = [{
 	description: 'NSE:NIFTY50',
 	exchange: 'NSE',
 	type: 'equity',
-	instrument_token:256265
+	instrument_token: 256265
 }];
 async function getAllSymbols() {
 	const data = await makeApiRequest('api/historicData/data/v3/all/exchanges');
 	let allSymbols = [];
 	const symbols = data.map(symbol => {
-		const symbolInfo = symbol.equity.split(":")
-		return {
-			symbol: symbolInfo[1],
-			full_name: symbol.equity,
-			description: symbol.equity,
-			exchange: symbolInfo[0],
-			type: 'equity',
-			instrument_token:symbol.instrument_token
-		};
+		if (symbol.equity) {
+			const symbolInfo = symbol.equity.split(":")
+			return {
+				symbol: symbolInfo[1],
+				full_name: symbol.equity,
+				description: symbol.equity,
+				exchange: symbolInfo[0],
+				type: 'equity',
+				instrument_token: symbol.instrument_token
+			};
+		}
+		else if (symbol.future) {
+			const symbolInfo = symbol.future.split(":")
+			return {
+				symbol: symbolInfo[1],
+				full_name: symbol.future,
+				description: symbol.future,
+				exchange: symbolInfo[0],
+				type: 'future',
+				instrument_token: symbol.instrument_token
+			};
+		}
 	});
 	allSymbols = [...allSymbols, ...symbols];
 
@@ -46,7 +59,6 @@ export default {
 
 	},
 	searchSymbols: async (userInput, exchange, symbolType, onResultReadyCallback) => {
-		console.log(userInput)
 		console.log('====Search Symbols running')
 		console.log('[searchSymbols]: Method call');
 		const symbols = await getAllSymbols();
@@ -62,16 +74,14 @@ export default {
 	resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
 		// expects a symbolInfo object in response
 		console.log('======resolveSymbol running')
-		console.log(symbolName,symbolsData)
 		const symbolItem = symbolsData.find((item) => item.full_name === symbolName);
-		console.log(symbolItem)
 		var symbol_stub = {
 			name: symbolItem.symbol,
 			description: symbolItem.description,
 			type: symbolItem.type,
 			session: '24x7',
 			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			instrument_token:symbolItem.instrument_token,
+			instrument_token: symbolItem.instrument_token,
 			ticker: symbolItem.full_name,
 			exchange: symbolItem.exchange,
 			minmov: 1,
@@ -79,13 +89,12 @@ export default {
 			has_intraday: true,
 			has_no_volume: true,
 			supported_resolution: supportedResolutions,
-			data_status:"streaming"
+			data_status: "streaming"
 		}
 
 		// if (split_data[2].match(/USD|EUR|JPY|AUD|GBP|KRW|CNY/)) {
 		// 	symbol_stub.pricescale = 100
 		// }
-		console.log(symbol_stub)
 		setTimeout(function () {
 			onSymbolResolvedCallback(symbol_stub)
 			console.log('Resolving that symbol....', symbol_stub)
@@ -102,13 +111,12 @@ export default {
 		// console.log(`Requesting bars between ${new Date(from * 1000).toISOString()} and ${new Date(to * 1000).toISOString()}`)
 		historyProvider.getBars(symbolInfo, resolution, from, to, firstDataRequest)
 			.then(bars => {
-				if (bars.length>0) {
+				if (bars.length > 0) {
 					onHistoryCallback(bars, { noData: false })
 				} else {
 					onHistoryCallback(bars, { noData: true })
 				}
 			}).catch(err => {
-				console.log({ err })
 				onErrorCallback(err)
 			})
 
@@ -119,7 +127,6 @@ export default {
 	},
 	unsubscribeBars: subscriberUID => {
 		console.log('=====unsubscribeBars running')
-
 		stream.unsubscribeBars(subscriberUID)
 	},
 	calculateHistoryDepth: (resolution, resolutionBack, intervalBack) => {

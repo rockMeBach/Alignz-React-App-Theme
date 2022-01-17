@@ -11,87 +11,105 @@ import io from 'socket.io-client';
 
 const EditModal = ({ show, onClose, order, setShow }) => {
 
-    const [orderTypes, setOrderTypes] = useState(order['market']?'market':order['limit']?'limit':'slm')
+    const [orderTypes, setOrderTypes] = useState(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
     const [qty, setQty] = useState(order.qty)
     const [price, setPrice] = useState(order.price)
     const [triggeredPrice, setTriggeredPrice] = useState(order.triggeredPrice)
     const [currentPrice, setCurrentPrice] = useState(0)
-    const [tradeTerm, setTradeTerm] = useState(order['intradayMIS']?'intradayMIS':'longtermCNC')
+    const [tradeTerm, setTradeTerm] = useState(order['intradayMIS'] ? 'intradayMIS' : 'longtermCNC')
     const [leverage, setLeverage] = useState(1)
-    
+    const [multiple, setMultiple] = useState(1)
+
 
 
 
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
-    const [socket,setSocket] = useState(null);
-    useEffect(()=>{
+    const [socket, setSocket] = useState(null);
+    useEffect(() => {
         console.log(order)
         setCurrentPrice(0)
-        setOrderTypes(order['market']?'market':order['limit']?'limit':'slm')
+        setOrderTypes(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
         setQty(order.qty)
-        setPrice(order.slm?0:order.price)
+        setPrice(order.slm ? 0 : order.price)
         setTriggeredPrice(order.triggeredPrice)
-        setTradeTerm(order['intradayMIS']?'intradayMIS':'longtermCNC')
-        if(show==true){
-        setSocket( io(`http://${BACKEND_URL_LIVE_TRADE}`));
+        setTradeTerm(order['intradayMIS'] ? 'intradayMIS' : 'longtermCNC')
+        if (show == true) {
+            setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
         }
-        else{
+        else {
 
-            if(socket)
-            {
+            if (socket) {
                 console.log("closed")
-            socket.disconnect()
+                socket.disconnect()
             }
         }
-    },[show])
+    }, [show])
 
-    useEffect(()=>{
-        if(socket)
-        {
-        socket.on("futureData", futureLiveDataModal);
-        socket.on("equityData", equityLiveDataModal);
+    useEffect(() => {
+        if (socket) {
+            socket.on("futureData", futureLiveDataModal);
+            socket.on("equityData", equityLiveDataModal);
         }
-    },[socket])
+    }, [socket])
 
-    useEffect(()=>{
-        if(orderTypes=='market')
-        {
+    useEffect(() => {
+        if (orderTypes == 'market') {
             setPrice(0);
             setTriggeredPrice(0)
         }
-        if(orderTypes=='limit')
-        {
+        if (orderTypes == 'limit') {
             setTriggeredPrice(0)
         }
-        if(orderTypes=='slm')
-        {
+        if (orderTypes == 'slm') {
             setPrice(0)
         }
-    },[orderTypes])
+    }, [orderTypes])
 
     const futureLiveDataModal = (futureData) => {
-        if(order.instrument_token==futureData.instrument_token)
-        setCurrentPrice(futureData.last_price.toFixed(2))
-        
+        if (order.instrument_token == futureData.instrument_token)
+            setCurrentPrice(futureData.last_price.toFixed(2))
+
     }
     const equityLiveDataModal = (equityData) => {
-        if(order.instrument_token==equityData.instrument_token)
-        setCurrentPrice(equityData.last_price.toFixed(2))
-        
+        if (order.instrument_token == equityData.instrument_token)
+            setCurrentPrice(equityData.last_price.toFixed(2))
+
     }
 
-
-
+    useEffect(() => {
+        if (show)
+            axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
+                params: {
+                    market: order.marketSearch,
+                    symbol: order.name
+                }
+            }).then(data => {
+                console.log(data)
+                setLeverage(data.data.leverage)
+                setMultiple(data.data.multiple)
+            })
+    }, [show])
 
     const update = () => {
+        if (qty % multiple != 0)
+            return toast(`Quantity not multiple of ${multiple}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "error"
+            });
         const data = {
             userID: auth.user._id,
-            orderID:order._id,
+            orderID: order._id,
             qty,
             price,
-            type:order.type,
+            type: order.type,
             triggeredPrice,
             intradayMIS: false,
             longtermCNC: false,
@@ -122,8 +140,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
 
         }).catch(err => {
             console.log(err.response)
-            if(err.response.data=="Order can't be edited due to recent change in status")
-            {
+            if (err.response.data == "Order can't be edited due to recent change in status") {
                 toast(err.response.data, {
                     position: "top-right",
                     autoClose: 5000,
@@ -135,7 +152,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                     type: "error"
                 });
                 setShow(false)
-                
+
             }
             return toast(err.response.data, {
                 position: "top-right",
@@ -165,7 +182,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                             </div>
                             <div className="col-md-6">
                                 <h6>{currentPrice}</h6>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 } bodyText={

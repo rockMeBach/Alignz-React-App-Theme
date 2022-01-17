@@ -14,7 +14,7 @@ export default class TVChartContainer extends React.PureComponent {
 
 	static defaultProps = {
 		symbol: 'NSE:NIFTY50',
-		exchange:'NSE',
+		exchange: 'NSE',
 		interval: '1',
 		containerId: 'tv_chart_container',
 		datafeedUrl: 'https://demo_feed.tradingview.com',
@@ -28,11 +28,11 @@ export default class TVChartContainer extends React.PureComponent {
 		studiesOverrides: {},
 	};
 
-		
+
 
 	tvWidget = null;
 
-
+	useEffect
 	componentDidMount() {
 		const widgetOptions = {
 			symbol: this.props.symbol,
@@ -52,13 +52,15 @@ export default class TVChartContainer extends React.PureComponent {
 			autosize: this.props.autosize,
 			studies_overrides: this.props.studiesOverrides,
 			enabled_features: ["fix_left_edge"],
-			timezone:"Asia/Kolkata"
+			timezone: "Asia/Kolkata"
 		};
 
 		const tvWidget = new widget(widgetOptions);
 		this.tvWidget = tvWidget;
 
 		tvWidget.onChartReady(() => {
+			this.tvWidget.chart().executeActionById("symbolSearch");
+			this.tvWidget.chart().setSymbol("NSE:NIFTY50");
 			tvWidget.headerReady().then(() => {
 				const button = tvWidget.createButton();
 				button.setAttribute('title', 'Click to show a notification popup');
@@ -83,11 +85,16 @@ export default class TVChartContainer extends React.PureComponent {
 		}
 	}
 
+	getSnapshotBeforeUpdate(prevProps) {
+		this.tvWidget.chart().setSymbol(this.props.symbol);
+		return null;
+	}
+
 	render() {
 		return (
 			<div
-				id={ this.props.containerId }
-				className={ 'TVChartContainer' }
+				id={this.props.containerId}
+				className={'TVChartContainer'}
 			/>
 		);
 	}

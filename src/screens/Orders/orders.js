@@ -28,10 +28,10 @@ const Orders = () => {
     const [ordersOpen, setOrdersOpen] = useState([])
     const [ordersExecuted, setOrdersExecuted] = useState([])
     const [todaysData, setTodaysData] = useState([])
-    const [editOrderDetail,setEditOrderDetail] = useState({})
-    const [deleteOrderID,setDeleteOrderID] = useState(null)
-    const [openEditModal,setOpenEditModal] = useState(false)
-    const [deleteModal,setDeleteModal] = useState(false)
+    const [editOrderDetail, setEditOrderDetail] = useState({})
+    const [deleteOrderID, setDeleteOrderID] = useState(null)
+    const [openEditModal, setOpenEditModal] = useState(false)
+    const [deleteModal, setDeleteModal] = useState(false)
     const ordersRef = useRef([])
 
 
@@ -68,91 +68,89 @@ const Orders = () => {
     }
 
     useEffect(() => {
-        if(!openEditModal||!deleteModal)
-        axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {
-            params: {
-                userID: auth.user._id
-            }
-        }).then(data => {
-            ordersRef.current = data.data.map(order => {
-                order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm:ss")
-                if (order.market)
-                    order.order = "Market"
-                if (order.limit)
-                    order.order = "Limit"
-                if (order.slm)
-                    order.order = "SL-M"
-                if (order.slm)
-                    order.price = order.triggeredPrice
+        if (!openEditModal || !deleteModal)
+            axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {
+                params: {
+                    userID: auth.user._id
+                }
+            }).then(data => {
+                ordersRef.current = data.data.map(order => {
+                    order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm:ss")
+                    if (order.market)
+                        order.order = "Market"
+                    if (order.limit)
+                        order.order = "Limit"
+                    if (order.slm)
+                        order.order = "SL-M"
+                    if (order.slm)
+                        order.price = order.triggeredPrice
 
-                return order;
-            })
-
-            const todaysData = ordersRef.current.filter(order => {
-                if (new Date(order.orderTime).getDate() == new Date().getDate() && new Date(order.orderTime).getMonth() == new Date().getMonth()
-                    && new Date(order.orderTime).getFullYear() == new Date().getFullYear()
-                )
                     return order;
-            })
+                })
 
-            const openData = todaysData.filter(order=>{
-                if(order.orderType=='open'||order.orderType=='trigger pending')
-                return order;
-            })
+                const todaysData = ordersRef.current.filter(order => {
+                    if (new Date(order.orderTime).getDate() == new Date().getDate() && new Date(order.orderTime).getMonth() == new Date().getMonth()
+                        && new Date(order.orderTime).getFullYear() == new Date().getFullYear()
+                    )
+                        return order;
+                })
 
-            const executedData = todaysData.filter(order=>{
-                if(order.orderType!='open'&&order.orderType!='trigger pending')
-                return order;
+                const openData = todaysData.filter(order => {
+                    if (order.orderType == 'open' || order.orderType == 'trigger pending')
+                        return order;
+                })
+
+                const executedData = todaysData.filter(order => {
+                    if (order.orderType != 'open' && order.orderType != 'trigger pending')
+                        return order;
+                })
+                console.log(openData)
+                setOrdersOpen(openData)
+                setOrdersExecuted(executedData)
+                setTodaysData(todaysData)
             })
-            console.log(openData)
-            setOrdersOpen(openData)
-            setOrdersExecuted(executedData)
-            setTodaysData(todaysData)
-        })
-    }, [auth,openEditModal,deleteModal])
+    }, [auth, openEditModal, deleteModal])
 
     const getSearchResultsOpen = (order) => {
-        if (order == '')
-        {
-            const openData = todaysData.filter(order=>{
-                if(order.orderType=='open'||order.orderType=='trigger pending')
-                return order;
+        if (order == '') {
+            const openData = todaysData.filter(order => {
+                if (order.orderType == 'open' || order.orderType == 'trigger pending')
+                    return order;
             })
             return setOrdersOpen(openData)
         }
         const results = todaysData.filter(item => {
-            
-            if (new RegExp(order).test(item.name)&&(item.orderType=='open'||item.orderType=='trigger pending'))
+
+            if (new RegExp(order).test(item.name) && (item.orderType == 'open' || item.orderType == 'trigger pending'))
                 return item;
         })
         setOrdersOpen(results);
     }
 
     const getSearchResultsExecuted = (order) => {
-        if (order == '')
-        {
-            const executedData = todaysData.filter(order=>{
-                if(order.orderType!='open'&&order.orderType!='trigger pending')
-                return order;
+        if (order == '') {
+            const executedData = todaysData.filter(order => {
+                if (order.orderType != 'open' && order.orderType != 'trigger pending')
+                    return order;
             })
             return setOrdersExecuted(executedData)
         }
         const results = todaysData.filter(item => {
-            if (new RegExp(order).test(item.name)&&item.orderType!='open'&&item.orderType!='trigger pending')
+            if (new RegExp(order).test(item.name) && item.orderType != 'open' && item.orderType != 'trigger pending')
                 return item;
         })
         setOrdersExecuted(results);
     }
 
-    const deleteOrder = ()=>{
-        const orderID=deleteOrderID
+    const deleteOrder = () => {
+        const orderID = deleteOrderID
         axios.delete(`http://${BACKEND_URL}/api/trading/deleteOrder`,
             {
-                params:{
-                    orderID:orderID
+                params: {
+                    orderID: orderID
                 }
             }
-        ).then(data=>{
+        ).then(data => {
             toast(data.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -164,7 +162,7 @@ const Orders = () => {
                 type: "success"
             });
             setDeleteModal(false)
-        }).catch(err=>{
+        }).catch(err => {
             toast(err.response.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -267,13 +265,13 @@ const Orders = () => {
                                             <td>{order.price}</td>
                                             <td>
                                                 <span className={`p-1 rounded bg-primary text-white`}>
-                                                    {order.orderType=='trigger pending'?'Trigger Pending':'Open'}
+                                                    {order.orderType == 'trigger pending' ? 'Trigger Pending' : 'Open'}
                                                 </span>
                                             </td>
                                             <td>
-                                            <EditOutlinedIcon onClick = {()=>{setOpenEditModal(true);setEditOrderDetail(order)}}/>
-                                            <DeleteOutlineOutlinedIcon onClick={()=>{setDeleteOrderID(order._id);setDeleteModal(true);}}/>
-                                             </td>
+                                                <EditOutlinedIcon onClick={() => { setOpenEditModal(true); setEditOrderDetail(order) }} />
+                                                <DeleteOutlineOutlinedIcon onClick={() => { setDeleteOrderID(order._id); setDeleteModal(true); }} />
+                                            </td>
                                         </tr>
                                     )
                                 })
@@ -305,7 +303,7 @@ const Orders = () => {
                         </Button>
                     </InputGroup>
                 </div>
-                
+
             </div>
             <div className="row">
                 <div className='col-md-12'>
@@ -357,14 +355,14 @@ const Orders = () => {
                 order={editOrderDetail}
             />
             <UIModal show={deleteModal}
-            title={<h4>Delete Order</h4>}
-            bodyText={<h6>Are you sure?</h6>}
-            onClose={()=>setDeleteModal(false)}
-            onSave={deleteOrder}
-            closeButtonVariant="outline-primary"
-            saveButtonVariant="danger"
-            closeButtonContent="Cancel"
-            saveButtonContent="Delete"
+                title={<h4>Delete Order</h4>}
+                bodyText={<h6>Are you sure?</h6>}
+                onClose={() => setDeleteModal(false)}
+                onSave={deleteOrder}
+                closeButtonVariant="outline-primary"
+                saveButtonVariant="danger"
+                closeButtonContent="Cancel"
+                saveButtonContent="Delete"
             />
         </div>
     )

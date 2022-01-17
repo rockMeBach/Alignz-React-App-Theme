@@ -18,71 +18,89 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     const [currentPrice, setCurrentPrice] = useState(0)
     const [tradeTerm, setTradeTerm] = useState('intradayMIS')
     const [leverage, setLeverage] = useState(1)
-    
+    const [multiple, setMultiple] = useState(1)
 
 
 
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
-    const [socket,setSocket] = useState(null);
-    useEffect(()=>{
+    const [socket, setSocket] = useState(null);
+    useEffect(() => {
         setPrice(0)
         setTriggeredPrice(0)
         setCurrentPrice(0)
-        if(show==true){
-        setSocket( io(`http://${BACKEND_URL_LIVE_TRADE}`));
+        if (show == true) {
+            setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
 
         }
-        else{
+        else {
 
-            if(socket)
-            {
+            if (socket) {
                 console.log("closed")
-            socket.disconnect()
+                socket.disconnect()
             }
         }
-    },[show])
+    }, [show])
 
-    useEffect(()=>{
-        if(socket)
-        {
-        socket.on("futureData", futureLiveDataModal);
-        socket.on("equityData", equityLiveDataModal);
+    useEffect(() => {
+        if (socket) {
+            socket.on("futureData", futureLiveDataModal);
+            socket.on("equityData", equityLiveDataModal);
         }
-    },[socket])
+    }, [socket])
 
-    useEffect(()=>{
-        if(orderTypes=='market')
-        {
+    useEffect(() => {
+        if (orderTypes == 'market') {
             setPrice(0);
             setTriggeredPrice(0)
         }
-        if(orderTypes=='limit')
-        {
+        if (orderTypes == 'limit') {
             setTriggeredPrice(0)
         }
-        if(orderTypes=='slm')
-        {
+        if (orderTypes == 'slm') {
             setPrice(0)
         }
-    },[orderTypes])
+    }, [orderTypes])
 
     const futureLiveDataModal = (futureData) => {
-        if(instrument.instrument_token==futureData.instrument_token)
-        setCurrentPrice(futureData.last_price.toFixed(2))
+        if (instrument.instrument_token == futureData.instrument_token)
+            setCurrentPrice(futureData.last_price.toFixed(2))
         console.log(instrument)
     }
     const equityLiveDataModal = (equityData) => {
-        if(instrument.instrument_token==equityData.instrument_token)
-        setCurrentPrice(equityData.last_price.toFixed(2))
+        if (instrument.instrument_token == equityData.instrument_token)
+            setCurrentPrice(equityData.last_price.toFixed(2))
         console.log(instrument)
     }
 
-
+    useEffect(() => {
+        console.log(instrument.instrument_token)
+        axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
+            params: {
+                market: instrument.market,
+                symbol: instrument.name
+            }
+        }).then(data => {
+            console.log(data)
+            setLeverage(data.data.leverage)
+            setMultiple(data.data.multiple)
+        })
+    }, [instrument])
 
 
     const buy = () => {
+        if (qty % multiple != 0)
+            return toast(`Quantity not multiple of ${multiple}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "error"
+            });
         const data = {
             userID: auth.user._id,
             type: 'buy',
@@ -150,7 +168,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                             </div>
                             <div className="col-md-6">
                                 <h6>{currentPrice}</h6>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 } bodyText={
