@@ -53,10 +53,10 @@ const config = {
 };
 
 export default {
-	onReady: cb => {
+	onReady: async (cb) => {
 		console.log('=====onReady running')
+		await getAllSymbols()
 		setTimeout(() => cb(config), 0)
-
 	},
 	searchSymbols: async (userInput, exchange, symbolType, onResultReadyCallback) => {
 		console.log('====Search Symbols running')

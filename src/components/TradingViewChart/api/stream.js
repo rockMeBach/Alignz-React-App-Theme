@@ -9,15 +9,18 @@ var _subs = []
 var currentSymbol = null
 export default {
   subscribeBars: function (symbolInfo, resolution, updateCb, uid, resetCache) {
+    console.log(historyProvider.history[symbolInfo.full_name])
+    console.log(resolution)
     var newSub = {
       ...symbolInfo,
       uid,
       resolution,
       symbolInfo,
-      lastBar: historyProvider.history[symbolInfo.full_name].lastBar,
+      lastBar: historyProvider.history[symbolInfo.full_name],
       listener: updateCb,
     }
     currentSymbol = newSub
+    console.log(currentSymbol)
     // _subs.push(newSub)
   },
   unsubscribeBars: function (uid) {
@@ -50,8 +53,8 @@ socket.on("equityData", (e) => {
 
   if (currentSymbol && currentSymbol.instrument_token === e.instrument_token) {
     // disregard the initial catchup snapshot of trades for already closed candles
-    console.log(currentSymbol)
-    if (new Date(e.last_trade_time).getTime() < currentSymbol.lastBar.time) {
+    // console.log(new Date(currentSymbol.lastBar.time), new Date(e.exchange_timestamp))
+    if (new Date(e.exchange_timestamp).getTime() < currentSymbol.lastBar.time) {
       return
     }
 
@@ -72,7 +75,8 @@ socket.on("futureData", (e) => {
 
   if (currentSymbol && currentSymbol.instrument_token === e.instrument_token) {
     // disregard the initial catchup snapshot of trades for already closed candles
-    if (new Date(e.last_trade_time).getTime() < currentSymbol.lastBar.time) {
+    // console.log(currentSymbol)
+    if (new Date(e.exchange_timestamp).getTime() < currentSymbol.lastBar.time) {
       return
     }
 
@@ -100,14 +104,14 @@ function updateBar(data, sub) {
   }
   var coeff = resolution * 60
   // console.log({coeff})
-  var rounded = Math.floor(new Date(data.last_trade_time).getTime() / coeff) * coeff
+  var rounded = Math.floor(new Date(data.exchange_timestamp).getTime() / coeff) * coeff
   var lastBarSec = lastBar.time / 1000
   var _lastBar
 
   if (rounded > lastBarSec) {
     // create a new candle, use last close as open **PERSONAL CHOICE**
     _lastBar = {
-      time: rounded * 1000,
+      time: rounded,
       open: lastBar.close,
       high: lastBar.close,
       low: lastBar.close,

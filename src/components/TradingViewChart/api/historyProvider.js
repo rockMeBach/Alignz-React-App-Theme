@@ -39,7 +39,7 @@ export default {
 				})
 				if (first) {
 					var lastBar = bars[bars.length - 1]
-					history[symbolInfo.full_name] = { lastBar: lastBar }
+					history[symbolInfo.full_name] = lastBar
 				}
 				return bars
 			} else {

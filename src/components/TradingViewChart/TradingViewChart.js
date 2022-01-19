@@ -59,8 +59,6 @@ export default class TVChartContainer extends React.PureComponent {
 		this.tvWidget = tvWidget;
 
 		tvWidget.onChartReady(() => {
-			this.tvWidget.chart().executeActionById("symbolSearch");
-			this.tvWidget.chart().setSymbol("NSE:NIFTY50");
 			tvWidget.headerReady().then(() => {
 				const button = tvWidget.createButton();
 				button.setAttribute('title', 'Click to show a notification popup');

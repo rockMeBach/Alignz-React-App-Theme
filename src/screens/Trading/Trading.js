@@ -179,16 +179,18 @@ const Trading = () => {
                         tradeWatch.map((tradeWatchItem, index) => {
                             return (
                                 <div className="row">
-                                    <div className="col-md-12">
-                                        <div class="row border-bottom border-top p-3 stock-row" onClick={() => setSelectedSymbol(`${tradeWatchItem.exch}:${tradeWatchItem.name}`)}>
+                                    <div className="col-md-12 stock-row">
+                                        <div class="row border-bottom border-top p-3" onClick={() => setSelectedSymbol(`${tradeWatchItem.exch}:${tradeWatchItem.name}`)}>
                                             <div class="col-6 col-md-3 text-break order-md-1">{tradeWatchItem.name}</div>
                                             <div className="col-6 col-md-3 text-end order-md-6" id={tradeWatchItem.instrument_token}>0.00</div>
                                             <div class="col-6 col-md-3 order-md-3">{tradeWatchItem.exch}</div>
                                             <div className="col-6 col-md-3 text-end order-md-9" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
-                                            <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
-                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
-                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
-                                                <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
+                                        </div>
+                                        <div className="row col-md-9 offset-md-3 exchange-row-trade">
+                                            <div className="row justify-content-evenly p-2">
+                                                <Button className="col-3" variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
+                                                <Button className="col-3" variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
+                                                <Button className="col-3" variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
                                             </div>
                                         </div>
                                     </div>
