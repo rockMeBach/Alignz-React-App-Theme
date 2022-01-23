@@ -37,6 +37,17 @@ async function getAllSymbols() {
 				instrument_token: symbol.instrument_token
 			};
 		}
+		else if (symbol.option) {
+			const symbolInfo = symbol.option.split(":")
+			return {
+				symbol: symbolInfo[1],
+				full_name: symbol.option,
+				description: symbol.option,
+				exchange: symbolInfo[0],
+				type: 'option',
+				instrument_token: symbol.instrument_token
+			};
+		}
 	});
 	allSymbols = [...allSymbols, ...symbols];
 

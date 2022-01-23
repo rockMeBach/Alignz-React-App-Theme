@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Form, FormControl, InputGroup, Button, ListGroup, Spinner } from "react-bootstrap";
 import axios from "axios"
-import "./EquityTrading.css"
+// import "./EquityTrading.css"
 import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
@@ -21,24 +21,23 @@ const EquityTrading = () => {
     const [sellModelOpen, setSellModelOpen] = useState(false)
     const [marketList, setMarketList] = useState([])
     const [tradeWatch, selectTradeWatch] = useState([])
-    const [buyInstrument ,setBuyInstrument]= useState({instrument_token:'',market:''})
-    const [sellInstrument,setSellInstrument] = useState({instrument_token:'',market:''})
+    const [buyInstrument, setBuyInstrument] = useState({ instrument_token: '', market: '' })
+    const [sellInstrument, setSellInstrument] = useState({ instrument_token: '', market: '' })
 
-    useEffect(()=>{
+    useEffect(() => {
         const socket = io(`http://${BACKEND_URL}`);
-        socket.on("equityData",equityLiveData);
-    },[])
+        socket.on("equityData", equityLiveData);
+    }, [])
 
-    const equityLiveData = (equityData) =>{
-        
-        if(document.getElementById(equityData.instrument_token))
-        {
+    const equityLiveData = (equityData) => {
+
+        if (document.getElementById(equityData.instrument_token)) {
             console.log(equityData)
-            var change =equityData.change.toFixed(2)
+            var change = equityData.change.toFixed(2)
             document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)
-            document.getElementById(equityData.instrument_token).style.color = change<0?"red":"green"
-            document.getElementById(equityData.instrument_token+"-change").innerHTML = change+"%"
-            document.getElementById(equityData.instrument_token+"-change").style.color = change<0?"red":"green"
+            document.getElementById(equityData.instrument_token).style.color = change < 0 ? "red" : "green"
+            document.getElementById(equityData.instrument_token + "-change").innerHTML = change + "%"
+            document.getElementById(equityData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
         }
     }
 
@@ -56,14 +55,14 @@ const EquityTrading = () => {
     }
 
 
-    
+
     return (
         <div className="container">
             <PageHeader
                 HeaderText="Equity Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Equity Trading" }]}
             />
-            <div className="row clearfix" style={{height:'100%'}}>
+            <div className="row clearfix" style={{ height: '100%' }}>
                 <div className="col-lg-4 col-md-12">
                     <div className="row">
                         <div className="col-md-6">
@@ -105,9 +104,9 @@ const EquityTrading = () => {
                                             <div className="col-md-3 text-md-end" id={`${tradeWatchItem.instrument_token}-change`}><Spinner animation="border" /> </div>
                                             <div className="col-md-3  text-md-end" id={tradeWatchItem.instrument_token}><Spinner animation="border" /></div>
                                             <div className="offset-md-6 col-md-6 justify-content-between exchange-row-trade">
-                                                <Button variant="success" onClick={() => {setBuyInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setBuyModelOpen(true)}}>BUY</Button>
-                                                <Button variant="danger" onClick={() => {setSellInstrument({instrument_token:tradeWatchItem.instrument_token,market:selectMarket});setSellModelOpen(true)}}>SELL</Button>
-                                                <Button variant="dark" index={index} onClick={() => {selectTradeWatch(tradeWatch.splice(index, 1))}}><DeleteIcon /></Button>
+                                                <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: selectMarket }); setBuyModelOpen(true) }}>BUY</Button>
+                                                <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: selectMarket }); setSellModelOpen(true) }}>SELL</Button>
+                                                <Button variant="dark" index={index} onClick={() => { selectTradeWatch(tradeWatch.splice(index, 1)) }}><DeleteIcon /></Button>
                                             </div>
                                         </div>
                                     </div>
@@ -118,19 +117,19 @@ const EquityTrading = () => {
 
                 </div>
                 <div className="col-lg-8 col-md-12 order-first order-lg-1">
-                <TradingViewWidget 
-                symbol="BSE:SENSEX"
-                theme={Themes.DARK}
-                
-                />
+                    <TradingViewWidget
+                        symbol="BSE:SENSEX"
+                        theme={Themes.DARK}
+
+                    />
                 </div>
             </div>
             <BuyModel show={buyModelOpen}
-                onClose={()=>setBuyModelOpen(false)}
+                onClose={() => setBuyModelOpen(false)}
                 instrument={buyInstrument}
             />
             <SellModel show={sellModelOpen}
-                onClose={()=>setSellModelOpen(false)}
+                onClose={() => setSellModelOpen(false)}
                 instrument={sellInstrument}
             />
         </div >

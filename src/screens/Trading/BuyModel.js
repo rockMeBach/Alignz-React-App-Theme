@@ -47,6 +47,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
         if (socket) {
             socket.on("futureData", futureLiveDataModal);
             socket.on("equityData", equityLiveDataModal);
+            socket.on("optionData", optionLiveDataModal);
         }
     }, [socket])
 
@@ -73,9 +74,13 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
             setCurrentPrice(equityData.last_price.toFixed(2))
         console.log(instrument)
     }
-
+    const optionLiveDataModal = (optionData) => {
+        if (instrument.instrument_token == optionData.instrument_token)
+            setCurrentPrice(optionData.last_price.toFixed(2))
+        console.log(instrument)
+    }
     useEffect(() => {
-        console.log(instrument.instrument_token)
+        console.log(instrument)
         axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
             params: {
                 market: instrument.market,
@@ -83,7 +88,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
             }
         }).then(data => {
             console.log(data)
-            setLeverage(data.data.leverage)
+            setLeverage(data.data['buy leverage'])
             setMultiple(data.data.multiple)
         })
     }, [instrument])

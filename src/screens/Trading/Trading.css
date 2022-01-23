@@ -1,6 +1,6 @@
 .exchange-row-trade {
-  position: absolute;
-  display: none;
+  position: absolute !important;
+  display: none !important;
   height: 100%;
   width: 100%;
   top: 0%;
@@ -11,6 +11,9 @@
 .stock-row:hover > .exchange-row-trade {
   display: flex !important;
   z-index: 1;
+}
+.exchange-row-trade > div > button {
+  height: auto !important;
 }
 .stock-row:hover > div {
   color: #00000034 !important;
@@ -23,12 +26,11 @@
   width: 100% !important;
 }
 
-@media only screen and (max-width: 660px) {
+@media screen and (max-width: 660px) {
   .exchange-row-trade {
     position: relative !important;
     display: flex !important;
-    height: 100%;
-    width: 100%;
-    top: 0%;
+    height: auto;
+    width: auto;
   }
 }

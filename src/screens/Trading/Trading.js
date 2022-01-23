@@ -49,6 +49,7 @@ const Trading = () => {
         const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
         socket.on("futureData", futureLiveData);
         socket.on("equityData", equityLiveData);
+        socket.on("optionData", optionLiveData);
     }, [])
 
 
@@ -74,6 +75,16 @@ const Trading = () => {
         }
     }
 
+    const optionLiveData = (optionData) => {
+
+        if (document.getElementById(optionData.instrument_token)) {
+            var change = optionData.change.toFixed(2)
+            document.getElementById(optionData.instrument_token).innerHTML = optionData.last_price.toFixed(2)
+            document.getElementById(optionData.instrument_token).style.color = change < 0 ? "red" : "green"
+            document.getElementById(optionData.instrument_token + "-change").innerHTML = change + "%"
+            document.getElementById(optionData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
+        }
+    }
 
     const getSearchResults = (e) => {
         setSearch(e);
@@ -123,8 +134,8 @@ const Trading = () => {
                 HeaderText="Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
-            <div className="row clearfix" style={{ height: '100%' }}>
-                <div className="col-lg-4 col-md-12">
+            <div className="row clearfix">
+                <div className="col-lg-4 col-md-12 watchlist">
                     <div className="row">
                         <div className="col-md-6">
                             <h5 className="d-inline me-1">Nifty 50</h5>
@@ -186,11 +197,17 @@ const Trading = () => {
                                             <div class="col-6 col-md-3 order-md-3">{tradeWatchItem.exch}</div>
                                             <div className="col-6 col-md-3 text-end order-md-9" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
                                         </div>
-                                        <div className="row col-md-9 offset-md-3 exchange-row-trade">
+                                        <div className="row col-md-9 offset-3 exchange-row-trade">
                                             <div className="row justify-content-evenly p-2">
-                                                <Button className="col-3" variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
-                                                <Button className="col-3" variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
-                                                <Button className="col-3" variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
+                                                <div className="col-3  d-flex align-items-center">
+                                                    <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
+                                                </div>
+                                                <div className="col-3  d-flex align-items-center">
+                                                    <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
+                                                </div>
+                                                <div className="col-3  d-flex align-items-center">
+                                                    <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
