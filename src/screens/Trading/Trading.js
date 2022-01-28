@@ -87,6 +87,9 @@ const Trading = () => {
     }
 
     const getSearchResults = (e) => {
+        if (!e) {
+            setMarketList([])
+        }
         setSearch(e);
         axios.get(`http://${BACKEND_URL}/api/trading/getSearchResults`, {
             params: {

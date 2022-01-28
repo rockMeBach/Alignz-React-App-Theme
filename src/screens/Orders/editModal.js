@@ -56,6 +56,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
     }, [socket])
 
     useEffect(() => {
+        console.log(order)
         if (orderTypes == 'market') {
             setPrice(0);
             setTriggeredPrice(0)
@@ -91,7 +92,14 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                 }
             }).then(data => {
                 console.log(data)
-                setLeverage(data.data.leverage)
+                if (order.marketSearch != 'option')
+                    setLeverage(data.data.leverage)
+                else {
+                    if (order.type == 'buy')
+                        setLeverage(data.data['buy leverage'])
+                    else
+                        setLeverage(data.data['sell leverage'])
+                }
                 setMultiple(data.data.multiple)
             })
     }, [show])
@@ -260,17 +268,17 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                         Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
                         {
                             orderTypes == 'market' && <span>
-                                {qty * currentPrice / leverage}
+                                {order.marketSearch == 'option' ? order.type != 'buy' ? qty * leverage : qty * currentPrice / leverage : qty * currentPrice / leverage}
                             </span>
                         }
                         {
                             orderTypes == 'limit' && <span>
-                                {qty * price / leverage}
+                                {order.marketSearch == 'option' ? order.type != 'buy' ? qty * leverage : qty * price / leverage : qty * price / leverage}
                             </span>
                         }
                         {
                             orderTypes == 'slm' && <span>
-                                {qty * triggeredPrice / leverage}
+                                {order.marketSearch == 'option' ? order.type != 'buy' ? qty * leverage : qty * triggeredPrice / leverage : qty * price / leverage}
                             </span>
                         }
                     </span>
