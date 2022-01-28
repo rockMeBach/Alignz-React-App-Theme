@@ -9,8 +9,8 @@ var _subs = []
 var currentSymbol = null
 export default {
   subscribeBars: function (symbolInfo, resolution, updateCb, uid, resetCache) {
-    console.log(historyProvider.history[symbolInfo.full_name])
-    console.log(resolution)
+    // console.log(historyProvider.history[symbolInfo.full_name])
+    // console.log(resolution)
     var newSub = {
       ...symbolInfo,
       uid,
@@ -20,7 +20,7 @@ export default {
       listener: updateCb,
     }
     currentSymbol = newSub
-    console.log(currentSymbol)
+    // console.log(currentSymbol)
     // _subs.push(newSub)
   },
   unsubscribeBars: function (uid) {
@@ -37,13 +37,13 @@ export default {
 }
 
 socket.on('connect', () => {
-  console.log('===Socket connected')
+  // console.log('===Socket connected')
 })
 socket.on('disconnect', (e) => {
-  console.log('===Socket disconnected:', e)
+  // console.log('===Socket disconnected:', e)
 })
 socket.on('error', err => {
-  console.log('====socket error', err)
+  // console.log('====socket error', err)
 })
 socket.on("equityData", (e) => {
   // here we get all events the CryptoCompare connection has subscribed to

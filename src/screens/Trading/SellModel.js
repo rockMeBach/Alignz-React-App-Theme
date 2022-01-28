@@ -45,6 +45,7 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
         if (socket) {
             socket.on("futureData", futureLiveDataModal);
             socket.on("equityData", equityLiveDataModal);
+            socket.on("optionData", optionLiveDataModal);
         }
     }, [socket])
 
@@ -71,17 +72,20 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
             setCurrentPrice(equityData.last_price.toFixed(2))
         console.log(instrument)
     }
-
+    const optionLiveDataModal = (optionData) => {
+        if (instrument.instrument_token == optionData.instrument_token)
+            setCurrentPrice(optionData.last_price.toFixed(2))
+    }
     useEffect(() => {
         console.log(instrument.instrument_token)
         axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
             params: {
                 market: instrument.market,
-                symbol: instrument.name
+                symbol: instrument.exchange + ":" + instrument.name
             }
         }).then(data => {
             console.log(data)
-            setLeverage(data.data.leverage)
+            setLeverage(data.data.leverage || data.data['sell leverage'])
             setMultiple(data.data.multiple)
         })
     }, [instrument])
@@ -114,14 +118,14 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
             name: instrument.name,
             product: 'product',
             exchange: instrument.exchange,
-            margin: qty * price / leverage,
+            margin: instrument.market == 'option' ? qty * leverage : qty * price / leverage,
             currentPrice
         }
 
         data[tradeTerm] = true;
         data[orderTypes] = true;
         if (orderTypes == 'slm')
-            data.margin = qty * triggeredPrice / leverage
+            data.margin = instrument.market == 'option' ? qty * leverage : qty * triggeredPrice / leverage
 
         axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`, data).then(data => {
             setShow(false)
@@ -239,17 +243,17 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
                         Margin Required <InfoOutlinedIcon className="text-danger" /> &#8377;
                         {
                             orderTypes == 'market' && <span>
-                                {qty * currentPrice / leverage}
+                                {instrument.market == 'option' ? qty * leverage : qty * currentPrice / leverage}
                             </span>
                         }
                         {
                             orderTypes == 'limit' && <span>
-                                {qty * price / leverage}
+                                {instrument.market == 'option' ? qty * leverage : qty * price / leverage}
                             </span>
                         }
                         {
                             orderTypes == 'slm' && <span>
-                                {qty * triggeredPrice / leverage}
+                                {instrument.market == 'option' ? qty * leverage : qty * triggeredPrice / leverage}
                             </span>
                         }
                     </span>

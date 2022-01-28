@@ -51,6 +51,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
         if (socket) {
             socket.on("futureData", futureLiveDataModal);
             socket.on("equityData", equityLiveDataModal);
+            socket.on("optionData", optionLiveDataModal);
         }
     }, [socket])
 
@@ -77,13 +78,16 @@ const EditModal = ({ show, onClose, order, setShow }) => {
             setCurrentPrice(equityData.last_price.toFixed(2))
 
     }
-
+    const optionLiveDataModal = (optionData) => {
+        if (instrument.instrument_token == optionData.instrument_token)
+            setCurrentPrice(optionData.last_price.toFixed(2))
+    }
     useEffect(() => {
         if (show)
             axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
                 params: {
                     market: order.marketSearch,
-                    symbol: order.name
+                    symbol: order.exchange + ":" + order.name
                 }
             }).then(data => {
                 console.log(data)

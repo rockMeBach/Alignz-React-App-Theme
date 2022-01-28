@@ -65,13 +65,13 @@ const config = {
 
 export default {
 	onReady: async (cb) => {
-		console.log('=====onReady running')
+		// console.log('=====onReady running')
 		await getAllSymbols()
 		setTimeout(() => cb(config), 0)
 	},
 	searchSymbols: async (userInput, exchange, symbolType, onResultReadyCallback) => {
-		console.log('====Search Symbols running')
-		console.log('[searchSymbols]: Method call');
+		// console.log('====Search Symbols running')
+		// console.log('[searchSymbols]: Method call');
 		const symbols = await getAllSymbols();
 		const newSymbols = symbols.filter(symbol => {
 			const isExchangeValid = exchange === '' || symbol.exchange === exchange;
@@ -84,7 +84,7 @@ export default {
 	},
 	resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
 		// expects a symbolInfo object in response
-		console.log('======resolveSymbol running')
+		// console.log('======resolveSymbol running')
 		const symbolItem = symbolsData.find((item) => item.full_name === symbolName);
 		var symbol_stub = {
 			name: symbolItem.symbol,
@@ -108,7 +108,7 @@ export default {
 		// }
 		setTimeout(function () {
 			onSymbolResolvedCallback(symbol_stub)
-			console.log('Resolving that symbol....', symbol_stub)
+			// console.log('Resolving that symbol....', symbol_stub)
 		}, 0)
 
 
@@ -116,7 +116,7 @@ export default {
 
 	},
 	getBars: function (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) {
-		console.log('=====getBars running')
+		// console.log('=====getBars running')
 		let { from, to, firstDataRequest } = periodParams;
 		// console.log('function args',arguments)
 		// console.log(`Requesting bars between ${new Date(from * 1000).toISOString()} and ${new Date(to * 1000).toISOString()}`)
@@ -133,11 +133,11 @@ export default {
 
 	},
 	subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback) => {
-		console.log('=====subscribeBars runnning')
+		// console.log('=====subscribeBars runnning')
 		stream.subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback)
 	},
 	unsubscribeBars: subscriberUID => {
-		console.log('=====unsubscribeBars running')
+		// console.log('=====unsubscribeBars running')
 		stream.unsubscribeBars(subscriberUID)
 	},
 	calculateHistoryDepth: (resolution, resolutionBack, intervalBack) => {
@@ -149,13 +149,13 @@ export default {
 	},
 	getMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
 		//optional
-		console.log('=====getMarks running')
+		// console.log('=====getMarks running')
 	},
 	getTimeScaleMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
 		//optional
-		console.log('=====getTimeScaleMarks running')
+		// console.log('=====getTimeScaleMarks running')
 	},
 	getServerTime: cb => {
-		console.log('=====getServerTime running')
+		// console.log('=====getServerTime running')
 	}
 }

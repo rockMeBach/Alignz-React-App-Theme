@@ -39,6 +39,7 @@ const Orders = () => {
         const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
         socket.on("futureData", futureLiveData);
         socket.on("equityData", equityLiveData);
+        socket.on("optionData", optionLiveData);
     }, [])
 
     const futureLiveData = (futureData) => {
@@ -66,7 +67,18 @@ const Orders = () => {
 
         }
     }
+    const optionLiveData = (optionData) => {
+        if (document.getElementsByClassName(optionData.instrument_token)) {
+            var elements = document.getElementsByClassName(optionData.instrument_token)
+            var change = optionData.change < 0 ? "red" : "green"
+            var data = optionData.last_price.toFixed(2)
+            Array.from(elements).forEach(element => {
+                element.innerHTML = data
+                element.style.color = change
+            });
 
+        }
+    }
     useEffect(() => {
         if (!openEditModal || !deleteModal)
             axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {

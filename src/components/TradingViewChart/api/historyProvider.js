@@ -9,10 +9,9 @@ export default {
 	history: history,
 	getBars: function (symbolInfo, resolution, from, to, first, limit) {
 		const symbol = symbolInfo.full_name.split("/")
-		console.log(symbolInfo)
 		const url = 'api/historicData/data/histominute'
 		const qs = {
-			e: symbol[0],
+			e: symbolInfo.instrument_token,
 			toTs: to ? to : '',
 			limit: limit ? limit : 2000,
 			type: symbolInfo.type
@@ -22,7 +21,7 @@ export default {
 		}).then(data => {
 			data = data.data
 			if (data.Response && data.Response === 'Error') {
-				console.log('error:', data.Message)
+				// console.log('error:', data.Message)
 				return []
 			}
 			if (data.length) {
