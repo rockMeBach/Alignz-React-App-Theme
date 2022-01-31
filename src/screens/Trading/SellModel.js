@@ -16,7 +16,7 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
     const [price, setPrice] = useState(0)
     const [triggeredPrice, setTriggeredPrice] = useState(0)
     const [currentPrice, setCurrentPrice] = useState(0)
-    const [tradeTerm, setTradeTerm] = useState('intradayMIS')
+    const [product, setProduct] = useState('MIS')
     const [leverage, setLeverage] = useState(1)
     const [multiple, setMultiple] = useState(1)
 
@@ -110,19 +110,16 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
             qty,
             price,
             triggeredPrice,
-            intradayMIS: false,
-            longtermCNC: false,
             market: false,
             limit: false,
             slm: false,
             name: instrument.name,
-            product: 'product',
+            product: product,
             exchange: instrument.exchange,
             margin: instrument.market == 'option' ? qty * leverage : qty * price / leverage,
             currentPrice
         }
 
-        data[tradeTerm] = true;
         data[orderTypes] = true;
         if (orderTypes == 'slm')
             data.margin = instrument.market == 'option' ? qty * leverage : qty * triggeredPrice / leverage
@@ -178,14 +175,14 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
                             <div className="col-md-8">
                                 <div class="form-check d-flex justify-content-between">
                                     <div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setTradeTerm('intradayMIS')} checked={tradeTerm == 'intradayMIS'} />
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setProduct('MIS')} checked={product == 'MIS'} />
                                         <label class="form-check-label text-danger" for="intraday">
                                             Intraday <span>MIS</span>
                                         </label>
                                     </div><div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longtermCNC')} checked={tradeTerm == 'longtermCNC'} />
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setProduct(instrument.market == 'equity' ? 'CNC' : 'NRML')} checked={product == 'CNC' || product == 'NRML'} />
                                         <label class="form-check-label text-danger" for="longterm">
-                                            Longterm <span>CNC</span>
+                                            Longterm {instrument.market == 'equity' ? <span>CNC</span> : <span>NRML</span>}
                                         </label>
                                     </div>
                                 </div>

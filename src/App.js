@@ -74,6 +74,7 @@ import Telegram from "./screens/Pages/Telegram";
 import Trading from "./screens/Trading/Trading"
 import EquityTrading from "./screens/EquityTrading/EquityTrading"
 import Orders from "./screens/Orders/orders"
+import Positions from "./screens/Positions/positions"
 import {
   dispatchLogin,
   fetchUser,
@@ -128,17 +129,17 @@ const App = () => {
   return (
     <div id="wrapper">
       {activeKey1 === "" ||
-      activeKey1 === "/" ||
-      activeKey1 === "login" ||
-      activeKey1 === "registration" ||
-      activeKey1 === "lockscreen" ||
-      activeKey1 === "forgotpassword" ||
-      activeKey1 === "page404" ||
-      activeKey1 === "page403" ||
-      activeKey1 === "page500" ||
-      activeKey1 === "page503" ||
-      activeKey1 === "maintanance" ||
-      activeKey1 === "user" ? (
+        activeKey1 === "/" ||
+        activeKey1 === "login" ||
+        activeKey1 === "registration" ||
+        activeKey1 === "lockscreen" ||
+        activeKey1 === "forgotpassword" ||
+        activeKey1 === "page404" ||
+        activeKey1 === "page403" ||
+        activeKey1 === "page500" ||
+        activeKey1 === "page503" ||
+        activeKey1 === "maintanance" ||
+        activeKey1 === "user" ? (
         <Switch>
           <Route exact path={`${process.env.PUBLIC_URL}/`} component={Home} />
           {!isLoggedIn ? (
@@ -218,7 +219,7 @@ const App = () => {
                   path={`${process.env.PUBLIC_URL}/dashboard`}
                   component={dashboard}
                 />
-                
+
               ) : (
                 <Redirect to="/login" />
               )}
@@ -242,20 +243,25 @@ const App = () => {
                 />
               )}
               <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/trading`}
-                  component={Trading}
-                />
+                exact
+                path={`${process.env.PUBLIC_URL}/trading`}
+                component={Trading}
+              />
               <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/equitytrading`}
-                  component={EquityTrading}
-                />
+                exact
+                path={`${process.env.PUBLIC_URL}/equitytrading`}
+                component={EquityTrading}
+              />
               <Route
-                  exact
-                  path={`${process.env.PUBLIC_URL}/orders`}
-                  component={Orders}
-                />
+                exact
+                path={`${process.env.PUBLIC_URL}/orders`}
+                component={Orders}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/positions`}
+                component={Positions}
+              />
               <Route
                 exact
                 path={`${process.env.PUBLIC_URL}/appinbox`}

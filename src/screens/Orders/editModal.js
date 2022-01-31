@@ -15,11 +15,11 @@ const EditModal = ({ show, onClose, order, setShow }) => {
     const [qty, setQty] = useState(order.qty)
     const [price, setPrice] = useState(order.price)
     const [triggeredPrice, setTriggeredPrice] = useState(order.triggeredPrice)
-    const [currentPrice, setCurrentPrice] = useState(0)
+    const [currentPrice, setCurrentPrice] = useState(-1)
     const [tradeTerm, setTradeTerm] = useState(order['intradayMIS'] ? 'intradayMIS' : 'longtermCNC')
     const [leverage, setLeverage] = useState(1)
     const [multiple, setMultiple] = useState(1)
-
+    const [product, setProduct] = useState('MIS')
 
 
 
@@ -29,12 +29,12 @@ const EditModal = ({ show, onClose, order, setShow }) => {
     const [socket, setSocket] = useState(null);
     useEffect(() => {
         console.log(order)
-        setCurrentPrice(0)
+        setCurrentPrice(-1)
         setOrderTypes(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
         setQty(order.qty)
         setPrice(order.slm ? 0 : order.price)
         setTriggeredPrice(order.triggeredPrice)
-        setTradeTerm(order['intradayMIS'] ? 'intradayMIS' : 'longtermCNC')
+        setProduct(order.product)
         if (show == true) {
             setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
         }
@@ -80,7 +80,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
 
     }
     const optionLiveDataModal = (optionData) => {
-        if (instrument.instrument_token == optionData.instrument_token)
+        if (order.instrument_token == optionData.instrument_token)
             setCurrentPrice(optionData.last_price.toFixed(2))
     }
     useEffect(() => {
@@ -123,16 +123,14 @@ const EditModal = ({ show, onClose, order, setShow }) => {
             price,
             type: order.type,
             triggeredPrice,
-            intradayMIS: false,
-            longtermCNC: false,
             market: false,
+            product: product,
             limit: false,
             slm: false,
             margin: qty * price / leverage,
             currentPrice: currentPrice
         }
 
-        data[tradeTerm] = true;
         data[orderTypes] = true;
         if (orderTypes == 'slm')
             data.margin = qty * triggeredPrice / leverage
@@ -203,14 +201,14 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                             <div className="col-md-8">
                                 <div class="form-check d-flex justify-content-between">
                                     <div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setTradeTerm('intradayMIS')} checked={tradeTerm == 'intradayMIS'} />
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setProduct('MIS')} checked={product == 'MIS'} />
                                         <label class="form-check-label text-success" for="intraday">
                                             Intraday <span>MIS</span>
                                         </label>
                                     </div><div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longtermCNC')} checked={tradeTerm == 'longtermCNC'} />
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setProduct(order.marketSearch == 'equity' ? 'CNC' : 'NRML')} checked={product == 'CNC' || product == 'NRML'} />
                                         <label class="form-check-label text-success" for="longterm">
-                                            Longterm <span>CNC</span>
+                                            Longterm {order.marketSearch == 'equity' ? <span>CNC</span> : <span>NRML</span>}
                                         </label>
                                     </div>
                                 </div>
@@ -278,7 +276,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                         }
                         {
                             orderTypes == 'slm' && <span>
-                                {order.marketSearch == 'option' ? order.type != 'buy' ? qty * leverage : qty * triggeredPrice / leverage : qty * price / leverage}
+                                {order.marketSearch == 'option' ? order.type != 'buy' ? qty * leverage : qty * triggeredPrice / leverage : qty * triggeredPrice / leverage}
                             </span>
                         }
                     </span>
@@ -286,7 +284,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                 onClose={onClose}
                 onSave={update}
                 closeButtonVariant="outline-primary"
-                saveButtonVariant="primary"
+                saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'primary'}`}
                 closeButtonContent="Cancel"
                 saveButtonContent="Update"
             />

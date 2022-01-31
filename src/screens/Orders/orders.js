@@ -231,6 +231,8 @@ const Orders = () => {
                                 value="orderTime" />
                             <ExcelColumn label="Order Type"
                                 value="order" />
+                            <ExcelColumn label="Product"
+                                value="product" />
                             <ExcelColumn label="QTY"
                                 value="qty" />
                             <ExcelColumn label="LTP"
@@ -254,6 +256,7 @@ const Orders = () => {
                                 <th>Exch</th>
                                 <th>Time</th>
                                 <th>Order Type</th>
+                                <th>Product</th>
                                 <th>QTY</th>
                                 <th>LTP</th>
                                 <th>Price</th>
@@ -272,6 +275,7 @@ const Orders = () => {
                                             <td>{order.exchange}</td>
                                             <td>{order.orderTime}</td>
                                             <td>{order.order}</td>
+                                            <td>{order.product}</td>
                                             <td>{order.qty}</td>
                                             <td className={`${order.instrument_token}`}>0.00</td>
                                             <td>{order.price}</td>
@@ -327,6 +331,7 @@ const Orders = () => {
                                 <th>Exch</th>
                                 <th>Execution Time</th>
                                 <th>Order Type</th>
+                                <th>Product</th>
                                 <th>QTY</th>
                                 <th>LTP</th>
                                 <th>Executed at Price</th>
@@ -344,6 +349,7 @@ const Orders = () => {
                                             <td>{order.exchange}</td>
                                             <td>{order.orderTime}</td>
                                             <td>{order.order}</td>
+                                            <td>{order.product}</td>
                                             <td>{order.qty}</td>
                                             <td className={`${order.instrument_token}`}>0.00</td>
                                             <td>{order.executedPrice}</td>
