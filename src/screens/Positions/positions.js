@@ -39,7 +39,7 @@ const Positions = () => {
         socket.on("optionData", optionLiveData);
     }, [])
 
-    const updateColumns = (id, val) => {
+    const updateColumns = (id, val, change) => {
         if (document.getElementById(id)) {
             var net_qty = parseInt(document.getElementById(id + "-net-qty").innerHTML)
             var buy_val = parseFloat(document.getElementById(id + "-buy-value").innerHTML)
@@ -47,8 +47,11 @@ const Positions = () => {
             var ltp = val;
             var cur_val = -(net_qty * ltp);
             var pnl = cur_val + buy_val + sell_val;
+            cur_val = cur_val.toFixed(2);
+            pnl = pnl.toFixed(2);
             document.getElementById(id + "-current-value").innerHTML = cur_val
             document.getElementById(id + "-ltp").innerHTML = ltp;
+            document.getElementById(id + "-ltp").style.color = change < 0 ? 'red' : 'green'
             document.getElementById(id + "-pnl").innerHTML = pnl;
         }
     }
@@ -56,20 +59,20 @@ const Positions = () => {
     const futureLiveData = (futureData) => {
         const products = ["MIS", "NRML"]
         products.forEach(product => {
-            updateColumns(futureData.instrument_token + "-" + product, futureData.last_price.toFixed(2))
+            updateColumns(futureData.instrument_token + "-" + product, futureData.last_price.toFixed(2), futureData.change)
         })
     }
 
     const equityLiveData = (equityData) => {
         const products = ["MIS", "CNC"]
         products.forEach(product => {
-            updateColumns(equityData.instrument_token + "-" + product, equityData.last_price.toFixed(2))
+            updateColumns(equityData.instrument_token + "-" + product, equityData.last_price.toFixed(2), equityData.change)
         })
     }
     const optionLiveData = (optionData) => {
         const products = ["MIS", "NRML"]
         products.forEach(product => {
-            updateColumns(optionData.instrument_token + "-" + product, optionData.last_price.toFixed(2))
+            updateColumns(optionData.instrument_token + "-" + product, optionData.last_price.toFixed(2), optionData.change)
         })
     }
 
@@ -155,8 +158,8 @@ const Positions = () => {
                                             <tr>
                                                 <td id={`${position.instrument_token + "-" + position.product}`}>{position.instrument}</td>
                                                 <td>{position.product}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-net-qty`}>{position.net_qty}</td>
-                                                <td>{position.avg}</td>
+                                                <td id={`${position.instrument_token + "-" + position.product}-net-qty`}>{position.net_qty.toFixed(2)}</td>
+                                                <td>{position.avg.toFixed(2)}</td>
                                                 <td id={`${position.instrument_token + "-" + position.product}-ltp`}>{0}</td>
                                                 <td id={`${position.instrument_token + "-" + position.product}-buy-value`}>{position.buy_value}</td>
                                                 <td id={`${position.instrument_token + "-" + position.product}-sell-value`}>{position.sell_value}</td>

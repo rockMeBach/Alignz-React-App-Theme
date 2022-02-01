@@ -15,7 +15,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     const [qty, setQty] = useState(0)
     const [price, setPrice] = useState(0)
     const [triggeredPrice, setTriggeredPrice] = useState(0)
-    const [currentPrice, setCurrentPrice] = useState(0)
+    const [currentPrice, setCurrentPrice] = useState(-1)
     const [product, setProduct] = useState('MIS')
     const [leverage, setLeverage] = useState(1)
     const [multiple, setMultiple] = useState(1)
@@ -29,7 +29,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
     useEffect(() => {
         setPrice(0)
         setTriggeredPrice(0)
-        setCurrentPrice(0)
+        setCurrentPrice(-1)
         if (show == true) {
             setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
 
@@ -167,7 +167,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                                 <h6>{instrument.name} X {qty} QTY</h6>
                             </div>
                             <div className="col-md-6">
-                                <h6>{currentPrice}</h6>
+                                <h6>{currentPrice == -1 ? 'Current Price Updating' : currentPrice}</h6>
                             </div>
                         </div>
                     </div>
@@ -258,9 +258,9 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                     </span>
                 }
                 onClose={onClose}
-                onSave={currentPrice == 0 ? null : buy}
+                onSave={currentPrice == -1 ? null : buy}
                 closeButtonVariant="outline-success"
-                saveButtonVariant="success"
+                saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'success'}`}
                 closeButtonContent="Cancel"
                 saveButtonContent="BUY"
             />

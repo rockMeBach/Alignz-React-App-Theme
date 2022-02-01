@@ -191,7 +191,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                                 <h6>{order.name} X {qty} QTY</h6>
                             </div>
                             <div className="col-md-6">
-                                <h6>{currentPrice}</h6>
+                                <h6>{currentPrice == -1 ? 'Current Price Updating' : currentPrice}</h6>
                             </div>
                         </div>
                     </div>
@@ -282,7 +282,7 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                     </span>
                 }
                 onClose={onClose}
-                onSave={update}
+                onSave={currentPrice == -1 ? null : update}
                 closeButtonVariant="outline-primary"
                 saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'primary'}`}
                 closeButtonContent="Cancel"
