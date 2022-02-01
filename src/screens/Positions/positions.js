@@ -47,9 +47,9 @@ const Positions = () => {
             var ltp = val;
             var cur_val = -(net_qty * ltp);
             var pnl = cur_val + buy_val + sell_val;
-            document.getElementById(id + "-current-value").innerHTML = cur_val
-            document.getElementById(id + "-ltp").innerHTML = ltp;
-            document.getElementById(id + "-pnl").innerHTML = pnl
+            document.getElementById(id + "-current-value").innerHTML = cur_val.toFixed(2)
+            document.getElementById(id + "-ltp").innerHTML = ltp.toFixed(2);
+            document.getElementById(id + "-pnl").innerHTML = pnl.toFixed(2);
         }
     }
 
