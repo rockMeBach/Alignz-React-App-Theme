@@ -1,0 +1,36 @@
+.exchange-row-trade {
+  position: absolute !important;
+  display: none !important;
+  height: 100%;
+  width: 100%;
+  top: 0%;
+}
+.stock-row {
+  position: relative;
+}
+.stock-row:hover > .exchange-row-trade {
+  display: flex !important;
+  z-index: 1;
+}
+.exchange-row-trade > div > button {
+  height: auto !important;
+}
+.stock-row:hover > div {
+  color: #00000034 !important;
+  fill: #00000034 !important;
+}
+.market-label-trading {
+  font-size: 0.9rem;
+}
+.search-input {
+  width: 100% !important;
+}
+
+@media screen and (max-width: 660px) {
+  .exchange-row-trade {
+    position: relative !important;
+    display: flex !important;
+    height: auto;
+    width: auto;
+  }
+}

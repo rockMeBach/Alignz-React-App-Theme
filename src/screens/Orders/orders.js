@@ -113,7 +113,7 @@ const Orders = () => {
                 })
 
                 const executedData = todaysData.filter(order => {
-                    if (order.orderType != 'open' && order.orderType != 'trigger pending')
+                    if (order.orderType == 'success' || new RegExp('AUTO').test(order.orderType))
                         return order;
                 })
                 console.log(openData)
@@ -142,7 +142,7 @@ const Orders = () => {
     const getSearchResultsExecuted = (order) => {
         if (order == '') {
             const executedData = todaysData.filter(order => {
-                if (order.orderType != 'open' && order.orderType != 'trigger pending')
+                if (order.orderType == 'success' || new RegExp('AUTO').test(order.orderType))
                     return order;
             })
             return setOrdersExecuted(executedData)

@@ -64,7 +64,8 @@
     "request-promise": "^4.2.6",
     "socket.io-client": "^4.4.0",
     "styled-components": "^5.3.1",
-    "technicalindicators": "^3.1.0"
+    "technicalindicators": "^3.1.0",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",

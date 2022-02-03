@@ -18,6 +18,7 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const Positions = () => {
     const auth = useSelector((state) => state.auth);
     const [positions, setPositions] = useState([])
+    const [sum, setSum] = useState(0)
     const [search, setSearch] = useState('')
     const positionsRef = useRef([])
 
@@ -53,6 +54,11 @@ const Positions = () => {
             document.getElementById(id + "-ltp").innerHTML = ltp;
             document.getElementById(id + "-ltp").style.color = change < 0 ? 'red' : 'green'
             document.getElementById(id + "-pnl").innerHTML = pnl;
+            var sum = 0
+            Array.from(document.querySelectorAll('[id$="-pnl"]')).forEach(ele => {
+                sum += parseFloat(ele.innerHTML)
+            })
+            setSum(sum.toFixed(2))
         }
     }
 
@@ -169,6 +175,10 @@ const Positions = () => {
                                         )
                                     })
                                 }
+                                <tr>
+                                    <td colSpan={8} className='text-right font-weight-bold'>Sum = </td>
+                                    <td className={`${sum >= 0 ? 'text-success' : 'text-danger'} font-weight-bold`}>{sum}</td>
+                                </tr>
                             </tbody>
                         </Table>
                     </div>

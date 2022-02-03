@@ -72,7 +72,7 @@ import Home from "./screens/Home/Home";
 import ChangePassword from "./components/Pages/ChangePassword";
 import Telegram from "./screens/Pages/Telegram";
 import Trading from "./screens/Trading/Trading"
-import EquityTrading from "./screens/EquityTrading/EquityTrading"
+import CryptoTrading from "./screens/CryptoTrading/CryptoTrading"
 import Orders from "./screens/Orders/orders"
 import Positions from "./screens/Positions/positions"
 import {
@@ -249,8 +249,8 @@ const App = () => {
               />
               <Route
                 exact
-                path={`${process.env.PUBLIC_URL}/equitytrading`}
-                component={EquityTrading}
+                path={`${process.env.PUBLIC_URL}/cryptotrading`}
+                component={CryptoTrading}
               />
               <Route
                 exact
