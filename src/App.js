@@ -75,6 +75,7 @@ import Trading from "./screens/Trading/Trading"
 import CryptoTrading from "./screens/CryptoTrading/CryptoTrading"
 import Orders from "./screens/Orders/orders"
 import Positions from "./screens/Positions/positions"
+import Holdings from "./screens/Holdings/holdings"
 import {
   dispatchLogin,
   fetchUser,
@@ -261,6 +262,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/positions`}
                 component={Positions}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/holdings`}
+                component={Holdings}
               />
               <Route
                 exact

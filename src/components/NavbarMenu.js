@@ -155,7 +155,7 @@ const NavbarMenu = () => {
                   Virtual Trading
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href style={{ color: "black" }}>
+                  <a class="dropdown-item" href="/holdings" style={{ color: "black" }}>
                     Holdings
                   </a>
                   <a class="dropdown-item" href="/positions" style={{ color: "black" }}>
