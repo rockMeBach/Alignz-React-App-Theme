@@ -192,7 +192,7 @@ const Orders = () => {
         <div className="container">
             <PageHeader
                 HeaderText="Orders"
-                Breadcrumb={[{ name: "Orders" }]}
+                Breadcrumb={[{ name: "Virtual Trading" }, { name: "Orders" }]}
             />
             {/* Open Orders */}
             <div className="row">

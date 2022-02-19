@@ -7,20 +7,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Form, FormControl, InputGroup, Button, ListGroup, Spinner } from "react-bootstrap";
 import axios from "axios"
-import "./Trading.css"
 import BACKEND_URL from "../../Backend_url";
-import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
-import io from 'socket.io-client';
 import TVChartContainer from '../../components/TradingViewChart/TradingViewChart'
+import { toast } from "react-toastify";
 
 
 const Trading = () => {
 
     const auth = useSelector((state) => state.auth);
-
-
     const [search, setSearch] = useState('')
     const [selectMarket, setSelectMarket] = useState()
     const [buyModelOpen, setBuyModelOpen] = useState(false)
@@ -29,62 +25,39 @@ const Trading = () => {
     const [tradeWatch, setTradeWatch] = useState([])
     const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: '' })
     const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: '' })
+    const [currentDate, setCurrentDate] = useState()
+    const [currentTime, setCurrentTime] = useState()
+    const [loader, setLoader] = useState(false)
     const [selectedSymbol, setSelectedSymbol] = useState('NSE:NIFTY50')
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
 
     useEffect(() => {
         console.log(auth)
-        axios.get(`http://${BACKEND_URL}/api/trading/getWatchlist`, {
+        axios.get(`http://${BACKEND_URL}/api/historicTrading/getHistoricTradingWatchlist`, {
             params: {
                 userID: auth.user._id
             }
         }).then(data => {
             console.log(data)
-            if (data.data)
-                setTradeWatch(data.data.watchlist)
+            if (data.data) {
+                var currentLocalDate = new Date(new Date(data.data.currentTime).getTime() - new Date().getTimezoneOffset() * 60000)
+                setCurrentDate(currentLocalDate.toISOString().split('T')[0])
+                setCurrentTime(currentLocalDate.toISOString().split('T')[1].split('.')[0])
+                const val = data.data.watchlist.map(item => {
+                    return {
+                        ...item,
+                        feed: 0,
+                        change: 0
+                    }
+                })
+                setTradeWatch(val)
+            }
         })
     }, [auth])
 
     useEffect(() => {
-        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
-        socket.on("futureData", futureLiveData);
-        socket.on("equityData", equityLiveData);
-        socket.on("optionData", optionLiveData);
-    }, [])
-
-
-
-    const futureLiveData = (futureData) => {
-
-        if (document.getElementById(futureData.instrument_token)) {
-            var change = futureData.change.toFixed(2)
-            document.getElementById(futureData.instrument_token).innerHTML = futureData.last_price.toFixed(2)
-            document.getElementById(futureData.instrument_token).style.color = change < 0 ? "red" : "green"
-            document.getElementById(futureData.instrument_token + "-change").innerHTML = change + "%"
-            document.getElementById(futureData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
-        }
-    }
-    const equityLiveData = (equityData) => {
-        // console.log(equityData)
-        if (document.getElementById(equityData.instrument_token)) {
-            var change = equityData.change.toFixed(2)
-            document.getElementById(equityData.instrument_token).innerHTML = equityData.last_price.toFixed(2)
-            document.getElementById(equityData.instrument_token).style.color = change < 0 ? "red" : "green"
-            document.getElementById(equityData.instrument_token + "-change").innerHTML = change + "%"
-            document.getElementById(equityData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
-        }
-    }
-
-    const optionLiveData = (optionData) => {
-
-        if (document.getElementById(optionData.instrument_token)) {
-            var change = optionData.change.toFixed(2)
-            document.getElementById(optionData.instrument_token).innerHTML = optionData.last_price.toFixed(2)
-            document.getElementById(optionData.instrument_token).style.color = change < 0 ? "red" : "green"
-            document.getElementById(optionData.instrument_token + "-change").innerHTML = change + "%"
-            document.getElementById(optionData.instrument_token + "-change").style.color = change < 0 ? "red" : "green"
-        }
-    }
+        getCurrentFeed()
+    }, [currentTime && currentDate])
 
     const getSearchResults = (e) => {
         setSearch(e);
@@ -115,8 +88,19 @@ const Trading = () => {
             exch: marketListItem[marketListItem.type].split(":")[0],
             type: marketListItem.type
         }
-        axios.post(`http://${BACKEND_URL}/api/trading/setWatchlist`, data).then(data => {
-            setTradeWatch(data.data.watchlist)
+        axios.post(`http://${BACKEND_URL}/api/historicTrading/addHistoricTradingWatchlist`, data).then(data => {
+            console.log(data)
+            if (data.data) {
+
+                const val = data.data.watchlist.map(item => {
+                    return {
+                        ...item,
+                        feed: 0,
+                        change: 0
+                    }
+                })
+                setTradeWatch(val)
+            }
         })
     }
 
@@ -126,11 +110,34 @@ const Trading = () => {
             userID: auth.user._id,
             instrument_token: instrument_token
         }
-        axios.put(`http://${BACKEND_URL}/api/trading/pullWatchlist`, data).then(data => {
+        axios.put(`http://${BACKEND_URL}/api/historicTrading/deleteHistoricTradingWatchlist`, data).then(data => {
             setTradeWatch(data.data.watchlist)
         })
     }
 
+    const getCurrentFeed = () => {
+        if (!currentDate || !currentTime)
+            return;
+        var time = new Date(currentDate + " " + currentTime)
+        if (time.getTime() > new Date().getTime())
+            return toast.error("Please select a valid time")
+        setLoader(true)
+        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id }).then(data => {
+            console.log(data)
+            setLoader(false)
+            const val = data.data.forEach((feed, index) => {
+                if (feed && document.getElementById(`${feed.instrument_token}`)) {
+                    document.getElementById(`${feed.instrument_token}`).innerHTML = feed.close.toFixed(2)
+                }
+            })
+        })
+    }
+
+    const setTime = (time = 0) => {
+        var current = new Date((new Date(currentDate + " " + currentTime).getTime() + time * 1000) - new Date().getTimezoneOffset() * 60000)
+        setCurrentDate(current.toISOString().split('T')[0])
+        setCurrentTime(current.toISOString().split('T')[1].split('.')[0])
+    }
 
     return (
         <div className="container">
@@ -138,18 +145,62 @@ const Trading = () => {
                 HeaderText="Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
+            <div className="row mb-4">
+                <div className="col-md-4">
+                    <div>
+                        <h6>Current Date</h6>
+                        <input type="date" className="form-control" value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                    </div>
+                </div>
+                <div className="col-4">
+                    <div className="row d-flex align-items-end" style={{ height: '100%' }}>
+                        <div className="col-3">
+                            <Button variant="danger" onClick={() => setTime(-60 * 60)}>-1 hr</Button>
+                        </div>
+                        <div className="col-3">
+                            <Button variant="danger" onClick={() => setTime(-5 * 60)}>-5 min</Button>
+                        </div>
+                        <div className="col-3">
+                            <Button variant="primary" onClick={() => setTime(5 * 60)}>+5 min</Button>
+                        </div>
+                        <div className="col-3">
+                            <Button variant="primary" onClick={() => setTime(60 * 60)}>+1 hr</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div>
+                        <h6>Current Time</h6>
+                        <input type="time" className="form-control" value={currentTime} onChange={e => setCurrentTime(e.target.value)} />
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <p className="border border-primary text-center rounded p-2 fw-bold">{new Date(currentDate + " " + currentTime).toLocaleString()}</p>
+                </div>
+            </div>
+
+            <div className="row mb-3">
+                {loader && <div className="col-12 mb-2 d-flex justify-content-center">
+                    <Spinner animation="border" />
+                </div>}
+                <div className="col-12">
+                    <Button variant="primary" className="col-12" onClick={() => { getCurrentFeed() }}>Submit</Button>
+                </div>
+            </div>
             <div className="row clearfix">
                 <div className="col-lg-4 col-md-12 watchlist">
+
                     <div className="row">
                         <div className="col-md-6">
                             <h5 className="d-inline me-1">Nifty 50</h5>
                             <p className="d-inline text-primary">NSE</p>
                         </div>
                         <div className="col-md-6 text-end">
-                            <p className="d-inline me-1" id={`256265-change`}>0</p>
-                            <p className="d-inline" id={`256265`}>0.0%</p>
+                            <p className="d-inline me-1" id={`256265`}>0</p>
+                            <p className="d-inline" id={`256265-change`}>0.0%</p>
                         </div>
-
                     </div>
                     <div className="row">
                         <InputGroup className="mb-3 mt-3">
@@ -201,13 +252,32 @@ const Trading = () => {
                                             <div class="col-6 col-md-3 order-md-3">{tradeWatchItem.exch}</div>
                                             <div className="col-6 col-md-3 text-end order-md-9" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
                                         </div>
+
                                         <div className="row col-md-9 offset-3 exchange-row-trade">
                                             <div className="row justify-content-evenly p-2">
                                                 <div className="col-3  d-flex align-items-center">
-                                                    <Button variant="success" onClick={() => { setBuyInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setBuyModelOpen(true) }}>BUY</Button>
+                                                    <Button variant="success" onClick={() => {
+                                                        setBuyInstrument({
+                                                            instrument_token: tradeWatchItem.instrument_token,
+                                                            market: tradeWatchItem.marketType,
+                                                            name: tradeWatchItem.name,
+                                                            exchange: tradeWatchItem.exch,
+                                                            price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
+                                                        });
+                                                        setBuyModelOpen(true)
+                                                    }}>BUY</Button>
                                                 </div>
                                                 <div className="col-3  d-flex align-items-center">
-                                                    <Button variant="danger" onClick={() => { setSellInstrument({ instrument_token: tradeWatchItem.instrument_token, market: tradeWatchItem.marketType, name: tradeWatchItem.name, exchange: tradeWatchItem.exch }); setSellModelOpen(true) }}>SELL</Button>
+                                                    <Button variant="danger" onClick={() => {
+                                                        setSellInstrument({
+                                                            instrument_token: tradeWatchItem.instrument_token,
+                                                            market: tradeWatchItem.marketType,
+                                                            name: tradeWatchItem.name,
+                                                            exchange: tradeWatchItem.exch,
+                                                            price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
+                                                        });
+                                                        setSellModelOpen(true)
+                                                    }}>SELL</Button>
                                                 </div>
                                                 <div className="col-3  d-flex align-items-center">
                                                     <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
@@ -222,11 +292,11 @@ const Trading = () => {
 
                 </div>
                 <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart" style={{ height: '500px' }}>
-                    <TVChartContainer
+                    {/* <TVChartContainer
                         containerId="trading-view-chart"
                         fullScreen={false}
                         symbol={selectedSymbol}
-                    />
+                    /> */}
 
                 </div>
             </div>
@@ -234,11 +304,13 @@ const Trading = () => {
                 setShow={setBuyModelOpen}
                 onClose={() => setBuyModelOpen(false)}
                 instrument={buyInstrument}
+                currentTime={new Date(new Date(currentDate + " " + currentTime).getTime() + new Date().getTimezoneOffset() * 60000)}
             />
             <SellModel show={sellModelOpen}
                 setShow={setSellModelOpen}
                 onClose={() => setSellModelOpen(false)}
                 instrument={sellInstrument}
+                currentTime={new Date(new Date(currentDate + " " + currentTime).getTime() + new Date().getTimezoneOffset() * 60000)}
             />
         </div >
     )

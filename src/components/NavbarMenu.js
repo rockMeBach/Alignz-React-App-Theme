@@ -155,47 +155,53 @@ const NavbarMenu = () => {
                   Virtual Trading
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/trading" style={{ color: "black" }}>
+                    Tradings
+                  </a>
+                  <a class="dropdown-item" href="/orders" style={{ color: "black" }}>
+                    Orders
+                  </a>
                   <a class="dropdown-item" href="/holdings" style={{ color: "black" }}>
                     Holdings
                   </a>
                   <a class="dropdown-item" href="/positions" style={{ color: "black" }}>
                     Positions
                   </a>
-                  <a class="dropdown-item" href="/trading" style={{ color: "black" }}>
-                    Tradings
-                  </a>
-                  <a class="dropdown-item" href="/cryptotrading" style={{ color: "black" }}>
-                    Crypto Trading
-                  </a>
                 </div>
               </li>
-              <li class="nav-item">
+
+              <li class="nav-item dropdown">
                 <a
-                  class="nav-link"
-                  href="/orders"
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                   style={{
                     color: "black",
                     fontSize: "15px",
                     paddingLeft: "20px",
                     fontWeight: "600",
                   }}
-                >
-                  Orders
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
                   href
-                  style={{
-                    color: "black",
-                    fontSize: "15px",
-                    paddingLeft: "20px",
-                    fontWeight: "600",
-                  }}
                 >
-                  Historical
+                  Historical Trading
                 </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/historictrading" style={{ color: "black" }}>
+                    Tradings
+                  </a>
+                  <a class="dropdown-item" href="/orders" style={{ color: "black" }}>
+                    Orders
+                  </a>
+                  <a class="dropdown-item" href="/holdings" style={{ color: "black" }}>
+                    Holdings
+                  </a>
+                  <a class="dropdown-item" href="/historicpositions" style={{ color: "black" }}>
+                    Positions
+                  </a>
+                </div>
               </li>
               <li class="nav-item">
                 <a
