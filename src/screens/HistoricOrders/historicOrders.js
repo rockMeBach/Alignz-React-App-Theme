@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux'
 import PageHeader from "../../components/PageHeader";
-import { InputGroup, FormControl, Button, Table } from 'react-bootstrap'
+import { InputGroup, FormControl, Button, Table, Spinner } from 'react-bootstrap'
 import UIModal from "../../components/UIElements/UIModal"
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -14,14 +14,14 @@ import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import io from 'socket.io-client';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import EditModal from "./editModal"
+// import EditModal from "./editModal"
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 
-const Orders = () => {
+const HistoricOrders = () => {
     const auth = useSelector((state) => state.auth);
     const [searchOpen, setSearchOpen] = useState('')
     const [searchExecuted, setSearchExecuted] = useState('')
@@ -32,62 +32,21 @@ const Orders = () => {
     const [deleteOrderID, setDeleteOrderID] = useState(null)
     const [openEditModal, setOpenEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
+    const [currentDate, setCurrentDate] = useState()
+    const [currentTime, setCurrentTime] = useState()
+    const [loader, setLoader] = useState(false)
     const ordersRef = useRef([])
 
 
     useEffect(() => {
-        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
-        socket.on("futureData", futureLiveData);
-        socket.on("equityData", equityLiveData);
-        socket.on("optionData", optionLiveData);
-    }, [])
-
-    const futureLiveData = (futureData) => {
-        if (document.getElementsByClassName(futureData.instrument_token)) {
-            var elements = document.getElementsByClassName(futureData.instrument_token)
-            var change = futureData.change < 0 ? "red" : "green"
-            var data = futureData.last_price.toFixed(2)
-            Array.from(elements).forEach(element => {
-                element.innerHTML = data
-                element.style.color = change
-            });
-
-        }
-    }
-
-    const equityLiveData = (equityData) => {
-        if (document.getElementsByClassName(equityData.instrument_token)) {
-            var elements = document.getElementsByClassName(equityData.instrument_token)
-            var change = equityData.change < 0 ? "red" : "green"
-            var data = equityData.last_price.toFixed(2)
-            Array.from(elements).forEach(element => {
-                element.innerHTML = data
-                element.style.color = change
-            });
-
-        }
-    }
-    const optionLiveData = (optionData) => {
-        if (document.getElementsByClassName(optionData.instrument_token)) {
-            var elements = document.getElementsByClassName(optionData.instrument_token)
-            var change = optionData.change < 0 ? "red" : "green"
-            var data = optionData.last_price.toFixed(2)
-            Array.from(elements).forEach(element => {
-                element.innerHTML = data
-                element.style.color = change
-            });
-
-        }
-    }
-    useEffect(() => {
-        if (!openEditModal || !deleteModal)
-            axios.get(`http://${BACKEND_URL}/api/trading/getOrders`, {
+        if (!openEditModal || !deleteModal) {
+            setLoader(true)
+            axios.get(`http://${BACKEND_URL}/api/historicTrading/getHistoricOrders`, {
                 params: {
                     userID: auth.user._id
                 }
             }).then(data => {
                 ordersRef.current = data.data.map(order => {
-                    order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm:ss")
                     if (order.market)
                         order.order = "Market"
                     if (order.limit)
@@ -99,29 +58,60 @@ const Orders = () => {
 
                     return order;
                 })
+                axios.get(`http://${BACKEND_URL}/api/historicTrading/getHistoricTradingWatchlist`, {
+                    params: {
+                        userID: auth.user._id
+                    }
+                }).then(data => {
+                    if (data.data) {
+                        if (!currentDate && !currentTime) {
+                            var currentLocalDate = new Date(new Date(data.data.currentTime).getTime() - new Date().getTimezoneOffset() * 60000)
+                            setCurrentDate(currentLocalDate.toISOString().split('T')[0])
+                            setCurrentTime(currentLocalDate.toISOString().split('T')[1].split('.')[0])
+                        }
+                        var currentDateTime = new Date(currentDate + " " + currentTime)
+                        const todaysData = ordersRef.current.filter(order => {
+                            if (new Date(order.orderTime).getDate() == new Date(currentDateTime).getDate() && new Date(order.orderTime).getMonth() == new Date(currentDateTime).getMonth()
+                                && new Date(order.orderTime).getFullYear() == new Date(currentDateTime).getFullYear()
 
-                const todaysData = ordersRef.current.filter(order => {
-                    if (new Date(order.orderTime).getDate() == new Date().getDate() && new Date(order.orderTime).getMonth() == new Date().getMonth()
-                        && new Date(order.orderTime).getFullYear() == new Date().getFullYear()
-                    )
-                        return order;
-                })
+                            ) {
+                                if (new Date(order.orderTime).getTime() <= new Date(currentDateTime).getTime())
+                                    return order;
+                            }
+                        })
 
-                const openData = todaysData.filter(order => {
-                    if (order.orderType == 'open' || order.orderType == 'trigger pending')
-                        return order;
-                })
+                        const openData = todaysData.filter(order => {
+                            console.log("initial", order, currentDateTime)
+                            if (order.orderType == 'open' || order.orderType == 'trigger pending')
+                                return order;
+                            else if (new Date(order.executedTime).getTime() > new Date(currentDateTime).getTime()) {
+                                console.log("Execution", order, currentDateTime)
+                                if (order.slm) {
+                                    order.orderType = 'trigger pending'
+                                    return order;
+                                }
+                                else {
+                                    order.orderType = 'open'
+                                    return order;
+                                }
+                            }
+                        })
 
-                const executedData = todaysData.filter(order => {
-                    if (order.orderType == 'success' || new RegExp('AUTO').test(order.orderType))
-                        return order;
+                        const executedData = todaysData.filter(order => {
+                            if ((order.orderType == 'success' || new RegExp('AUTO').test(order.orderType)) && new Date(order.executedTime).getTime() <= new Date(currentDateTime).getTime())
+                                return order;
+                        })
+                        setOrdersOpen(openData)
+                        setOrdersExecuted(executedData)
+                        setTodaysData(todaysData)
+                        getCurrentFeed()
+                    }
                 })
-                console.log(openData)
-                setOrdersOpen(openData)
-                setOrdersExecuted(executedData)
-                setTodaysData(todaysData)
             })
-    }, [auth, openEditModal, deleteModal])
+        }
+    }, [auth, openEditModal, deleteModal, currentDate, currentTime])
+
+
 
     const getSearchResultsOpen = (order) => {
         if (order == '') {
@@ -148,19 +138,25 @@ const Orders = () => {
             return setOrdersExecuted(executedData)
         }
         const results = todaysData.filter(item => {
-            if (new RegExp(order).test(item.name) && item.orderType != 'open' && item.orderType != 'trigger pending')
+            if (
+                new RegExp(order).test(item.name)
+                && item.orderType != 'open'
+                && item.orderType != 'trigger pending'
+            )
                 return item;
         })
 
         setOrdersExecuted(results);
+
     }
 
     const deleteOrder = () => {
         const orderID = deleteOrderID
-        axios.delete(`http://${BACKEND_URL}/api/trading/deleteOrder`,
+        axios.delete(`http://${BACKEND_URL}/api/historicTrading/deleteHistoricOrder`,
             {
                 params: {
-                    orderID: orderID
+                    orderID: orderID,
+                    executedTime: new Date(currentDate + ' ' + currentTime)
                 }
             }
         ).then(data => {
@@ -189,12 +185,91 @@ const Orders = () => {
         })
     }
 
+    const getCurrentFeed = () => {
+        if (!currentDate || !currentTime)
+            return;
+        var time = new Date(currentDate + " " + currentTime)
+        if (time.getTime() > new Date().getTime())
+            return toast.error("Please select a valid time")
+        setLoader(true)
+        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id }).then(data => {
+            setLoader(false)
+            const val = data.data.forEach((feed, index) => {
+                if (feed && document.getElementsByClassName(feed.instrument_token)) {
+                    var elements = document.getElementsByClassName(feed.instrument_token)
+                    var data = feed.open.toFixed(2)
+                    Array.from(elements).forEach(element => {
+                        element.innerHTML = data
+                    });
+
+                }
+            })
+        })
+            .catch(err => {
+                setLoader(false)
+            })
+    }
+
+    const setTime = (time = 0) => {
+        var current = new Date((new Date(currentDate + " " + currentTime).getTime() + time * 1000) - new Date().getTimezoneOffset() * 60000)
+        setCurrentDate(current.toISOString().split('T')[0])
+        setCurrentTime(current.toISOString().split('T')[1].split('.')[0])
+    }
+
     return (
         <div className="container">
             <PageHeader
                 HeaderText="Orders"
-                Breadcrumb={[{ name: "Virtual Trading" }, { name: "Orders" }]}
+                Breadcrumb={[{ name: "Historic Trading" }, { name: "Orders" }]}
             />
+            <div className="row mb-4">
+                <div className="col-md-3">
+                    <div>
+                        <h6>Current Date</h6>
+                        <input type="date" className="form-control" value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                    </div>
+                </div>
+                <div className="col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
+                    <div className="row d-flex align-items-end" style={{ height: '100%' }}>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-60 * 60)}>-1 hr</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-5 * 60)}>-5 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-1 * 60)}>-1 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(1 * 60)}>+1 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(5 * 60)}>+5 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(60 * 60)}>+1 hr</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <div>
+                        <h6>Current Time</h6>
+                        <input type="time" className="form-control" value={currentTime} onChange={e => setCurrentTime(e.target.value)} />
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <p className="border border-primary text-center rounded p-2 fw-bold">{new Date(currentDate + " " + currentTime).toLocaleString()}</p>
+                </div>
+            </div>
+
+            <div className="row mb-3">
+                {loader && <div className="col-12 mb-2 d-flex justify-content-center">
+                    <Spinner animation="border" />
+                </div>}
+            </div>
+
             {/* Open Orders */}
             <div className="row">
                 <div className='col-lg-6 col-md-12'>
@@ -348,7 +423,7 @@ const Orders = () => {
                                             <td>{order.name}</td>
                                             <td>{order.type[0].toUpperCase() + order.type.slice(1)}</td>
                                             <td>{order.exchange}</td>
-                                            <td>{new Date(order.orderTime).toLocaleString()}</td>
+                                            <td>{new Date(order.executedTime).toLocaleString()}</td>
                                             <td>{order.order}</td>
                                             <td>{order.product}</td>
                                             <td>{order.qty}</td>
@@ -368,11 +443,11 @@ const Orders = () => {
                 </div>
             </div>
             <ToastContainer />
-            <EditModal show={openEditModal}
+            {/* <EditModal show={openEditModal}
                 setShow={setOpenEditModal}
                 onClose={() => setOpenEditModal(false)}
                 order={editOrderDetail}
-            />
+            /> */}
             <UIModal show={deleteModal}
                 title={<h4>Delete Order</h4>}
                 bodyText={<h6>Are you sure?</h6>}
@@ -387,4 +462,4 @@ const Orders = () => {
     )
 }
 
-export default Orders
+export default HistoricOrders

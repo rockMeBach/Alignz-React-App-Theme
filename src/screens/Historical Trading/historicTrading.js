@@ -57,7 +57,7 @@ const Trading = () => {
 
     useEffect(() => {
         getCurrentFeed()
-    }, [currentTime && currentDate])
+    }, [currentTime, currentDate, tradeWatch])
 
     const getSearchResults = (e) => {
         setSearch(e);
@@ -127,7 +127,7 @@ const Trading = () => {
             setLoader(false)
             const val = data.data.forEach((feed, index) => {
                 if (feed && document.getElementById(`${feed.instrument_token}`)) {
-                    document.getElementById(`${feed.instrument_token}`).innerHTML = feed.close.toFixed(2)
+                    document.getElementById(`${feed.instrument_token}`).innerHTML = feed.open.toFixed(2)
                 }
             })
         })
@@ -145,30 +145,36 @@ const Trading = () => {
                 HeaderText="Trading"
                 Breadcrumb={[{ name: "Virtual Trading" }, { name: "Trading" }]}
             />
-            <div className="row mb-4">
-                <div className="col-md-4">
+            <div className="row mb-2">
+                <div className="col-md-3">
                     <div>
                         <h6>Current Date</h6>
                         <input type="date" className="form-control" value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
                     </div>
                 </div>
-                <div className="col-4">
+                <div className="col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
                     <div className="row d-flex align-items-end" style={{ height: '100%' }}>
-                        <div className="col-3">
-                            <Button variant="danger" onClick={() => setTime(-60 * 60)}>-1 hr</Button>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-60 * 60)}>-1 hr</Button>
                         </div>
-                        <div className="col-3">
-                            <Button variant="danger" onClick={() => setTime(-5 * 60)}>-5 min</Button>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-5 * 60)}>-5 min</Button>
                         </div>
-                        <div className="col-3">
-                            <Button variant="primary" onClick={() => setTime(5 * 60)}>+5 min</Button>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-1 * 60)}>-1 min</Button>
                         </div>
-                        <div className="col-3">
-                            <Button variant="primary" onClick={() => setTime(60 * 60)}>+1 hr</Button>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(1 * 60)}>+1 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(5 * 60)}>+5 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(60 * 60)}>+1 hr</Button>
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <div>
                         <h6>Current Time</h6>
                         <input type="time" className="form-control" value={currentTime} onChange={e => setCurrentTime(e.target.value)} />
@@ -185,9 +191,6 @@ const Trading = () => {
                 {loader && <div className="col-12 mb-2 d-flex justify-content-center">
                     <Spinner animation="border" />
                 </div>}
-                <div className="col-12">
-                    <Button variant="primary" className="col-12" onClick={() => { getCurrentFeed() }}>Submit</Button>
-                </div>
             </div>
             <div className="row clearfix">
                 <div className="col-lg-4 col-md-12 watchlist">
@@ -199,7 +202,6 @@ const Trading = () => {
                         </div>
                         <div className="col-md-6 text-end">
                             <p className="d-inline me-1" id={`256265`}>0</p>
-                            <p className="d-inline" id={`256265-change`}>0.0%</p>
                         </div>
                     </div>
                     <div className="row">
@@ -249,8 +251,7 @@ const Trading = () => {
                                         <div class="row border-bottom border-top p-3" onClick={() => setSelectedSymbol(`${tradeWatchItem.exch}:${tradeWatchItem.name}`)}>
                                             <div class="col-6 col-md-3 text-break order-md-1">{tradeWatchItem.name}</div>
                                             <div className="col-6 col-md-3 text-end order-md-6" id={tradeWatchItem.instrument_token}>0.00</div>
-                                            <div class="col-6 col-md-3 order-md-3">{tradeWatchItem.exch}</div>
-                                            <div className="col-6 col-md-3 text-end order-md-9" id={`${tradeWatchItem.instrument_token}-change`}>0% <KeyboardArrowDownIcon className="text-danger" /> </div>
+                                            <div class="col-6 col-md-6 order-md-3">{tradeWatchItem.exch}</div>
                                         </div>
 
                                         <div className="row col-md-9 offset-3 exchange-row-trade">
@@ -304,13 +305,13 @@ const Trading = () => {
                 setShow={setBuyModelOpen}
                 onClose={() => setBuyModelOpen(false)}
                 instrument={buyInstrument}
-                currentTime={new Date(new Date(currentDate + " " + currentTime).getTime() + new Date().getTimezoneOffset() * 60000)}
+                currentTime={new Date(currentDate + " " + currentTime)}
             />
             <SellModel show={sellModelOpen}
                 setShow={setSellModelOpen}
                 onClose={() => setSellModelOpen(false)}
                 instrument={sellInstrument}
-                currentTime={new Date(new Date(currentDate + " " + currentTime).getTime() + new Date().getTimezoneOffset() * 60000)}
+                currentTime={new Date(currentDate + " " + currentTime)}
             />
         </div >
     )

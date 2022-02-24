@@ -192,7 +192,7 @@ const NavbarMenu = () => {
                   <a class="dropdown-item" href="/historictrading" style={{ color: "black" }}>
                     Tradings
                   </a>
-                  <a class="dropdown-item" href="/orders" style={{ color: "black" }}>
+                  <a class="dropdown-item" href="/historicOrders" style={{ color: "black" }}>
                     Orders
                   </a>
                   <a class="dropdown-item" href="/holdings" style={{ color: "black" }}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux'
 import PageHeader from "../../components/PageHeader";
-import { InputGroup, FormControl, Button, Table } from 'react-bootstrap'
+import { InputGroup, FormControl, Button, Table, Spinner } from 'react-bootstrap'
 import ReactExport from "react-export-excel";
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -20,25 +20,19 @@ const HistoricPositions = () => {
     const [positions, setPositions] = useState([])
     const [sum, setSum] = useState(0)
     const [search, setSearch] = useState('')
-    const [currentDate, setCurrentDate] = useState()
-    const [currentTime, setCurrentTime] = useState()
+    const [currentDate, setCurrentDate] = useState('')
+    const [currentTime, setCurrentTime] = useState('')
+    const [loader, setLoader] = useState(false)
     const positionsRef = useRef([])
 
+
+
     useEffect(() => {
-        axios.get(`http://${BACKEND_URL}/api/historicPositions/getHistoricPositions`, {
-            params: {
-                userId: auth.user._id
-            }
-        }).then(data => {
-            setPositions(data.data)
-            positionsRef.current = data.data
-        })
         axios.get(`http://${BACKEND_URL}/api/historicTrading/getHistoricTradingWatchlist`, {
             params: {
                 userID: auth.user._id
             }
         }).then(data => {
-            console.log(data)
             if (data.data) {
                 var currentLocalDate = new Date(new Date(data.data.currentTime).getTime() - new Date().getTimezoneOffset() * 60000)
                 setCurrentDate(currentLocalDate.toISOString().split('T')[0])
@@ -47,8 +41,64 @@ const HistoricPositions = () => {
         })
     }, [auth])
 
+    useEffect(() => {
+        if (currentDate != '' && currentTime != '') {
+            const getCurrentFeed = new Promise((resolve, reject) => {
+                var time = new Date(currentDate + " " + currentTime)
+                if (time.getTime() > new Date().getTime())
+                    return toast.error("Please select a valid time")
+                setLoader(true)
+                return axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time: time, userID: auth.user._id }).then(data => {
+                    setLoader(false)
+                    console.log(data)
+                    resolve(data.data)
+                }).catch(err => {
+                    setLoader(false)
+                    reject()
+                })
+            })
+            getCurrentFeed.then((ltpData) => {
+                setLoader(true)
+                setSum(0)
+                axios.get(`http://${BACKEND_URL}/api/historicPositions/getHistoricPositions`, {
+                    params: {
+                        userId: auth.user._id,
+                        currentTime: new Date(currentDate + " " + currentTime)
+                    }
+                }).then(data => {
+                    setLoader(false)
+                    if (data.data) {
+                        setPositions(data.data)
+                        positionsRef.current = data.data
+                        setLtp(ltpData)
+                    }
+                })
+            })
 
-    const updateColumns = (id, val, change) => {
+        }
+    }, [auth, currentDate, currentTime])
+
+    const setLtp = (ltpData) => {
+        const val = ltpData.forEach((feed, index) => {
+            if (feed) {
+                const products = ["MIS", "NRML", "CNC"]
+                products.forEach(product => {
+                    updateColumns(feed.instrument_token + "-" + product, feed.close.toFixed(2))
+                })
+            }
+        })
+    }
+
+
+
+
+    const setTime = (time = 0) => {
+        var current = new Date((new Date(currentDate + " " + currentTime).getTime() + time * 1000) - new Date().getTimezoneOffset() * 60000)
+        setCurrentDate(current.toISOString().split('T')[0])
+        setCurrentTime(current.toISOString().split('T')[1].split('.')[0])
+    }
+
+    const updateColumns = (id, val) => {
         if (document.getElementById(id)) {
             var net_qty = parseInt(document.getElementById(id + "-net-qty").innerHTML)
             var buy_val = parseFloat(document.getElementById(id + "-buy-value").innerHTML)
@@ -60,35 +110,16 @@ const HistoricPositions = () => {
             pnl = pnl.toFixed(2);
             document.getElementById(id + "-current-value").innerHTML = cur_val
             document.getElementById(id + "-ltp").innerHTML = ltp;
-            document.getElementById(id + "-ltp").style.color = change < 0 ? 'red' : 'green'
             document.getElementById(id + "-pnl").innerHTML = pnl;
             var sum = 0
             Array.from(document.querySelectorAll('[id$="-pnl"]')).forEach(ele => {
                 sum += parseFloat(ele.innerHTML)
             })
+            console.log(sum)
             setSum(sum.toFixed(2))
         }
     }
 
-    const futureLiveData = (futureData) => {
-        const products = ["MIS", "NRML"]
-        products.forEach(product => {
-            updateColumns(futureData.instrument_token + "-" + product, futureData.last_price.toFixed(2), futureData.change)
-        })
-    }
-
-    const equityLiveData = (equityData) => {
-        const products = ["MIS", "CNC"]
-        products.forEach(product => {
-            updateColumns(equityData.instrument_token + "-" + product, equityData.last_price.toFixed(2), equityData.change)
-        })
-    }
-    const optionLiveData = (optionData) => {
-        const products = ["MIS", "NRML"]
-        products.forEach(product => {
-            updateColumns(optionData.instrument_token + "-" + product, optionData.last_price.toFixed(2), optionData.change)
-        })
-    }
 
     const getSearchResults = (search) => {
         if (search == '')
@@ -104,8 +135,55 @@ const HistoricPositions = () => {
         <div className="container">
             <PageHeader
                 HeaderText="Positions"
-                Breadcrumb={[{ name: "Positions" }]}
+                Breadcrumb={[{ name: "Historic Orders" }, { name: "Positions" }]}
             />
+            <div className="row mb-2">
+                <div className="col-md-3">
+                    <div>
+                        <h6>Current Date</h6>
+                        <input type="date" className="form-control" value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                    </div>
+                </div>
+                <div className="col-md-6 mt-2 mb-2 mt-md-0 mb-md-0">
+                    <div className="row d-flex align-items-end" style={{ height: '100%' }}>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-60 * 60)}>-1 hr</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-5 * 60)}>-5 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="danger" disabled={loader} onClick={() => setTime(-1 * 60)}>-1 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(1 * 60)}>+1 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(5 * 60)}>+5 min</Button>
+                        </div>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button variant="primary" disabled={loader} onClick={() => setTime(60 * 60)}>+1 hr</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <div>
+                        <h6>Current Time</h6>
+                        <input type="time" className="form-control" value={currentTime} onChange={e => setCurrentTime(e.target.value)} />
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <p className="border border-primary text-center rounded p-2 fw-bold">{new Date(currentDate + " " + currentTime).toLocaleString()}</p>
+                </div>
+            </div>
+
+            <div className="row mb-3">
+                {loader && <div className="col-12 mb-2 d-flex justify-content-center">
+                    <Spinner animation="border" />
+                </div>}
+            </div>
             <div className="row">
                 <div className='col-lg-6 col-md-12'>
                     <InputGroup className="mb-3">
