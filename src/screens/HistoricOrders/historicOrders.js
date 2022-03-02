@@ -36,6 +36,7 @@ const HistoricOrders = () => {
     const [currentTime, setCurrentTime] = useState()
     const [loader, setLoader] = useState(false)
     const ordersRef = useRef([])
+    var prevDateTime = useRef('')
 
 
     useEffect(() => {
@@ -81,11 +82,10 @@ const HistoricOrders = () => {
                         })
 
                         const openData = todaysData.filter(order => {
-                            console.log("initial", order, currentDateTime)
                             if (order.orderType == 'open' || order.orderType == 'trigger pending')
                                 return order;
                             else if (new Date(order.executedTime).getTime() > new Date(currentDateTime).getTime()) {
-                                console.log("Execution", order, currentDateTime)
+
                                 if (order.slm) {
                                     order.orderType = 'trigger pending'
                                     return order;
@@ -188,11 +188,15 @@ const HistoricOrders = () => {
     const getCurrentFeed = () => {
         if (!currentDate || !currentTime)
             return;
+        if (prevDateTime.current == '')
+            prevDateTime.current = new Date(currentDate + " " + currentTime)
         var time = new Date(currentDate + " " + currentTime)
         if (time.getTime() > new Date().getTime())
             return toast.error("Please select a valid time")
+        if (time.getTime() < prevDateTime.current.getTime())
+            prevDateTime.current = time
         setLoader(true)
-        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id }).then(data => {
+        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id, prevDateTime: prevDateTime.current }).then(data => {
             setLoader(false)
             const val = data.data.forEach((feed, index) => {
                 if (feed && document.getElementsByClassName(feed.instrument_token)) {
@@ -211,6 +215,7 @@ const HistoricOrders = () => {
     }
 
     const setTime = (time = 0) => {
+        prevDateTime.current = new Date(currentDate + " " + currentTime)
         var current = new Date((new Date(currentDate + " " + currentTime).getTime() + time * 1000) - new Date().getTimezoneOffset() * 60000)
         setCurrentDate(current.toISOString().split('T')[0])
         setCurrentTime(current.toISOString().split('T')[1].split('.')[0])

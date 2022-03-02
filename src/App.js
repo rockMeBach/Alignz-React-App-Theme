@@ -78,6 +78,7 @@ import Positions from "./screens/Positions/positions"
 import Holdings from "./screens/Holdings/holdings"
 import HistoricTrading from "./screens/Historical Trading/historicTrading";
 import HistoricPositions from "./screens/HistoricPositions/historicPositions";
+import HistoricHoldings from "./screens/HistoricHoldings/historicHoldings";
 import HistoricOrders from "./screens/HistoricOrders/historicOrders";
 
 import {
@@ -281,6 +282,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/historicpositions`}
                 component={HistoricPositions}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/historicholdings`}
+                component={HistoricHoldings}
               />
               <Route
                 exact

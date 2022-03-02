@@ -15,15 +15,15 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 
-const HistoricPositions = () => {
+const HistoricHoldings = () => {
     const auth = useSelector((state) => state.auth);
-    const [positions, setPositions] = useState([])
+    const [holdings, setHoldings] = useState([])
     const [sum, setSum] = useState(0)
     const [search, setSearch] = useState('')
     const [currentDate, setCurrentDate] = useState('')
     const [currentTime, setCurrentTime] = useState('')
     const [loader, setLoader] = useState(false)
-    const positionsRef = useRef([])
+    const holdingsRef = useRef([])
     var prevDateTime = useRef('')
 
 
@@ -63,7 +63,7 @@ const HistoricPositions = () => {
             getCurrentFeed.then((ltpData) => {
                 setLoader(true)
                 setSum(0)
-                axios.get(`http://${BACKEND_URL}/api/historicPositions/getHistoricPositions`, {
+                axios.get(`http://${BACKEND_URL}/api/historicHoldings/getHistoricHoldings`, {
                     params: {
                         userId: auth.user._id,
                         currentTime: new Date(currentDate + " " + currentTime)
@@ -71,8 +71,8 @@ const HistoricPositions = () => {
                 }).then(data => {
                     setLoader(false)
                     if (data.data) {
-                        setPositions(data.data)
-                        positionsRef.current = data.data
+                        setHoldings(data.data)
+                        holdingsRef.current = data.data
                         setLtp(ltpData)
                     }
                 })
@@ -126,19 +126,19 @@ const HistoricPositions = () => {
 
     const getSearchResults = (search) => {
         if (search == '')
-            return setPositions(positionsRef.current)
-        const res = positionsRef.current.filter(position => {
-            if (new RegExp(search).test(position.instrument))
-                return position
+            return setHoldings(holdingsRef.current)
+        const res = holdingsRef.current.filter(holding => {
+            if (new RegExp(search).test(holding.instrument))
+                return holding
         })
-        setPositions(res)
+        setHoldings(res)
     }
 
     return (
         <div className="container">
             <PageHeader
-                HeaderText="Positions"
-                Breadcrumb={[{ name: "Historic Orders" }, { name: "Positions" }]}
+                HeaderText="Holdings"
+                Breadcrumb={[{ name: "Historic Tradings" }, { name: "Holdings" }]}
             />
             <div className="row mb-2">
                 <div className="col-md-3">
@@ -214,7 +214,7 @@ const HistoricPositions = () => {
                         style={{ bpositonColor: 'rgb(226, 116, 152)', color: 'rgb(226, 116, 152)' }}>
                         <DownloadIcon /> Download Historical positons
                     </Button>}>
-                        <ExcelSheet data={positionsRef.current} name="positons">
+                        <ExcelSheet data={holdingsRef.current} name="positons">
                             <ExcelColumn label="Instrument" value="instrument" />
                             <ExcelColumn label="Product" value="product" />
                             <ExcelColumn label="Net QTY"
@@ -250,19 +250,19 @@ const HistoricPositions = () => {
                             </thead>
                             <tbody>
                                 {
-                                    positions.map((position, key) => {
+                                    holdings.map((holding, key) => {
                                         return (
 
                                             <tr>
-                                                <td id={`${position.instrument_token + "-" + position.product}`}>{position.instrument}</td>
-                                                <td>{position.product}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-net-qty`}>{position.net_qty.toFixed(2)}</td>
-                                                <td>{position.avg.toFixed(2)}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-ltp`}>{0}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-buy-value`}>{position.buy_value}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-sell-value`}>{position.sell_value}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-current-value`}>{0}</td>
-                                                <td id={`${position.instrument_token + "-" + position.product}-pnl`}>{0}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}`}>{holding.instrument}</td>
+                                                <td>{holding.product}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-net-qty`}>{holding.net_qty.toFixed(2)}</td>
+                                                <td>{holding.avg.toFixed(2)}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-ltp`}>{0}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-buy-value`}>{holding.buy_value}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-sell-value`}>{holding.sell_value}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-current-value`}>{0}</td>
+                                                <td id={`${holding.instrument_token + "-" + holding.product}-pnl`}>{0}</td>
                                             </tr>
                                         )
                                     })
@@ -280,4 +280,4 @@ const HistoricPositions = () => {
     )
 }
 
-export default HistoricPositions;
+export default HistoricHoldings;

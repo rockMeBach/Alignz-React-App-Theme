@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux"
 import PageHeader from "../../components/PageHeader";
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,7 +10,7 @@ import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
 import BuyModel from "./BuyModel"
 import SellModel from "./SellModel"
-import TVChartContainer from '../../components/TradingViewChart/TradingViewChart'
+import TVChartContainer from '../../components/HistoricTradingViewChart/TradingViewChart'
 import { toast } from "react-toastify";
 
 
@@ -25,24 +25,26 @@ const Trading = () => {
     const [tradeWatch, setTradeWatch] = useState([])
     const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: '' })
     const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: '' })
-    const [currentDate, setCurrentDate] = useState()
-    const [currentTime, setCurrentTime] = useState()
+    const [currentDate, setCurrentDate] = useState('')
+    const [currentTime, setCurrentTime] = useState('')
     const [loader, setLoader] = useState(false)
     const [selectedSymbol, setSelectedSymbol] = useState('NSE:NIFTY50')
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
+    var prevDateTime = useRef('')
 
     useEffect(() => {
-        console.log(auth)
         axios.get(`http://${BACKEND_URL}/api/historicTrading/getHistoricTradingWatchlist`, {
             params: {
                 userID: auth.user._id
             }
         }).then(data => {
-            console.log(data)
             if (data.data) {
                 var currentLocalDate = new Date(new Date(data.data.currentTime).getTime() - new Date().getTimezoneOffset() * 60000)
                 setCurrentDate(currentLocalDate.toISOString().split('T')[0])
                 setCurrentTime(currentLocalDate.toISOString().split('T')[1].split('.')[0])
+
+                sessionStorage.setItem('currentDate', currentLocalDate.toISOString().split('T')[0])
+                sessionStorage.setItem('currentTime', currentLocalDate.toISOString().split('T')[1].split('.')[0])
                 const val = data.data.watchlist.map(item => {
                     return {
                         ...item,
@@ -71,7 +73,6 @@ const Trading = () => {
                 search: e
             }
         }).then(data => {
-            // console.log(data.data)
             const reduceRedundancyData = data.data.filter(listItem => {
                 if (!tradeWatch.some(trade => trade.instrument_token == listItem.instrument_token))
                     return listItem;
@@ -89,7 +90,7 @@ const Trading = () => {
             type: marketListItem.type
         }
         axios.post(`http://${BACKEND_URL}/api/historicTrading/addHistoricTradingWatchlist`, data).then(data => {
-            console.log(data)
+
             if (data.data) {
 
                 const val = data.data.watchlist.map(item => {
@@ -116,14 +117,18 @@ const Trading = () => {
     }
 
     const getCurrentFeed = () => {
+
         if (!currentDate || !currentTime)
             return;
+        if (prevDateTime.current == '')
+            prevDateTime.current = new Date(currentDate + " " + currentTime)
         var time = new Date(currentDate + " " + currentTime)
         if (time.getTime() > new Date().getTime())
             return toast.error("Please select a valid time")
+        if (time.getTime() < prevDateTime.current.getTime())
+            prevDateTime.current = time
         setLoader(true)
-        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id }).then(data => {
-            console.log(data)
+        axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id, prevDateTime: prevDateTime.current }).then(data => {
             setLoader(false)
             const val = data.data.forEach((feed, index) => {
                 if (feed && document.getElementById(`${feed.instrument_token}`)) {
@@ -133,10 +138,17 @@ const Trading = () => {
         })
     }
 
-    const setTime = (time = 0) => {
+    const setTime = async (time = 0) => {
+        prevDateTime.current = new Date(currentDate + " " + currentTime)
         var current = new Date((new Date(currentDate + " " + currentTime).getTime() + time * 1000) - new Date().getTimezoneOffset() * 60000)
+
+        sessionStorage.setItem('currentDate', current.toISOString().split('T')[0])
+        sessionStorage.setItem('currentTime', current.toISOString().split('T')[1].split('.')[0])
+
         setCurrentDate(current.toISOString().split('T')[0])
         setCurrentTime(current.toISOString().split('T')[1].split('.')[0])
+
+
     }
 
     return (
@@ -292,14 +304,17 @@ const Trading = () => {
                     }
 
                 </div>
-                <div className="col-lg-8 col-md-12 order-md-1 order-first" id="trading-view-chart" style={{ height: '500px' }}>
-                    {/* <TVChartContainer
-                        containerId="trading-view-chart"
-                        fullScreen={false}
-                        symbol={selectedSymbol}
-                    /> */}
-
-                </div>
+                {loader ? '' :
+                    <div className="col-lg-8 col-md-12 order-md-1 order-first" id="historic-trading-view-chart" style={{ height: '500px' }}>
+                        <TVChartContainer
+                            containerId="historic-trading-view-chart"
+                            fullScreen={false}
+                            symbol={selectedSymbol}
+                            currentDate={currentDate}
+                            currentTime={currentTime}
+                        />
+                    </div>
+                }
             </div>
             <BuyModel show={buyModelOpen}
                 setShow={setBuyModelOpen}
