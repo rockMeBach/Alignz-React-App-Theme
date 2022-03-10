@@ -16,3 +16,11 @@
   color: #007bff;
   font: normal normal bold 15px/24px Ubuntu;
 }
+.scanner-list-alert-toggle{
+  background-color: red !important;
+  border: none !important;
+}
+
+.scanner-list-alert-toggle:checked{
+  background-color: lawngreen !important;
+}

@@ -1,103 +1,266 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation, useParams, useHistory } from "react-router-dom";
 import "./ScannerWorkpanel.scss";
+import ScannerConditions from "../ScannerConditions/ScannerConditions";
 import WorkpanelHeading from "../WorkpanelHeading/WorkpanelHeading";
 import WorkpanelFilter from "../WorkpanelFilter/WorkpanelFilter";
 import queryCalculator from "../ScannerExpressionCalculator/ScannerexpressionCalculator";
 import axios from "axios";
-import BACKEND_URL from "../../../Backend_url";
+import BACKEND_URL from "../../../Backend_url"
+import { DragContext } from "../../../contexts/DragContexts";
+import LoadingModal from "../LoadingModal/LoadingModal";
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const auth = useSelector((state) => state.auth);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [scannerInfo, setScannerInfo] = useState(null);
   const [apiResults, setApiResults] = useState([]);
   const [binaryOperator, setBinaryOperator] = useState([]);
   const [apiResultsLength, setApiResultsLength] = useState(0);
   const [finalResult, setFinalResult] = useState(null);
+  const [curElemId, setCurElemId] = useState("");
+  const [scannerSettArr, setScannerSettArr] = useState([]);
+  const [allIndicators, setAllIndicators] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [resultsLink, setResultsLink] = useState("");
+  const history = useHistory();
+  let {id} = useParams();
+  let currScanner = useLocation();
 
   const scannerData = (s) => {
     setData(s);
   };
 
+  const getURL = async (results, owner) => {
+    //console.log("getting url for", results);
+    window.localStorage.setItem("url_status", 0);
+    const res = await axios
+      .post(`http://${BACKEND_URL}/api/getResultsUrl/`, {
+        results,
+        owner
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => console.log(err));
+  
+    return res;
+  }
+
   const saveScanner = async () => {
-    var tmp = data;
-    tmp.publicChecked = document.getElementById("alert-public").checked;
-    tmp.starttime = scannerInfo.starttime;
-    tmp.endtime = scannerInfo.endtime;
-    tmp.fnoLotSize = scannerInfo.fnoLotSize;
-    tmp.segment = scannerInfo.segment;
-    tmp.segment1a = scannerInfo.segment1a;
-    tmp.comparison = scannerInfo.comparison;
-    tmp.LHS = scannerInfo.LHS;
-    tmp.RHS = scannerInfo.RHS;
-    tmp.owner = auth.user._id;
-    const res = await axios.post(
-      `http://${BACKEND_URL}/api/scanner/setScanner`,
-      {
-        tmp,
+
+    let conditions = document.getElementById(
+      "scanner-condition-indicators"
+    ).childNodes;
+    if(isExprValid() && conditions[0].className.trim() != "scanner-indicator-drag-request"){
+      let date = new Date();
+      let todaysDate = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+      let timeAdded = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+
+      let starttime =
+        document.getElementById("scanner-start-time").childNodes[1].value;
+      let endtime =
+        document.getElementById("scanner-end-time").childNodes[1].value;
+      let tmp = {
+        name: data.name,
+        description: data.description,
+        publicChecked: document.getElementById("alert-public").checked,
+        alerts: document.getElementById("alert-switch").checked,
+        date: todaysDate,
+        time: timeAdded,
+        starttime: starttime,
+        endtime: endtime,
+        duplicate: document.getElementById('duplicate-switch').checked,
+        fnoLotSize: "",
+        satisfy: document.getElementById('satisfy').checked,
+        segment: document.getElementById("scanner-segment").value,
+        segment1a: document.getElementById("scanner-segment-1a").value,
+        segment2a: document.getElementById("scanner-segment-2a").value,
+        timeframe: document.getElementById("scanner-timeframe").value,
+        owner: auth.user._id,
+        expression: scannerSettArr,
+        categories: currScanner.state!==undefined && currScanner.state.categories!==undefined?currScanner.state.categories:[]
+      };
+      
+      if(currScanner.state!==undefined){
+        const scannerId = currScanner.state._id;
+
+        if(auth.user._id != currScanner.state.owner){
+          if(confirm("This scanner will be saved as your own.") === true){
+            tmp.categories = [];
+            const res = await axios.post(
+              `http://${BACKEND_URL}/api/scanner/setScanner`,
+              {
+                tmp,
+              }
+            );
+
+            if(res.data!==undefined && res.data!==null){
+              alert(res.data.msg);
+              history.push("/scanners");
+            }
+          }
+        }else{
+          console.log("Editing mode", scannerId);
+
+          const res = await axios.post(
+            `http://${BACKEND_URL}/api/scanner/updateScanner`,
+            {
+              scannerId,
+              tmp,
+            }
+          );
+
+          if(res.data!==undefined && res.data!==null){
+            alert(res.data.msg);
+          }
+        }
+      }else{
+        const res = await axios.post(
+          `http://${BACKEND_URL}/api/scanner/setScanner`,
+          {
+            tmp,
+          }
+        );
+        console.log("Creation mode");
+
+        if(res.data!==undefined && res.data!==null){
+          alert(res.data.msg);
+        }
       }
-    );
+    }else{
+      alert("Please create a valid expression");
+    }
     // console.log(res);
   };
 
-  const fetchScannerResults = async (conditions) => {
-    let flag = true;
-    let comparison;
-    let LHS = [];
-    let RHS = [];
-    conditions.forEach((e) => {
-      // console.log(e)
-      // console.log("ID", e.id, e.data);
+  const isExprValid = () => {
+    let pseudoString = "";
+    let isValid = false;
+    let invalidConditionFound = false;
 
-      if (
-        e.id === "<" ||
-        e.id === ">" ||
-        e.id === "cfab" ||
-        e.id === "cfba" ||
-        e.id === ">=" ||
-        e.id === "<="
-      ) {
-        comparison = e.id;
-        flag = false;
-      } else if (flag) {
-        if (e.data) LHS.push(e.data);
-        else LHS.push(e.id);
-      } else {
-        if (e.data) RHS.push(e.data);
-        else RHS.push(e.id);
+    scannerSettArr.forEach((condition)=>{
+      if(!isLeftRightValid(condition)){
+        invalidConditionFound = true;
+      }else{
+        for(let i=0;i<condition.length;i++){
+          let curId = condition[i].indicatorName;
+          if(curId=="+" || curId=="-" || curId=="*" || curId=="/" || (typeof curId=='number') || curId==">" || curId=="<"
+          || curId==">=" || curId=="<="){
+            pseudoString += curId+" ";
+          }else if(curId == "cfab" || curId == "cfba"){
+            pseudoString += "> ";
+          }else if(curId=="or" || curId=="and" || curId=="substract"){
+            pseudoString += "|| ";
+          }else{
+            pseudoString += 1+" ";
+          }
+        }
       }
     });
 
-    if (!document.getElementById("satisfy").checked) comparison = !comparison;
+    try{
+      let evalVal = eval(pseudoString.trim())+"";
+      if(evalVal!="" && !invalidConditionFound){
+        isValid = true;
+      }
+    }catch(err){
+      isValid = false;
+    }
 
-    let starttime =
-      document.getElementById("scanner-start-time").childNodes[1].value;
-    let endtime =
-      document.getElementById("scanner-end-time").childNodes[1].value;
-    let query = {
-      starttime: starttime,
-      endtime: endtime,
-      duplicate: document.getElementById('duplicate-switch').checked,
-      fnoLotSize: document.getElementById("scanner-fno-lot-size").value,
-      segment: document.getElementById("scanner-segment").value,
-      segment1a: document.getElementById("scanner-segment-1a").value,
-      timeframe: document.getElementById("scanner-timeframe").value,
-      comparison: comparison,
-      LHS: LHS,
-      RHS: RHS,
-    };
-    setScannerInfo(query);
-    let res = await queryCalculator(query);
-    if (res === undefined) res = [];
+    return isValid;
+  }
 
-    let results = apiResults;
-    results.push(res.data);
-    console.log("result", results);
-    setApiResults(results);
-    setApiResultsLength(apiResults.length + 1);
+  const isLeftRightValid = (conditions) => {
+    let flag = true;
+    let comparison = "";
+    let LHS = [];
+    let RHS = [];
+    conditions.forEach((e) => {
+      if (
+        e.indicatorName === "<" ||
+        e.indicatorName === ">" ||
+        e.indicatorName === "cfab" ||
+        e.indicatorName === "cfba" ||
+        e.indicatorName === ">=" ||
+        e.indicatorName === "<="
+      ) {
+        comparison = e.indicatorName;
+        flag = false;
+      } else if (flag) {
+        LHS.push(e);
+      } else {
+        RHS.push(e);
+      }
+    });
 
-    return res.data;
+    if(LHS.length!==0 && RHS.length!==0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  const fetchScannerResults = async (conditions) => {
+    let flag = true;
+    let comparison = "";
+    let LHS = [];
+    let RHS = [];
+    conditions.forEach((e) => {
+      // console.log("ID", e.id, e.data);
+
+      if (
+        e.indicatorName === "<" ||
+        e.indicatorName === ">" ||
+        e.indicatorName === "cfab" ||
+        e.indicatorName === "cfba" ||
+        e.indicatorName === ">=" ||
+        e.indicatorName === "<="
+      ) {
+        comparison = e.indicatorName;
+        flag = false;
+      } else if (flag) {
+        LHS.push(e);
+      } else {
+        RHS.push(e);
+      }
+    });
+
+    if(LHS.length!==0 && RHS.length!==0){
+      //if (!document.getElementById("satisfy").checked) comparison = !comparison;
+
+      let starttime =
+        document.getElementById("scanner-start-time").childNodes[1].value;
+      let endtime =
+        document.getElementById("scanner-end-time").childNodes[1].value;
+      let query = {
+        starttime: starttime,
+        endtime: endtime,
+        duplicate: document.getElementById('duplicate-switch').checked,
+        fnoLotSize: "",
+        satisfy: document.getElementById('satisfy').checked,
+        segment: document.getElementById("scanner-segment").value,
+        segment1a: document.getElementById("scanner-segment-1a").value,
+        timeframe: document.getElementById("scanner-timeframe").value,
+        comparison: comparison,
+        LHS: LHS,
+        RHS: RHS,
+      };
+      setScannerInfo(query);
+      let res = await queryCalculator(query);
+      if (res === undefined) res = [];
+
+      let results = apiResults;
+      results.push(res.data);
+      //console.log("result", results);
+      setApiResults(results);
+      setApiResultsLength(apiResults.length);
+
+      return res.data;
+    }else{
+      return -1;
+    }
   };
 
   const submitScanner = async () => {
@@ -105,29 +268,41 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       "scanner-condition-indicators"
     ).childNodes;
 
+    if(isExprValid() && conditions[0].className.trim() != "scanner-indicator-drag-request"){
+      setLoading(true);
       // console.log("Duplicate", document.getElementById('duplicate-switch').checked)
+      //alert("Expression is valid");
 
-    let binary_operation = [];
-    let results = [];
+      let binary_operation = [];
+      let results = [];
 
-    conditions.forEach(async (e) => {
-      if (
-        e.childNodes.length === 1 &&
-        (e.childNodes[0].id === "or" ||
-          e.childNodes[0].id === "and" ||
-          e.childNodes[0].id === "substract")
-      ) {
-        binary_operation.push(e.childNodes[0].id);
-        // setBinaryOperator(e.childNodes[0].id);
-      } else {
-        let tmp = await fetchScannerResults(e.childNodes);
-      }
-    });
+      scannerSettArr.forEach(async (e) => {
+          if (
+            e.length === 1 &&
+            (e[0].indicatorName === "or" ||
+              e[0].indicatorName === "and" ||
+              e[0].indicatorName === "substract")
+          ) {
+            binary_operation.push(e[0].indicatorName);
+            // setBinaryOperator(e.childNodes[0].id);
+          } else {
+            let tmp = await fetchScannerResults(e);
+            if(tmp===-1){
+              alert("Expression is not valid");
+              return;
+            }
+          }
+        });
 
-    setApiResults(results);
-    // setApiResultsLength(binary_operation.length);
-    // console.log("Binary", binary_operation);
-    setBinaryOperator(binary_operation);
+      setBinaryOperator(binary_operation);
+      //setApiResults(results);
+    }else{
+      alert("Expression is not valid");
+    }
+    //setApiResultsLength(binary_operation.length);
+    //console.log("Binary", binary_operation);
+
+    console.log(scannerSettArr);
   };
 
   useEffect(() => {
@@ -135,9 +310,14 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       "scanner-condition-indicators"
     ).childNodes;
 
-    // console.log("Results", apiResults, apiResultsLength, conditions);
+    let binaryOperatorsLength = document.querySelectorAll("#or").length
+    +document.querySelectorAll("#and").length
+    +document.querySelectorAll("#substract").length-3;
+
+    //console.log("Results", apiResults, apiResultsLength, conditions);
+    //console.log(conditions.length, apiResultsLength, apiResults.length);
     if (apiResultsLength === 0) {
-      // console.log("Final Result", finalResult);
+      //console.log("Final Result", finalResult);
       scannerResultDisplay(finalResult);
       setFinalResult(null);
       setBinaryOperator(null);
@@ -145,15 +325,21 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       return;
     }
 
-    // console.log("length", conditions.length, apiResultsLength)
-
-    if (conditions.length === apiResults.length || conditions.length === apiResultsLength) {
+    if (conditions.length === 1 || conditions.length === apiResultsLength+binaryOperatorsLength) {
       calculateFinalResult();
       setApiResultsLength(0);
     }
   }, [apiResultsLength]);
 
-  const calculateFinalResult = () => {
+  useEffect(()=>{
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notification");
+    } else {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  const calculateFinalResult = async () => {
     console.log("calculator");
     let final_result = undefined;
     let binaryOperatorIndex = 0;
@@ -164,14 +350,19 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         let newFinalResult = {};
         let stocks = new Set([...Object.keys(final_result), ...Object.keys(e)]);
 
-        Array.from(stocks).forEach((e2) => {
-          console.log("Stocks", e2);
-          newFinalResult[e2] = binaryCalculator(
-            final_result[e2] ? final_result[e2] : [],
-            e[e2] ? e[e2] : [],
-            binaryOperator[binaryOperatorIndex]
-          );
-        });
+        try{
+
+          Array.from(stocks).forEach((e2) => {
+            newFinalResult[e2] = binaryCalculator(
+              final_result[e2] ? final_result[e2] : [],
+              e[e2] ? e[e2] : [],
+              binaryOperator[binaryOperatorIndex]
+            );
+          });
+
+        }catch(err){
+          console.log("err in binary");
+        }
 
         binaryOperatorIndex = binaryOperatorIndex + 1;
         final_result = newFinalResult;
@@ -179,9 +370,56 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     setFinalResult(final_result);
+    //await getURL(getClippedResults(final_result, document.getElementById('duplicate-switch').checked), auth.user._id);
+    setLoading(false);
+
     // console.log("Final Result 2", final_result);
     // scannerResultDisplay(final_result);
   };
+
+  const getClippedResults = (final_result, duplicate) =>{
+    let clipped_result = [];
+    Object.entries(final_result).forEach(([key, value]) => {
+      if(!duplicate){
+        let tmp = [];
+
+        value.forEach((e, i)=>{
+          let previousRow = i ? value[i - 1] : undefined;
+
+          if(previousRow && previousRow.date === e.date) {
+            
+            let pt = previousRow.time.split(':');
+            let ct  = e.time.split(':');
+
+            if(
+                (
+                    Number(ct[0]) === Number(pt[0])
+                    &&
+                    Number(ct[1]) - Number(pt[1]) === 1
+                )
+                ||
+                (
+                    Number(ct[0]) - Number(pt[0]) === 1
+                    && 
+                    Number(ct[1]) === 0
+                    && 
+                    Number(pt[1]) === 59
+                )
+            ) {
+            }
+          }else{
+            tmp.push(e);
+          }
+        });
+
+        clipped_result.push(...tmp);
+      }else{
+        clipped_result.push(...value);
+      }
+    });
+
+    return clipped_result.slice(0,100);
+  }
 
   const binaryCalculator = (array1, array2, binary_operator) => {
     var combine = [];
@@ -246,51 +484,29 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       }
     }
     // console.log(binary_operator, combine);
+    //console.log(array1, array2, combine);
     return combine;
   };
 
   return (
     <div className="col-lg-12 scanner-workpanel-component">
-      <WorkpanelHeading scannerData={scannerData} />
-      <WorkpanelFilter />
-
-      <div className="form-check form-switch" style={{margin: '1rem'}}>
-        <label className="form-check-label" for="alert-switch">
-          Do you want duplicate results ?
-        </label>
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="duplicate-switch"
-          style={{marginTop: '0.3rem', marginLeft: '1rem'}}
-        />
+      {/*loading && <LoadingModal />*/}
+      <DragContext.Provider value={{curElemId, setCurElemId, scannerSettArr, setScannerSettArr, allIndicators, setAllIndicators}}>
+        <WorkpanelHeading scannerData={scannerData} scannerDetails={currScanner.state} />
+        <WorkpanelFilter />
+        <div className="scanner-conditions-component">
+          <ScannerConditions />
+        </div>
+      </DragContext.Provider>
+      <div className="submit-save-scanner-buttons">
+        <button className="btn submit-btn" onClick={submitScanner}>
+          Submit
+        </button>
+        <button className="btn submit-btn" onClick={saveScanner}>
+          Save
+        </button>
       </div>
-      <div className="form-check form-switch" style={{margin: '1rem'}}>
-        <label className="form-check-label">
-          Timeframe
-        </label>
-        <select
-          style={{width: '20%', display: 'inline-block', marginLeft: '1rem'}}
-          className="form-control scanner-condition-option"
-          name="candelstick-timeframe"
-          id="scanner-timeframe"
-        >
-          <option value="1-min">1 min</option>
-          <option value="2-min">2 min</option>
-          <option value="3-min">3 min</option>
-          <option value="5-min">5 min</option>
-          <option value="10-min">10 min</option>
-          <option value="15-min">15 min</option>
-        </select>
-            {/* </div> */}
-      </div>
-
-      <button className="btn submit-btn" onClick={submitScanner}>
-        Submit
-      </button>
-      <button className="btn submit-btn" onClick={saveScanner}>
-        Save Scanner
-      </button>
+      {resultsLink!=="" && <p><a href={resultsLink}>Get your results here (Active for 1 minute)</a></p>}
     </div>
   );
 };

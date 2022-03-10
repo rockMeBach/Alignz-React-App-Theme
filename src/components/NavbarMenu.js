@@ -206,6 +206,20 @@ const NavbarMenu = () => {
               <li class="nav-item">
                 <a
                   class="nav-link"
+                  href="/options"
+                  style={{
+                    color: "black",
+                    fontSize: "15px",
+                    paddingLeft: "20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  Options Analyzer
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
                   href="/scanners"
                   style={{
                     color: "black",

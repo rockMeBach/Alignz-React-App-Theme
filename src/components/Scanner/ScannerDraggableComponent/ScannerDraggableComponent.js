@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import IndicatorModal from "../IndicatorModal/IndicatorModal";
 import NumberModal from "../NumberModal/NumberModal";
 import CrossIcon from "../../../assets/icons/cross-icon.svg";
 import "./ScannerDraggableComponent.scss";
+import { DragContext } from "../../../contexts/DragContexts";
+import LTPModal from "../LTPModal/LTPModal";
 
 const ScannerDraggableComponent = ({
   id,
@@ -15,102 +18,98 @@ const ScannerDraggableComponent = ({
   const [indicatorModalInput, setIndicatorModalInput] = useState({});
   const [numberModalInput, setNumberModalInput] = useState({});
   const [numberModalOpen, setNumberModalOpen] = useState(false);
-  const [element, setElement] = useState(undefined);
+  const [ltpModalOpen, setLTPModalOpen] = useState(false);
+  const [ltpModalInput, setLTPModalInput] = useState({});
+  const {scannerSettArr} = useContext(DragContext);
+  const {setScannerSettArr} = useContext(DragContext);
+
+  let currScanner = useLocation();
+
+  const openIndicatorModal = (eSettings) => {
+    if (
+      eSettings.indicatorName === ">" ||
+      eSettings.indicatorName === "<" ||
+      eSettings.indicatorName === "+" ||
+      eSettings.indicatorName === "-" ||
+      eSettings.indicatorName === "*" ||
+      eSettings.indicatorName === "cfab" ||
+      eSettings.indicatorName === "cfba" ||
+      eSettings.indicatorName === "/" ||
+      eSettings.indicatorName === "<=" ||
+      eSettings.indicatorName === ">=" ||
+      eSettings.indicatorName === "or" ||
+      eSettings.indicatorName === "and" ||
+      eSettings.indicatorName === "substract"
+    )
+      return;
+
+    if(eSettings.indicatorName=="number"){
+      setNumberModalInput(eSettings);
+      setNumberModalOpen(true);
+    }else if(eSettings.indicatorName=="ltp"){
+      setLTPModalInput(eSettings);
+      setLTPModalOpen(true);
+    }else{
+      setIndicatorModalInput(eSettings);
+      setIndicatorModalOpen(true);
+    }
+  };
 
   const closeIndicatorModal = (indicatorSetting) => {
-    let tmpSetting = indicatorModalInput;
-    tmpSetting.settings = indicatorSetting.setting;
-    indicatorModalInput.element.data = indicatorSetting;
-    // console.log(indicatorSetting)
-    setIndicatorModalInput(tmpSetting);
     setIndicatorModalOpen(false);
   };
 
-  const openIndicatorModal = (e) => {
-    let classNames = e.className.split(" ");
-    if (
-      classNames.length <= 1 ||
-      classNames[1] !== "scanner-draggable-component-name"
-    )
-      return;
-    if (
-      e.id === ">" ||
-      e.id === "<" ||
-      e.id === "+" ||
-      e.id === "-" ||
-      e.id === "*" ||
-      e.id === "cfab" ||
-      e.id === "cfba" ||
-      e.id === "/" ||
-      e.id === "<=" ||
-      e.id === ">=" ||
-      e.id === "or" ||
-      e.id === "and" ||
-      e.id === "substract"
-    )
-      return;
-
-    if (e.id === "number") {
-      if (e.data) {
-        setNumberModalInput({
-          indicatorName: e.id,
-          element: e,
-          value: e.data.value,
-        });
-      } else {
-        setNumberModalInput({
-          indicatorName: e.id,
-          element: e,
-          value: 0,
-        });
-      }
-
-      setNumberModalOpen(true);
-      return;
-    }
-
-    if (e.data) {
-      setIndicatorModalInput({
-        indicatorName: e.id,
-        element: e,
-        settings: e.data.setting,
-        timeframe: e.data.timeframe,
-      });
-    } else {
-      setIndicatorModalInput({
-        indicatorName: e.id,
-        element: e,
-        timeframe: "1-min",
-        settings: [
-          { name: "Length", value: 14 },
-          {
-            name: "Source",
-            options: ["Open", "High", "Low", "Close"],
-            value: "Close",
-          },
-        ],
-      });
-    }
-    setIndicatorModalOpen(true);
-  };
-
   const closeNumberModal = (numberSettings) => {
-    numberModalInput.element.data = numberSettings;
     setNumberModalOpen(false);
   };
 
-  const deleteDraggableComponent = (e) => {
-    // console.log(e.target.parentNode.remove())
-    deleteComponent(i, j);
+  const closeLTPModal = (ltpSettings) => {
+    setLTPModalOpen(false);
   };
 
-  useEffect(() => {
-    let e = Array.from(
-      document.getElementsByClassName("scanner-draggable-component-name")
-    )[indicatorLength - 1];
+  const showFullFunction = (main, subindicators) => {
+    let fullString = main+"()";
 
-    openIndicatorModal(e);
-    setElement(e);
+    subindicators.forEach((indicator, index)=>{
+      if(index!==subindicators.length-1){
+        fullString = fullString.replace("()", "("+indicator.indicatorName+"()"+")");
+      }else{
+        fullString = fullString.replace("()", "("+indicator.indicatorName+")");
+      }
+    })
+
+    return fullString.toUpperCase();
+  }
+
+  useEffect(() => {
+    if(window.localStorage.getItem("scannerLoaded") === null){
+
+      let jPos = window.localStorage.getItem("j-pos");
+      let iPos = window.localStorage.getItem("i-pos");
+      let dblclicked = window.localStorage.getItem("dblclicked");
+
+      let e = document.querySelector(".scanner-condition-indicators-class").childNodes;
+      let eSettings = scannerSettArr[iPos][jPos]!==undefined?scannerSettArr[iPos][jPos]:scannerSettArr[iPos][j];
+
+      if(dblclicked==null){
+        if(iPos!=null){
+          if(jPos!=null){
+            e = e[iPos].childNodes[jPos];
+            window.localStorage.removeItem("j-pos");
+          }else{
+            e = e[iPos].childNodes[e[iPos].childNodes.length-1];
+          }
+        }
+      }else{
+        e = Array.from(
+          document.getElementsByClassName("scanner-draggable-component-name")
+        );
+        e = e[e.length-1];
+        window.localStorage.removeItem("dblclicked");
+      }
+
+      openIndicatorModal(eSettings);
+    }
   }, []);
 
   return (
@@ -122,13 +121,27 @@ const ScannerDraggableComponent = ({
           // textAlign: "center",
           margin: "1rem",
         }}
-        onDoubleClick={(e) => openIndicatorModal(e.target)}
+        onDoubleClick={() => {
+          if(!indicatorModalOpen && !numberModalOpen) {
+            openIndicatorModal(scannerSettArr[i][j])
+          }
+        }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          window.localStorage.setItem("j-pos", e.target.getAttribute("data-index-j"));
+        }}
+        onDragLeave={(e)=>{
+          e.preventDefault();
+          window.localStorage.removeItem("j-pos");
+        }}
+        data-index-i={i}
+        data-index-j={j}
       >
         <img
           src={CrossIcon}
           alt=""
           className="cross-icon"
-          onClick={deleteDraggableComponent}
+          onClick={()=>{deleteComponent(i,j)}}
           style={{ top: "-70%", left: "-0.4rem" }}
         />
 
@@ -146,10 +159,20 @@ const ScannerDraggableComponent = ({
           />
         )}
 
-        {id === "number" && element && element.data ? 
-          element.data.value
+        {ltpModalOpen && (
+          <LTPModal
+            ltpModalInput={ltpModalInput}
+            closeLTPModal={closeLTPModal}
+          />
+        )}
+
+        {scannerSettArr[i][j].indicatorName==="number" ? 
+          scannerSettArr[i][j].value
           : 
-          id.toUpperCase()
+          (scannerSettArr[i][j].subindicators!==undefined && scannerSettArr[i][j].subindicators.length!==0)?
+          showFullFunction(scannerSettArr[i][j].indicatorName, scannerSettArr[i][j].subindicators)
+          :
+          scannerSettArr[i][j].indicatorName.toUpperCase()
         }
         
       </div>

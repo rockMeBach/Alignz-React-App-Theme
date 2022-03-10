@@ -1,8 +1,65 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
 
 import DownloadIcon from "../../assets/images/download.svg";
 import ProjectsListTable from "../../components/Pages/ProjectsListTable";
+
+import { Link } from "react-router-dom";
+
 const ProjectsList = () => {
+  
+  const auth = useSelector((state) => state.auth);
+  const [scanners, setScanners] = useState([]);
+  const [fundamental, setFundamental] = useState([]);
+  const [topLoved, setTopLoved] = useState([]);
+  const [candlestickPatterns, setCandlestickPatterns] = useState([]);
+
+  useEffect(()=>{
+    if(auth.user._id!==undefined && auth.user._id!==""){
+      axios
+        .post(`http://${BACKEND_URL}/api/scanner/getScanners`, {id: auth.user._id})
+        .then((res) => {
+          setScanners(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [auth]);
+
+  useEffect(()=>{
+    axios
+        .get(`http://${BACKEND_URL}/api/scanner/getAllScanners`)
+        .then((res) => {
+          categorizeScanners(res.data);
+        })
+        .catch((err) => console.log(err));
+  }, []);
+  
+  const categorizeScanners = (data) => {
+    if(data.length>0){
+      data.filter(e => {return e.publicChecked;}).forEach(element => {
+        if(element.categories!==undefined){
+          if(element.categories.indexOf("fundamental")!==-1){
+            let tempArr = fundamental;
+            tempArr.push(element);
+            setFundamental(tempArr);
+          }
+          if(element.categories.indexOf("top-loved")!==-1){
+            let tempArr = topLoved;
+            tempArr.push(element);
+            setTopLoved(tempArr);
+          }
+          if(element.categories.indexOf("candlestick-patterns-scan")!==-1){
+            let tempArr = candlestickPatterns;
+            tempArr.push(element);
+            setCandlestickPatterns(tempArr);
+          }
+        }
+      });
+    }
+  }
+
   return (
     <div
       style={{ flex: 1 }}
@@ -83,7 +140,7 @@ const ProjectsList = () => {
                   className="body project_report"
                   style={{ padding: "5px " }}
                 >
-                  <ProjectsListTable />
+                  <ProjectsListTable scanners={scanners.reverse()} setScanners={setScanners} />
                 </div>
               </div>
             </div>
@@ -185,46 +242,28 @@ const ProjectsList = () => {
                     Fundamental Scanners
                   </h2>
                 </li>
+                {fundamental.length<=0 &&
                 <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
                 >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  No scanners here
+                </li>}
+                {
+                  fundamental.length>0 && fundamental.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
                   className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li
-                  style={{ padding: "13px", paddingLeft: "35px" }}
-                  className="wcard"
-                >
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{
-                    background: "#F8F9FA",
-                    padding: "13px",
-                    paddingLeft: "35px",
-                  }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
                 <a
                   href="/scanners/fundamental-scanner"
                   style={{ textDecoration: "none" }}
@@ -266,43 +305,28 @@ const ProjectsList = () => {
                     Top Loved
                   </h2>
                 </li>
+                {topLoved.length<=0 && 
                 <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
                 >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  No scanners here
+                </li>}
+                {
+                  topLoved.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
                   className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{
-                    background: "#F8F9FA",
-                    padding: "13px",
-                    paddingLeft: "35px",
-                  }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
                 <a
                   href="/scanners/top-loved-scanner"
                   style={{ textDecoration: "none" }}
@@ -344,43 +368,28 @@ const ProjectsList = () => {
                     Candlestick Patterns Scan
                   </h2>
                 </li>
+                {candlestickPatterns.length<=0 &&
                 <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
                 >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                  No scanners here
+                </li>}
+                {
+                  candlestickPatterns.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
                   className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{ background: "#F8F9FA", paddingLeft: "35px" }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }} className="wcard">
-                  15 minute stock breakouts
-                </li>
-                <li
-                  style={{
-                    background: "#F8F9FA",
-                    padding: "13px",
-                    paddingLeft: "35px",
-                  }}
-                  className="wcard"
-                >
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
                 <a
                   href="/scanners/candlestick-scanner"
                   style={{ textDecoration: "none" }}

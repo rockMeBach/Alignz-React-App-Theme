@@ -40,7 +40,7 @@ const Pricing = () => {
 
   return (
     <div
-      style={{ flex: 1 }}
+      style={{ flex: 1, fontSize: "15px"}}
       onClick={() => {
         document.body.classList.remove("offcanvas-active");
       }}
@@ -52,7 +52,118 @@ const Pricing = () => {
             Breadcrumb={[{ name: "Pricing", navigate: "" }]}
           />
           <div className="row clearfix">
-            <div className="col-lg-4 col-md-12">
+          <div className="col-lg-3 col-md-12">
+              <div className="card pricing2">
+                <div className="body">
+                  <div className="pricing-plan">
+                    <img alt="" className="pricing-img" src={PaperPlane} />
+                    <h2 className="pricing-header">FREE</h2>
+                    <ul className="pricing-features">
+                      <div className="container-fluid">
+                        <div className="row ">
+                          <div className="col-6 text-left">Historical Scans</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            Results from 2021
+                          </div>
+                          <div className="col-6 text-left">Historical Scans</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            Upto {tier1.scans}
+                          </div>
+
+                          <div className="col-6 text-left">Virtual Trading</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.trades} per month
+                          </div>
+                          <div className="col-6 text-left">Historic Charts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.charts} old
+                          </div>
+                          <div className="col-6 text-left">Backtests</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.backtest} per month
+                          </div>
+                          <div className="col-6 text-left">Emails Alerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.email} per month
+                          </div>
+                          <div className="col-6 text-left">Whatsapp Alerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.whatsapp} per month
+                          </div>
+                          <div className="col-6 text-left">Telegram Alerts</div>
+                          <div
+                            className="col-6 text-right"
+                            style={{
+                              fontWeight: "800",
+                              color: "rgb(226, 116, 152)",
+                              fontSize: "17px",
+                            }}
+                          >
+                            {tier1.telegram} per month
+                          </div>
+                        </div>
+                      </div>
+                    </ul>
+                    <span className="pricing-price">FREE</span>
+                    <a className="btn disable" style={{ color: "white" }} href>
+                      Buy Now
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+
+            <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
                 <div className="body">
                   <div className="pricing-plan">
@@ -161,7 +272,7 @@ const Pricing = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-md-12">
+            <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
                 <div className="body">
                   <div className="pricing-plan">
@@ -288,7 +399,7 @@ const Pricing = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-md-12">
+            <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
                 <div className="body">
                   <div className="pricing-plan">

@@ -9,7 +9,7 @@ import "./index.css";
 import App from "./App";
 import "./assets/assets/scss/main.scss";
 import "./assets/assets/scss/color_skins.scss";
-import "../node_modules/font-awesome/scss/font-awesome.scss";
+import "../node_modules/font-awesome/scss/font-awesome.scss"; 
 
 // Import Bootstrap and Jquery
 import "bootstrap";
@@ -21,7 +21,6 @@ import "jquery/dist/jquery.js";
 const store = createStore(reducers, applyMiddleware(thunk));
 // const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 // const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-
 
 ReactDOM.render(
   <Provider store={store}>

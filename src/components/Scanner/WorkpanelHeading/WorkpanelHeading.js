@@ -1,20 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./WorkpanelHeading.scss";
 import "bootstrap/dist/css/bootstrap.css";
-const initialState = {
-  name: "",
-  description: "",
-};
 
-const WorkpanelHeading = ({ scannerData }) => {
-  const [data, setData] = useState(initialState);
-  const { name, description } = data;
+const WorkpanelHeading = ({ scannerData, scannerDetails }) => {
+  const [data, setData] = useState({
+    name: "",
+    description: "",
+    publicChecked: "",
+    alerts: ""
+  });
+  const { name, description, publicChecked, alerts } = data;
+
+  useEffect(()=>{
+    if(scannerDetails!==undefined && scannerDetails!==null){
+      let temp = {
+        name: scannerDetails.name,
+        description: scannerDetails.description,
+        publicChecked: scannerDetails.publicChecked,
+        alerts: scannerDetails.alerts
+      };
+      setData(temp);
+      scannerData(temp);
+    }
+  }, []);
+
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     let temp = { ...data, [name]: value };
-    setData({ ...data, [name]: value });
+    setData(temp);
     scannerData(temp);
   };
+
+  const handleSwitches = (e, value) => {
+    const { name } = e.target;
+    let temp = { ...data, [name]: value };
+    setData(temp);
+    scannerData(temp);
+  };
+
   return (
     <div className="scanner-workpanel-heading">
       <div className="scanner-workpanel-header">
@@ -51,9 +74,10 @@ const WorkpanelHeading = ({ scannerData }) => {
             <input
               type="radio"
               id="alert-public"
-              name="alert"
+              name="publicChecked"
               value="Public"
-              checked
+              checked={publicChecked}
+              onClick={(e)=>{handleSwitches(e, true)}}
             />
             <label for="alert-public">Public</label>
           </div>
@@ -61,17 +85,22 @@ const WorkpanelHeading = ({ scannerData }) => {
             <input
               type="radio"
               id="alert-private"
-              name="alert"
+              name="publicChecked"
               value="Private"
+              checked={!publicChecked}
+              onClick={(e)=>{handleSwitches(e, false)}}
             />
             <label for="alert-private">Private</label>
           </div>
 
           <div className="form-check form-switch">
             <input
+              name="alerts"
               className="form-check-input"
               type="checkbox"
               id="alert-switch"
+              checked={alerts}
+              onClick={(e)=>{handleSwitches(e, !alerts)}}
             />
             <label className="form-check-label" for="alert-switch">
               Alerts

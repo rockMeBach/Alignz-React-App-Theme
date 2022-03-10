@@ -80,12 +80,14 @@ import HistoricTrading from "./screens/Historical Trading/historicTrading";
 import HistoricPositions from "./screens/HistoricPositions/historicPositions";
 import HistoricHoldings from "./screens/HistoricHoldings/historicHoldings";
 import HistoricOrders from "./screens/HistoricOrders/historicOrders";
-
+import BACKEND_URL from "./Backend_url";
+import axios from "axios";
 import {
   dispatchLogin,
   fetchUser,
   dispatchGetUser,
 } from "./actions/authAction";
+import OptionsAnalyzer from "./screens/OptionsAnalyzer/OptionsAnalyzer";
 window.__DEV__ = true;
 
 const App = () => {
@@ -123,6 +125,34 @@ const App = () => {
       getUser();
     }
   }, [token, dispatch]);
+
+  useEffect(()=>{
+    const interval = setInterval(async ()=>{
+      if(window.localStorage.getItem("url_status")!==null){
+        //console.log("checking url...");
+        const owner = auth.user._id;
+        const res = await axios
+          .post(`http://${BACKEND_URL}/api/checkUrl/`, {
+            owner: owner
+          })
+          .then((res) => {
+            if(res.data==="found"){
+              new Notification("Your URL was generated!");
+              window.localStorage.removeItem("url_status");
+            }
+            return res;
+          })
+          .catch((err) => {
+            console.log(err)
+            window.localStorage.removeItem("url_status");
+          });
+      
+        return res;
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [auth.user._id]);
 
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;
@@ -272,6 +302,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/holdings`}
                 component={Holdings}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/options`}
+                component={OptionsAnalyzer}
               />
               <Route
                 exact
@@ -535,7 +570,7 @@ const App = () => {
               />
               <Route
                 exact
-                path={`${process.env.PUBLIC_URL}/scanners/scanner`}
+                path={`${process.env.PUBLIC_URL}/scanners/scanner/`}
                 component={scanner}
               />
               <Route

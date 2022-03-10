@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import BACKEND_URL from "../../Backend_url";
 
 const Toggle = styled.button`
   width: 50px;
@@ -29,6 +31,20 @@ const Toggle = styled.button`
 `;
 
 const TopLovedScanners = () => {
+
+  const [scanners, setScanners] = useState([]);
+
+  useEffect(()=>{
+    axios
+        .get(`http://${BACKEND_URL}/api/scanner/getAllScanners`)
+        .then((res) => {
+          setScanners(res.data.filter((scanner)=>{
+            return scanner.categories.indexOf("top-loved")!==-1 && scanner.publicChecked;
+          }));
+        })
+        .catch((err) => console.log(err));
+  }, []);
+
   const [on, toggle] = useState(false);
   return (
     <div
@@ -109,32 +125,34 @@ const TopLovedScanners = () => {
                           <th className="project-list-table-heading">Alerts</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr
-                          style={{
-                            background: "#F8F9FA 0% 0% no-repeat padding-box",
-                          }}
-                        >
-                          <td className="project-list-table-row">1</td>
-                          <td className="project-list-table-row project-list-table-scanner-name">
-                            Intraday seeing in the last 15 days
-                          </td>
-                          <td className="project-list-table-row">
-                            lorem isoum sdojicf edcfv cd fv 3ecv 4rc fvtg
-                          </td>
-                          <td className="project-list-table-row">10,000</td>
-                          <td
-                            className="project-list-table-row"
-                            style={{ color: "#E27498", fontWeight: "bold" }}
+                      {scanners.map((scanner, index)=>
+                        <tbody>
+                          <tr
+                            style={{
+                              background: "#F8F9FA 0% 0% no-repeat padding-box",
+                            }}
                           >
-                            subscribed
-                          </td>
+                            <td className="project-list-table-row">{index+1}</td>
+                            <td className="project-list-table-row project-list-table-scanner-name">
+                              {scanner.name}
+                            </td>
+                            <td className="project-list-table-row">
+                              {scanner.description}
+                            </td>
+                            <td className="project-list-table-row">10000</td>
+                            <td
+                              className="project-list-table-row"
+                              style={{ color: "#E27498", fontWeight: "bold" }}
+                            >
+                              subscribed
+                            </td>
 
-                          <td className="project-list-table-row">
-                            <Toggle on={on} onClick={() => toggle(!on)} />
-                          </td>
-                        </tr>
-                      </tbody>
+                            <td className="project-list-table-row">
+                              <Toggle on={on} onClick={() => toggle(!on)} />
+                            </td>
+                          </tr>
+                        </tbody>
+                      )}
                     </table>
                   </div>
                 </div>

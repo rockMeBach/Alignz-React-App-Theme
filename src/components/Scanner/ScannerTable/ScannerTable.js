@@ -37,7 +37,7 @@ const ScannerTable = ({key, value, index}) => {
                     
                     let previousRow = i ? value[i - 1] : undefined;
 
-                    console.log("if", previousRow)
+                    //console.log("if", previousRow)
                     if(previousRow && previousRow.date === e.date) {
 
                         let pt = previousRow.time.split(':');
