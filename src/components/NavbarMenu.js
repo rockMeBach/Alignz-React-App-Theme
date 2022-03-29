@@ -1,11 +1,58 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios"
 import "bootstrap/dist/css/bootstrap.min.css";
 import user from "../assets/images/monkey.jpg";
 import coin from "../assets/images/coin/coin.jpeg";
+import bell from "../assets/icons/bell-icon.png"
+import io from 'socket.io-client';
+import BACKEND_URL_LIVE_TRADE from "../Backend_live_feed_url";
+import BACKEND_URL from "../Backend_url";
 
 const NavbarMenu = () => {
   const auth = useSelector((state) => state.auth);
+  const [notifications, setNotifications] = useState([]);
+  const notificationRef = useRef([])
+  const [badge, setBadge] = useState(false)
+  useEffect(() => {
+    if (auth) {
+      axios.get(`http://${BACKEND_URL}/api/notifications/getNotifications`, {
+        params: {
+          userID: auth.user._id
+        }
+      }).then((res) => {
+        console.log(res)
+        if (res) {
+          setNotifications(res.data)
+          notificationRef.current = res.data
+          res.data.forEach(element => {
+            if (element.is_read == false)
+              setBadge(true)
+          });
+        }
+        const socket = io(`http://${BACKEND_URL_LIVE_TRADE}`);
+        socket.emit("setSocketId", auth.user._id);
+        socket.on('notification', data => {
+          console.log(notifications, data)
+          notificationRef.current.unshift(data)
+          setNotifications(notificationRef.current);
+          setBadge(true)
+        })
+      })
+    }
+
+  }, [auth]);
+  const readNotifications = () => {
+    axios.post(`http://${BACKEND_URL}/api/notifications/readNotifications`, {
+      data: {
+        userID: auth.user._id
+      }
+    }).then(data => {
+      if (data) {
+        setBadge(false)
+      }
+    })
+  }
   return (
     <div>
       <nav
@@ -29,6 +76,47 @@ const NavbarMenu = () => {
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown" onClick={() => {
+                readNotifications()
+              }}>
+
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdownNotification"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  href
+                >
+                  <img
+                    src={bell}
+                    alt="notifications"
+                    className="img-fluid"
+                    style={{
+                      height: "25px",
+                    }}
+                  ></img>
+                  {badge &&
+                    <div className="bg-primary rounded-circle position-absolute" style={{ width: '10px', height: '10px', top: "2px", right: "2px" }}></div>
+                  }
+                </a>
+                <ul
+                  class="dropdown-menu"
+                  aria-labelledby="navbarDropdownNotification"
+                  style={{ padding: "0px", left: "-50px", width: '300px', maxHeight: '400px', overflow: 'auto' }}
+                >
+                  {
+                    notifications.map(notification => {
+                      return (
+                        <li class="dropdown-item text-wrap  border-bottom">
+                          {notification.content}
+                        </li>
+                      )
+                    })
+                  }
+
+                </ul>
+              </li>
               <li class="nav-item">
                 <a class="nav-link">
                   {" "}

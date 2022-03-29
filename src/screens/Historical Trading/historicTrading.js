@@ -28,7 +28,7 @@ const Trading = () => {
     const [currentDate, setCurrentDate] = useState('')
     const [currentTime, setCurrentTime] = useState('')
     const [loader, setLoader] = useState(false)
-    const [selectedSymbol, setSelectedSymbol] = useState('NSE:NIFTY50')
+    const [selectedSymbol, setSelectedSymbol] = useState('NSE:ITC')
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
     var prevDateTime = useRef('')
 
@@ -131,8 +131,9 @@ const Trading = () => {
         axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id, prevDateTime: prevDateTime.current }).then(data => {
             setLoader(false)
             const val = data.data.forEach((feed, index) => {
+                console.log(feed)
                 if (feed && document.getElementById(`${feed.instrument_token}`)) {
-                    document.getElementById(`${feed.instrument_token}`).innerHTML = feed.open.toFixed(2)
+                    document.getElementById(`${feed.instrument_token}`).innerHTML = parseFloat(feed.open).toFixed(2)
                 }
             })
         })

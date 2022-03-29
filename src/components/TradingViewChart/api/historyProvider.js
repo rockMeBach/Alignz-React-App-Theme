@@ -14,7 +14,9 @@ export default {
 			e: symbolInfo.instrument_token,
 			toTs: to ? to : '',
 			limit: limit ? limit : 2000,
-			type: symbolInfo.type
+			type: symbolInfo.type,
+			name: symbolInfo.name,
+			resolution
 		}
 		return axios.get(`${api_root}${url}`, {
 			params: qs,
@@ -33,6 +35,7 @@ export default {
 						high: el.high,
 						open: el.open,
 						close: el.close,
+						volume: el.volume
 					}
 
 				})

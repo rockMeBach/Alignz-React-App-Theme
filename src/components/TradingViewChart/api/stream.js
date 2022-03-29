@@ -57,9 +57,9 @@ socket.on("equityData", (e) => {
     if (new Date(e.exchange_timestamp).getTime() < currentSymbol.lastBar.time) {
       return
     }
-
     var _lastBar = updateBar(e, currentSymbol)
 
+    console.log(currentSymbol)
     // send the most recent bar back to TV's realtimeUpdate callback
     currentSymbol.listener(_lastBar)
     // update our own record of lastBar
@@ -79,7 +79,6 @@ socket.on("futureData", (e) => {
     if (new Date(e.exchange_timestamp).getTime() < currentSymbol.lastBar.time) {
       return
     }
-
     var _lastBar = updateBar(e, currentSymbol)
 
     // send the most recent bar back to TV's realtimeUpdate callback
@@ -116,6 +115,7 @@ function updateBar(data, sub) {
       high: lastBar.close,
       low: lastBar.close,
       close: data.last_price,
+      volume: data.volume_traded
     }
 
   } else {

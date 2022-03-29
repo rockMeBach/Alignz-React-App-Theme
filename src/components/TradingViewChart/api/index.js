@@ -4,12 +4,12 @@ import stream from './stream'
 import { makeApiRequest, generateSymbol } from './helper.js';
 // ...
 var symbolsData = [{
-	symbol: 'NIFTY50',
-	full_name: 'NSE:NIFTY50',
-	description: 'NSE:NIFTY50',
+	symbol: 'ITC',
+	full_name: 'NSE:ITC',
+	description: 'NSE:ITC',
 	exchange: 'NSE',
 	type: 'equity',
-	instrument_token: 256265
+	instrument_token: 128224004
 }];
 async function getAllSymbols() {
 	const data = await makeApiRequest('api/historicData/data/v3/all/exchanges');
@@ -98,7 +98,6 @@ export default {
 			minmov: 1,
 			pricescale: 100,
 			has_intraday: true,
-			has_no_volume: true,
 			supported_resolution: supportedResolutions,
 			data_status: "streaming"
 		}

@@ -13,7 +13,7 @@ function getLanguageFromURL() {
 export default class TVChartContainer extends React.PureComponent {
 
 	static defaultProps = {
-		symbol: 'NSE:NIFTY50',
+		symbol: 'NSE:ITC',
 		exchange: 'NSE',
 		interval: '1',
 		containerId: 'tv_chart_container',
