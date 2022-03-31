@@ -1,5 +1,6 @@
-import React from "react"
+import React, {useEffect} from "react"
 import moment, { Moment } from "moment"
+import { Button } from "react-bootstrap"
 
 const OptionsCurrentBar = (props) => {
   const minTime = props.simulatorDate
@@ -9,11 +10,16 @@ const OptionsCurrentBar = (props) => {
     .clone()
     .set({ hour: 15, minute: 30, second: 0, millisecond: 0 })
   // console.log(props.simulatorDate)
+
+  useEffect(()=>{
+    console.log("simulatorDate:", props.simulatorDate)
+  }, [])
+
   return (
     <div className="mt-4 text-center text-sm items-center flex flex-wrap justify-around text-white">
       {/* Previous buttons */}
       {/* <div className="my-2 flex flex-wrap justify-around"> */}
-      <button
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-pink-700 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go back 1 day
@@ -33,8 +39,8 @@ const OptionsCurrentBar = (props) => {
           />
         </svg>
         1 Day
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-pink-500 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go back 30 mins
@@ -60,8 +66,8 @@ const OptionsCurrentBar = (props) => {
           />
         </svg>
         30 MIN
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-pink-400 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go back 15 mins
@@ -87,8 +93,8 @@ const OptionsCurrentBar = (props) => {
           />
         </svg>
         15 MIN
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-pink-400 text-hite rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go back 5 mins
@@ -114,8 +120,8 @@ const OptionsCurrentBar = (props) => {
           />
         </svg>
         5 MIN
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-pink-400 text-hite rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go back 1 mins
@@ -141,17 +147,17 @@ const OptionsCurrentBar = (props) => {
           />
         </svg>
         1 MIN
-      </button>
+      </Button>
       {/* </div> */}
       {/* Current Date time div */}
-      <div className="text-pink-400 underline bg-white rounded-lg p-2 shadow-lg">
-        <div className="font-bold text-xl">
+      <div className="text-pink-400 underline rounded-lg p-2 shadow-lg">
+        <div className="font-bold text-xl" style={{color:"black"}}>
           {moment(props.simulatorDate).format("DD-MMM-YY HH:mm")}
         </div>
       </div>
       {/* Next buttons */}
       {/* <div className="my-2 flex flex-wrap justify-around"> */}
-      <button
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-fuchsia-400 text-hite rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go forward 1 mins
@@ -177,8 +183,8 @@ const OptionsCurrentBar = (props) => {
             d="M17 8l4 4m0 0l-4 4m4-4H3"
           />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-fuchsia-400 text-hite rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go forward 5 mins
@@ -204,8 +210,8 @@ const OptionsCurrentBar = (props) => {
             d="M17 8l4 4m0 0l-4 4m4-4H3"
           />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-fuchsia-400 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go forward 15 mins
@@ -231,8 +237,8 @@ const OptionsCurrentBar = (props) => {
             d="M17 8l4 4m0 0l-4 4m4-4H3"
           />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-fuchsia-500 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go forward 30 mins
@@ -258,8 +264,8 @@ const OptionsCurrentBar = (props) => {
             d="M17 8l4 4m0 0l-4 4m4-4H3"
           />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
         className="px-2 md:py-1 my-1 font-bold bg-fuchsia-700 rounded-md disabled:bg-gray-500"
         onClick={() => {
           // Go forward 1 day
@@ -284,7 +290,7 @@ const OptionsCurrentBar = (props) => {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </Button>
     </div>
     // </div>
   )

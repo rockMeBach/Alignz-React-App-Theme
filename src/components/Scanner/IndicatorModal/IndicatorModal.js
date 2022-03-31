@@ -17,6 +17,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
   const [selectedIndicator, setSelectedIndicator] = useState(0);
   const {scannerSettArr} = useContext(DragContext);
   const {allIndicators} = useContext(DragContext);
+  const [allIndicatorsStrings, setAllIndicatorsStrings] = useState([]);
   const numberRegEx = /^\d+$/;
 
   const closeModal = () => {
@@ -53,6 +54,12 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
   }
 
   useEffect(() => {
+    let tmp = allIndicatorsStrings;
+    allIndicators.forEach((indicator)=>{
+      tmp.push(indicator.id);
+    })
+    setAllIndicatorsStrings(tmp);
+
     document.getElementById("staticBackdropLive").style.background = "rgba(0, 0, 0, 0.9)";
     //set sourceIndicators to subindicators if subindicators is not null or does exist
     if(indicatorModalInput.subindicators!==undefined && indicatorModalInput.subindicators.length>0){
@@ -195,6 +202,9 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                   disabled={offsetCandleValue!=="latest-candle" || tmpTimeframeValue.indexOf("min")===-1}
                   style={{color:(offsetCandleValue!=="latest-candle" || tmpTimeframeValue.indexOf("min")===-1)?"silver":""}}
                   value={
+                    (offset2CandleValue.startsWith("custom-"))?
+                      "custom-days-custom-candle"
+                    :
                     (offset2CandleValue.split("-")[1]!=="yester")?
                       (offset2CandleValue.split("-")[0]>5)?
                         "custom-todays-candle"
@@ -213,14 +223,26 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                       if(numberRegEx.test(num) && num!="0"){
                         tempArr[selectedIndicator].offset2 = num+"-candle";
                       }else{
-                        alert("Please type in a number(not zero)");
+                        alert("Please type in a number");
                       }
                     }else if(e.target.value==="custom-yester-candle"){
                       let num = prompt("Select a number", 4);
                       if(numberRegEx.test(num) && num!="0"){
                         tempArr[selectedIndicator].offset2 = num+"-yester-candle";
                       }else{
-                        alert("Please type in a number(not zero)");
+                        alert("Please type in a number");
+                      }
+                    }else if(e.target.value==="custom-days-custom-candle"){
+                      let num = prompt("How many days ago?", 1);
+                      if(numberRegEx.test(num) && num!="0"){
+                        let num2 = prompt("Which candle?", 1);
+                        if(numberRegEx.test(num2) && num2!="0"){
+                          tempArr[selectedIndicator].offset2 = "custom-"+num2+"-"+num+"-candle";
+                        }else{
+                          alert("Please type in a number");  
+                        }
+                      }else{
+                        alert("Please type in a number");
                       }
                     }else{
                       tempArr[selectedIndicator].offset2 = e.target.value;
@@ -293,7 +315,7 @@ const IndicatorModal = ({ indicatorModalInput, closeIndicatorModal }) => {
                                   { name: "Length", value: 14 },
                                   {
                                     name: "Source",
-                                    options: ["Open", "High", "Low", "Close", "SAR", "SMA", "WMA"],
+                                    options: ["Open", "High", "Low", "Close", ...allIndicatorsStrings],
                                     value: "Close",
                                   },
                                   ...newIndicatorSettings

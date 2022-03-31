@@ -15,6 +15,9 @@ const ProjectsList = () => {
   const [fundamental, setFundamental] = useState([]);
   const [topLoved, setTopLoved] = useState([]);
   const [candlestickPatterns, setCandlestickPatterns] = useState([]);
+  const [rangeBreakouts, setRangeBreakouts] = useState([]);
+  const [bullish, setBullish] = useState([]);
+  const [bearish, setBearish] = useState([]);
 
   useEffect(()=>{
     if(auth.user._id!==undefined && auth.user._id!==""){
@@ -54,6 +57,21 @@ const ProjectsList = () => {
             let tempArr = candlestickPatterns;
             tempArr.push(element);
             setCandlestickPatterns(tempArr);
+          }
+          if(element.categories.indexOf("range-breakouts")!==-1){
+            let tempArr = rangeBreakouts;
+            tempArr.push(element);
+            setRangeBreakouts(tempArr);
+          }
+          if(element.categories.indexOf("bullish")!==-1){
+            let tempArr = bullish;
+            tempArr.push(element);
+            setBullish(tempArr);
+          }
+          if(element.categories.indexOf("bearish")!==-1){
+            let tempArr = bearish;
+            tempArr.push(element);
+            setBearish(tempArr);
           }
         }
       });
@@ -368,6 +386,7 @@ const ProjectsList = () => {
                     Candlestick Patterns Scan
                   </h2>
                 </li>
+
                 {candlestickPatterns.length<=0 &&
                 <li
                 style={{ background: "#F8F9FA", paddingLeft: "35px" }}
@@ -390,6 +409,7 @@ const ProjectsList = () => {
                   </li>
                   </Link>:"")
                 }
+
                 <a
                   href="/scanners/candlestick-scanner"
                   style={{ textDecoration: "none" }}
@@ -431,27 +451,30 @@ const ProjectsList = () => {
                     Range Breakouts Scan
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                
+                {rangeBreakouts.length<=0 &&
+                <li
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
+                >
+                  No scanners here
+                </li>}
+                {
+                  rangeBreakouts.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
+                  className="wcard"
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
+
               </ul>
             </div>
           </div>
@@ -478,27 +501,30 @@ const ProjectsList = () => {
                     Bullish Scan
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                
+                {bullish.length<=0 &&
+                <li
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
+                >
+                  No scanners here
+                </li>}
+                {
+                  bullish.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
+                  className="wcard"
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
+
               </ul>
             </div>
           </div>
@@ -525,27 +551,30 @@ const ProjectsList = () => {
                     Bearish Scan
                   </h2>
                 </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
-                <li style={{ padding: "13px", paddingLeft: "35px" }}>
-                  15 minute stock breakouts
-                </li>
-                <li style={{ background: "#F8F9FA", paddingLeft: "35px" }}>
-                  Intraday buying seen in the past 15 minutes
-                </li>
+                
+                {bearish.length<=0 &&
+                <li
+                style={{ background: "#F8F9FA", paddingLeft: "35px" }}
+                className="wcard"
+                >
+                  No scanners here
+                </li>}
+                {
+                  bearish.map((e, i)=>
+                  (i<7)?
+                  <Link to={{
+                    pathname: "/scanners/scanner/",
+                    state: e
+                  }}>
+                  <li
+                  style={{ background: i%2==0?"#F8F9FA":"", paddingLeft: "35px" }}
+                  className="wcard"
+                  >
+                    {e.name}
+                  </li>
+                  </Link>:"")
+                }
+
               </ul>
             </div>
           </div>

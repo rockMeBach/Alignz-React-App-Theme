@@ -11,13 +11,24 @@ import axios from "axios";
 
 const Pricing = () => {
   const auth = useSelector((state) => state.auth);
+  const [tier0, setTier0] = useState([]);
   const [tier1, setTier1] = useState([]);
   const [tier2, setTier2] = useState([]);
   const [tier3, setTier3] = useState([]);
-  const [subvalue, setSubvalue] = useState(1);
+  const [subvalue, setSubvalue] = useState(0);
   const name = auth.user.name;
   const email = auth.user.email;
   const tier = auth.user.tier;
+
+  const leftTextStyle = {
+    fontSize: "12px"
+  };
+
+  const rightTextStyle = {
+    fontWeight: "500",
+    color: "rgb(226, 116, 152)",
+    fontSize: "12px",
+  };
 
   const handleScroll = () => {
     window.scroll({
@@ -26,12 +37,15 @@ const Pricing = () => {
       behavior: "smooth",
     });
   };
+
   let res;
+
   useEffect(async () => {
     res = await axios.get(`http://${BACKEND_URL}/api/payment/paymentDatabase`);
-    setTier1(res.data[0]);
-    setTier2(res.data[1]);
-    setTier3(res.data[2]);
+    setTier0(res.data[0]);
+    setTier1(res.data[1]);
+    setTier2(res.data[2]);
+    setTier3(res.data[3]);
   }, []);
 
   useEffect(() => {
@@ -52,328 +66,290 @@ const Pricing = () => {
             Breadcrumb={[{ name: "Pricing", navigate: "" }]}
           />
           <div className="row clearfix">
-          <div className="col-lg-3 col-md-12">
+            {/*FREE PRICING PLAN*/}
+            <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
-                <div className="body">
+                <div className="body" style={{padding:"0"}}>
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={PaperPlane} />
                     <h2 className="pricing-header">FREE</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
-                          <div className="col-6 text-left">Historical Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            Results from 2021
+                            Results from {tier0.scans_start_year}
                           </div>
-                          <div className="col-6 text-left">Historical Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            Upto {tier1.scans}
+                            Max {tier0.scans_max_results} results
                           </div>
 
-                          <div className="col-6 text-left">Virtual Trading</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Email Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.trades} per month
+                            {tier0.live_scanner_emails}
                           </div>
-                          <div className="col-6 text-left">Historic Charts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.charts} old
+                            {tier0.live_scanner_telegrams}
                           </div>
-                          <div className="col-6 text-left">Backtests</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Equities</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.backtest} per month
+                            Available from {tier0.charts_equities}
                           </div>
-                          <div className="col-6 text-left">Emails Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts FnO</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.email} per month
+                            Available from {tier0.charts_fno}
                           </div>
-                          <div className="col-6 text-left">Whatsapp Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Crypto</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.whatsapp} per month
+                            Yes
                           </div>
-                          <div className="col-6 text-left">Telegram Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Options Analyzer</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.telegram} per month
+                            {tier0.options_analyzer==="true"?"Yes":"No"}
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Virtual Trading</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            Yes
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Backtests</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            {tier0.backtests}
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">FREE</span>
-                    <a className="btn disable" style={{ color: "white" }} href>
-                      Buy Now
-                    </a>
                   </div>
                 </div>
               </div>
             </div>
             
-
+            {/*BASIC PRICING PLAN*/}
             <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
-                <div className="body">
+                <div className="body" style={{padding:"0"}}>
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={PaperPlane} />
-                    <h2 className="pricing-header">Basic</h2>
+                    <h2 className="pricing-header">BASIC</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
-                          <div className="col-6 text-left">Live Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            5 mins delay
+                            Results from {tier1.scans_start_year}
                           </div>
-                          <div className="col-6 text-left">Historic Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            Upto {tier1.scans}
+                            Max {tier1.scans_max_results} results
                           </div>
 
-                          <div className="col-6 text-left">Virtual Trading</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Email Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.trades} per month
+                            {tier1.live_scanner_emails}
                           </div>
-                          <div className="col-6 text-left">Historic Charts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.charts} old
+                            {tier1.live_scanner_telegrams}
                           </div>
-                          <div className="col-6 text-left">Backtests</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Equities</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.backtest} per month
+                            Available from {tier1.charts_equities}
                           </div>
-                          <div className="col-6 text-left">Emails Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts FnO</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.email} per month
+                            Available from {tier1.charts_fno}
                           </div>
-                          <div className="col-6 text-left">Whatsapp Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Crypto</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.whatsapp} per month
+                            Yes
                           </div>
-                          <div className="col-6 text-left">Telegram Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Options Analyzer</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier1.telegram} per month
+                            {tier1.options_analyzer==="true"?"Yes":"No"}
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Virtual Trading</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            Yes
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Backtests</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            {tier1.backtests}
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">FREE</span>
-                    <a className="btn disable" style={{ color: "white" }} href>
-                      Buy Now
-                    </a>
+                    <span className="pricing-price">Rs. {tier1.cost}</span>
+                    {tier === 1 ? (
+                      <button className="btn btn-success disable">
+                        Already Subscribed
+                      </button>
+                    ) : (
+                      <a
+                        className="btn"
+                        style={{
+                          background: "#E27498",
+                          color: "white",
+                          fontWeight: "bold",
+                        }}
+                        onClick={() =>
+                          setSubvalue(1)
+                        }
+                        href
+                      >
+                        Buy Now
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/*ADVANCED PRICING PLAN*/}
             <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
-                <div className="body">
+                <div className="body" style={{padding:"0"}}>
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={Plane} />
-                    <h2 className="pricing-header">Advanced</h2>
+                    <h2 className="pricing-header">ADVANCED</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
-                          <div className="col-6 text-left">Live Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            No Delay
+                            Results from {tier2.scans_start_year}
                           </div>
-                          <div className="col-6 text-left">Historic Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            Upto {tier2.scans}
+                            Max {tier2.scans_max_results} results
                           </div>
 
-                          <div className="col-6 text-left">Virtual Trading</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Email Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.trades} per month
+                            {tier2.live_scanner_emails}
                           </div>
-                          <div className="col-6 text-left">Historic Charts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.charts} old
+                            {tier2.live_scanner_telegrams}
                           </div>
-                          <div className="col-6 text-left">Backtests</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Equities</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.backtest} per month
+                            Available from {tier2.charts_equities}
                           </div>
-                          <div className="col-6 text-left">Emails Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts FnO</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.email} per month
+                            Available from {tier2.charts_fno}
                           </div>
-                          <div className="col-6 text-left">Whatsapp Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Crypto</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.whatsapp} per month
+                            Yes
                           </div>
-                          <div className="col-6 text-left">Telegram Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Options Analyzer</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier2.telegram} per month
+                            {tier2.options_analyzer==="true"?"Yes":"No"}
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Virtual Trading</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            Yes
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Backtests</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            {tier2.backtests}
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">Rs. {tier2.price}</span>
+                    <span className="pricing-price">Rs. {tier2.cost}</span>
                     {tier === 2 ? (
                       <button className="btn btn-success disable">
                         Already Subscribed
@@ -387,7 +363,6 @@ const Pricing = () => {
                           fontWeight: "bold",
                         }}
                         onClick={() =>
-                          //createOrder(tier2.price)
                           setSubvalue(2)
                         }
                         href
@@ -399,108 +374,92 @@ const Pricing = () => {
                 </div>
               </div>
             </div>
+
+            {/*PRO PRICING PLAN*/}
             <div className="col-lg-3 col-md-12">
               <div className="card pricing2">
-                <div className="body">
+                <div className="body" style={{padding:"0"}}>
                   <div className="pricing-plan">
                     <img alt="" className="pricing-img" src={SpaceShip} />
-                    <h2 className="pricing-header">Pro</h2>
+                    <h2 className="pricing-header">PRO</h2>
                     <ul className="pricing-features">
                       <div className="container-fluid">
                         <div className="row ">
-                          <div className="col-6 text-left">Live Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            No Delay
+                            Results from {tier3.scans_start_year}
                           </div>
-                          <div className="col-6 text-left">Historic Scans</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Scans</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            Upto {tier3.scans}
+                            Max {tier3.scans_max_results} results
                           </div>
 
-                          <div className="col-6 text-left">Virtual Trading</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Email Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.trades}
+                            {tier3.live_scanner_emails}
                           </div>
-                          <div className="col-6 text-left">Historic Charts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Live Scanner Telegram Alerts</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.charts} old
+                            {tier3.live_scanner_telegrams}
                           </div>
-                          <div className="col-6 text-left">Backtests</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Equities</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.backtest} per month
+                            Available from {tier3.charts_equities}
                           </div>
-                          <div className="col-6 text-left">Emails Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts FnO</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.email} per month
+                            Available from {tier3.charts_fno}
                           </div>
-                          <div className="col-6 text-left">Whatsapp Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Historical Charts Crypto</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.whatsapp} per month
+                            Yes
                           </div>
-                          <div className="col-6 text-left">Telegram Alerts</div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Options Analyzer</div>
                           <div
                             className="col-6 text-right"
-                            style={{
-                              fontWeight: "800",
-                              color: "rgb(226, 116, 152)",
-                              fontSize: "17px",
-                            }}
+                            style={rightTextStyle}
                           >
-                            {tier3.telegram} per month
+                            {tier3.options_analyzer==="true"?"Yes":"No"}
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Virtual Trading</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            Yes
+                          </div>
+                          <div className="col-6 text-left" style={leftTextStyle}>Backtests</div>
+                          <div
+                            className="col-6 text-right"
+                            style={rightTextStyle}
+                          >
+                            {tier3.backtests}
                           </div>
                         </div>
                       </div>
                     </ul>
-                    <span className="pricing-price">Rs. {tier3.price}</span>
+                    <span className="pricing-price">Rs. {tier3.cost}</span>
                     {tier === 3 ? (
                       <button className="btn btn-success disable">
                         Already Subscribed
@@ -513,9 +472,9 @@ const Pricing = () => {
                           color: "white",
                           fontWeight: "bold",
                         }}
-                        onClick={() => {
-                          setSubvalue(3);
-                        }}
+                        onClick={() =>
+                          setSubvalue(3)
+                        }
                         href
                       >
                         Buy Now
@@ -525,8 +484,10 @@ const Pricing = () => {
                 </div>
               </div>
             </div>
+            {/*PLANS END*/}
           </div>
         </div>
+
         <div className="container">
           <div className="row clearfix">
             {subvalue === 1 && (
@@ -538,7 +499,6 @@ const Pricing = () => {
                   opacity: "1",
                   marginBottom: "50px",
                   paddingBottom: "40px",
-                  display: "none",
                 }}
               >
                 <Subscription tier={tier1} email={email} name={name} />

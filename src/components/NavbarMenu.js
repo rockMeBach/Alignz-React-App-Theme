@@ -291,6 +291,39 @@ const NavbarMenu = () => {
                   </a>
                 </div>
               </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  style={{
+                    color: "black",
+                    fontSize: "15px",
+                    paddingLeft: "20px",
+                    fontWeight: "600",
+                  }}
+                  href
+                >
+                  Crypto Trading
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/cryptotrading" style={{ color: "black" }}>
+                    Tradings
+                  </a>
+                  <a class="dropdown-item" href="/cryptoOrders" style={{ color: "black" }}>
+                    Orders
+                  </a>
+                  <a class="dropdown-item" href="/cryptoholdings" style={{ color: "black" }}>
+                    Holdings
+                  </a>
+                  <a class="dropdown-item" href="/cryptopositions" style={{ color: "black" }}>
+                    Positions
+                  </a>
+                </div>
+              </li>
               <li class="nav-item">
                 <a
                   class="nav-link"

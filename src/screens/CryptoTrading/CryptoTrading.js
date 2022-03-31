@@ -10,7 +10,7 @@ import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
 // import BuyModel from "./BuyModel"
 // import SellModel from "./SellModel"
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 // import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import coins from "../../Data/CryptoCoins.json"
@@ -32,7 +32,8 @@ const CryptoTrading = () => {
             url = url + `/${crypto.toLowerCase()}@ticker`
         }
         )
-        const socket = io(url);
+        console.log(url)
+        const socket = W3CWebSocket(url);
         socket.onmessage = liveData
     }, [cryptos])
 

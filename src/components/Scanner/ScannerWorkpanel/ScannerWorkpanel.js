@@ -10,6 +10,7 @@ import axios from "axios";
 import BACKEND_URL from "../../../Backend_url"
 import { DragContext } from "../../../contexts/DragContexts";
 import LoadingModal from "../LoadingModal/LoadingModal";
+import io from "socket.io-client"
 
 const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const auth = useSelector((state) => state.auth);
@@ -23,7 +24,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
   const [scannerSettArr, setScannerSettArr] = useState([]);
   const [allIndicators, setAllIndicators] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [resultsLink, setResultsLink] = useState("");
   const history = useHistory();
   let {id} = useParams();
   let currScanner = useLocation();
@@ -102,7 +102,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
             }
           }
         }else{
-          console.log("Editing mode", scannerId);
+          console.log("Editing mode");
 
           const res = await axios.post(
             `http://${BACKEND_URL}/api/scanner/updateScanner`,
@@ -178,19 +178,24 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     let LHS = [];
     let RHS = [];
     conditions.forEach((e) => {
-      if (
-        e.indicatorName === "<" ||
-        e.indicatorName === ">" ||
-        e.indicatorName === "cfab" ||
-        e.indicatorName === "cfba" ||
-        e.indicatorName === ">=" ||
-        e.indicatorName === "<="
-      ) {
-        comparison = e.indicatorName;
-        flag = false;
-      } else if (flag) {
+      if(e.indicatorName !== "and" && e.indicatorName !== "or" && e.indicatorName !== "substract"){
+        if (
+          e.indicatorName === "<" ||
+          e.indicatorName === ">" ||
+          e.indicatorName === "cfab" ||
+          e.indicatorName === "cfba" ||
+          e.indicatorName === ">=" ||
+          e.indicatorName === "<="
+        ) {
+          comparison = e.indicatorName;
+          flag = false;
+        } else if (flag) {
+          LHS.push(e);
+        } else {
+          RHS.push(e);
+        }
+      }else{
         LHS.push(e);
-      } else {
         RHS.push(e);
       }
     });
@@ -246,6 +251,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         comparison: comparison,
         LHS: LHS,
         RHS: RHS,
+        tier: auth.user.tier
       };
       setScannerInfo(query);
       let res = await queryCalculator(query);
@@ -273,7 +279,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       // console.log("Duplicate", document.getElementById('duplicate-switch').checked)
       //alert("Expression is valid");
 
-      let binary_operation = [];
+      /*let binary_operation = [];
       let results = [];
 
       scannerSettArr.forEach(async (e) => {
@@ -294,8 +300,30 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           }
         });
 
-      setBinaryOperator(binary_operation);
+      setBinaryOperator(binary_operation);*/
       //setApiResults(results);
+
+      alert("Your results will be generated soon and you will be notified, please wait...");
+
+      //new logic here
+      let starttime =
+        document.getElementById("scanner-start-time").childNodes[1].value;
+      let endtime =
+        document.getElementById("scanner-end-time").childNodes[1].value;
+      let query = {
+        starttime: starttime,
+        endtime: endtime,
+        duplicate: document.getElementById('duplicate-switch').checked,
+        fnoLotSize: "",
+        satisfy: document.getElementById('satisfy').checked,
+        segment: document.getElementById("scanner-segment").value,
+        segment1a: document.getElementById("scanner-segment-1a").value,
+        timeframe: document.getElementById("scanner-timeframe").value,
+        expression: scannerSettArr,
+        user: auth.user
+      };
+
+      let res = await queryCalculator(query);
     }else{
       alert("Expression is not valid");
     }
@@ -305,7 +333,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     console.log(scannerSettArr);
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     let conditions = document.getElementById(
       "scanner-condition-indicators"
     ).childNodes;
@@ -314,10 +342,10 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     +document.querySelectorAll("#and").length
     +document.querySelectorAll("#substract").length-3;
 
-    //console.log("Results", apiResults, apiResultsLength, conditions);
-    //console.log(conditions.length, apiResultsLength, apiResults.length);
+    console.log("Results", apiResults, apiResultsLength, conditions);
+    console.log(conditions.length, apiResultsLength, apiResults.length);
     if (apiResultsLength === 0) {
-      //console.log("Final Result", finalResult);
+      console.log("Final Result", finalResult);
       scannerResultDisplay(finalResult);
       setFinalResult(null);
       setBinaryOperator(null);
@@ -326,10 +354,11 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     }
 
     if (conditions.length === 1 || conditions.length === apiResultsLength+binaryOperatorsLength) {
+      console.log(apiResultsLength, binaryOperatorsLength, conditions.length)
       calculateFinalResult();
       setApiResultsLength(0);
     }
-  }, [apiResultsLength]);
+  }, [apiResultsLength]);*/
 
   useEffect(()=>{
     if (!("Notification" in window)) {
@@ -370,7 +399,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
     });
 
     setFinalResult(final_result);
-    //await getURL(getClippedResults(final_result, document.getElementById('duplicate-switch').checked), auth.user._id);
     setLoading(false);
 
     // console.log("Final Result 2", final_result);
@@ -506,7 +534,6 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
           Save
         </button>
       </div>
-      {resultsLink!=="" && <p><a href={resultsLink}>Get your results here (Active for 1 minute)</a></p>}
     </div>
   );
 };

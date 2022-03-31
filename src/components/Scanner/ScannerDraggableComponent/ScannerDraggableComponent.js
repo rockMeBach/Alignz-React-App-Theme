@@ -22,6 +22,8 @@ const ScannerDraggableComponent = ({
   const [ltpModalInput, setLTPModalInput] = useState({});
   const {scannerSettArr} = useContext(DragContext);
   const {setScannerSettArr} = useContext(DragContext);
+  const {allIndicators} = useContext(DragContext);
+  const [allIndicatorsStrings, setAllIndicatorsStrings] = useState([]);
 
   let currScanner = useLocation();
 
@@ -50,6 +52,7 @@ const ScannerDraggableComponent = ({
       setLTPModalInput(eSettings);
       setLTPModalOpen(true);
     }else{
+      eSettings.settings[1].options = eSettings.settings[1].options.concat(allIndicatorsStrings)
       setIndicatorModalInput(eSettings);
       setIndicatorModalOpen(true);
     }
@@ -82,33 +85,43 @@ const ScannerDraggableComponent = ({
   }
 
   useEffect(() => {
-    if(window.localStorage.getItem("scannerLoaded") === null){
+    let tmp = allIndicatorsStrings;
+    allIndicators.forEach((indicator)=>{
+      tmp.push(indicator.id);
+    })
+    setAllIndicatorsStrings(tmp);
 
-      let jPos = window.localStorage.getItem("j-pos");
-      let iPos = window.localStorage.getItem("i-pos");
-      let dblclicked = window.localStorage.getItem("dblclicked");
+    try{
+      if(window.localStorage.getItem("scannerLoaded") === null){
 
-      let e = document.querySelector(".scanner-condition-indicators-class").childNodes;
-      let eSettings = scannerSettArr[iPos][jPos]!==undefined?scannerSettArr[iPos][jPos]:scannerSettArr[iPos][j];
+        let jPos = window.localStorage.getItem("j-pos");
+        let iPos = window.localStorage.getItem("i-pos");
+        let dblclicked = window.localStorage.getItem("dblclicked");
 
-      if(dblclicked==null){
-        if(iPos!=null){
-          if(jPos!=null){
-            e = e[iPos].childNodes[jPos];
-            window.localStorage.removeItem("j-pos");
-          }else{
-            e = e[iPos].childNodes[e[iPos].childNodes.length-1];
+        let e = document.querySelector(".scanner-condition-indicators-class").childNodes;
+        let eSettings = scannerSettArr[iPos][jPos]!==undefined?scannerSettArr[iPos][jPos]:scannerSettArr[iPos][j];
+
+        if(dblclicked==null){
+          if(iPos!=null){
+            if(jPos!=null){
+              e = e[iPos].childNodes[jPos];
+              window.localStorage.removeItem("j-pos");
+            }else{
+              e = e[iPos].childNodes[e[iPos].childNodes.length-1];
+            }
           }
+        }else{
+          e = Array.from(
+            document.getElementsByClassName("scanner-draggable-component-name")
+          );
+          e = e[e.length-1];
+          window.localStorage.removeItem("dblclicked");
         }
-      }else{
-        e = Array.from(
-          document.getElementsByClassName("scanner-draggable-component-name")
-        );
-        e = e[e.length-1];
-        window.localStorage.removeItem("dblclicked");
-      }
 
-      openIndicatorModal(eSettings);
+        openIndicatorModal(eSettings);
+      }
+    }catch(err){
+      console.log(err)
     }
   }, []);
 

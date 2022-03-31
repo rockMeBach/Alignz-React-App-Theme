@@ -28,7 +28,7 @@ const Trading = () => {
     const [currentDate, setCurrentDate] = useState('')
     const [currentTime, setCurrentTime] = useState('')
     const [loader, setLoader] = useState(false)
-    const [selectedSymbol, setSelectedSymbol] = useState('NSE:ITC')
+    const [selectedSymbol, setSelectedSymbol] = useState('NSE:NIFTY50')
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
     var prevDateTime = useRef('')
 

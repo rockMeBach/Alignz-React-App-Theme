@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const ScannerTable = ({key, value, index}) => {
 

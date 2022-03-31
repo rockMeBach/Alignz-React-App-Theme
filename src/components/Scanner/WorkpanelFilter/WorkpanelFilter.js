@@ -6,6 +6,7 @@ import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
 import { DragContext } from "../../../contexts/DragContexts";
 import {Col, Form} from "react-bootstrap"
+import Multiselect from 'multiselect-react-dropdown';
 
 const WorkpanelFilter = () => {
   const [indicators, setIndicators] = useState([]);
@@ -19,9 +20,6 @@ const WorkpanelFilter = () => {
   const {setCurElemId} = useContext(DragContext);
   const {setAllIndicators} = useContext(DragContext);
   const currScanner = useLocation();
-  const [equityStocks, setEquityStocks] = useState([]);
-  const [futureStocks, setFutureStocks] = useState([]);
-  const [optionsStocks, setOptionsStocks] = useState([]);
 
   const disableCrossIcons = () => {
     Array.from(document.getElementsByClassName("cross-icon")).forEach(element => {
@@ -57,7 +55,7 @@ const WorkpanelFilter = () => {
       })
       .catch((err) => console.log(err));
 
-      document.getElementById("satisfy").checked = true;
+    document.getElementById("satisfy").checked = true;
   }, []);
 
   useEffect(() => {
@@ -96,16 +94,22 @@ const WorkpanelFilter = () => {
 
   useEffect(()=>{
     if(segment===0){
-      setSegment1aArr(["All",
-        "Nifty 50",
-        "Nifty 100",
-        "Nifty 200",
-        "Nifty 500",
-        "Particular Stock"
-      ])
+      axios.get(`http://${BACKEND_URL}/api/getAllEquities`)
+      .then((res) => {
+        setSegment1aArr(["All",
+          "Nifty 50",
+          "Nifty 100",
+          "Nifty 200",
+          "Nifty 500",
+          ...res.data
+        ])
+      })
+      .catch((err) => console.log(err));
+
       setSegment2aArr([
         "X"
       ])
+
       if(currScanner.state===undefined) {
         setSegment1a("All");
         setSegment2a("X");
@@ -118,9 +122,11 @@ const WorkpanelFilter = () => {
         "Banknifty Spot",
         "Banknifty Future"
       ])
+
       setSegment2aArr([
         "Expiry"
       ])
+
       if(currScanner.state===undefined) {
         setSegment1a("Index Spot");
         setSegment2a("Expiry");
@@ -227,10 +233,12 @@ const WorkpanelFilter = () => {
             )
           }
         </select>
+      </div>
 
-        <select
+      <div className="segment-2-div">
+      {segment!==2 && <select
           className="form-control scanner-segment-select"
-          name="fno-lot-size"
+          name="scanner-segment-2a"
           id="scanner-segment-2a"
           value={segment2a}
           onChange={(e)=>{
@@ -242,7 +250,62 @@ const WorkpanelFilter = () => {
               <option value={option}>{option}</option>
             )
           }
-        </select>
+        </select>}
+
+        {segment===2 && <Multiselect
+          id="scanner-segment-2a"
+          name="scanner-segment-2a"
+          displayValue="key"
+          groupBy="cat"
+          onSelect={function onSelect(e){
+            const canBeAdded = e.filter((obj)=>{return obj.cat===e[e.length-1].cat && obj.key!==e[e.length-1].key}).length
+            ===0;
+
+            if(!canBeAdded){
+              e.pop();
+            }
+          }}
+          selectionLimit={2}
+          options={[
+            {
+              cat: 'Type',
+              key: 'CE'
+            },
+            {
+              cat: 'Type',
+              key: 'PE'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Current Week'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Current Week +1'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Current Week +2'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Current Week +3'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Current Month'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Next Month'
+            },
+            {
+              cat: 'Expiry',
+              key: 'Far Month'
+            },
+          ]}
+          showCheckbox
+        />}
       </div>
 
           <div className="scanner-time-and-lot-size">

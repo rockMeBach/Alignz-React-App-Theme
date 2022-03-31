@@ -29,7 +29,7 @@ const Trading = () => {
     const [tradeWatch, setTradeWatch] = useState([])
     const [buyInstrument, setBuyInstrument] = useState({ instrument_token: 0, market: '' })
     const [sellInstrument, setSellInstrument] = useState({ instrument_token: 0, market: '' })
-    const [selectedSymbol, setSelectedSymbol] = useState('NSE:ITC')
+    const [selectedSymbol, setSelectedSymbol] = useState('NSE:NIFTY50')
     var market = ["equity", "future", "option", "mcx", "currency", "crypto"]
 
     useEffect(() => {

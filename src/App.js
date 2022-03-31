@@ -126,9 +126,9 @@ const App = () => {
     }
   }, [token, dispatch]);
 
-  useEffect(()=>{
-    const interval = setInterval(async ()=>{
-      if(window.localStorage.getItem("url_status")!==null){
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (window.localStorage.getItem("url_status") !== null) {
         //console.log("checking url...");
         const owner = auth.user._id;
         const res = await axios
@@ -136,7 +136,7 @@ const App = () => {
             owner: owner
           })
           .then((res) => {
-            if(res.data==="found"){
+            if (res.data === "found") {
               new Notification("Your URL was generated!");
               window.localStorage.removeItem("url_status");
             }
@@ -146,7 +146,7 @@ const App = () => {
             console.log(err)
             window.localStorage.removeItem("url_status");
           });
-      
+
         return res;
       }
     }, 2000);
@@ -285,11 +285,6 @@ const App = () => {
               />
               <Route
                 exact
-                path={`${process.env.PUBLIC_URL}/cryptotrading`}
-                component={CryptoTrading}
-              />
-              <Route
-                exact
                 path={`${process.env.PUBLIC_URL}/orders`}
                 component={Orders}
               />
@@ -327,6 +322,12 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/historicOrders`}
                 component={HistoricOrders}
+              />
+
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/cryptotrading`}
+                component={CryptoTrading}
               />
               <Route
                 exact

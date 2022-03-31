@@ -6,6 +6,7 @@ import Tab from "@mui/material/Tab"
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import { Box } from "@mui/system"
 import axios from "axios"
+import {Container, Row, Col} from "react-bootstrap"
 import "./OptionsAnalyzer.css"
 
 // import { Search as SearchIcon } from "@mui/icons-material"
@@ -258,30 +259,33 @@ const OptionsAnalyzer = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <div className="" style={{ backgroundColor: "rgb(224 213 252)" }}>
-        <Navbar />
+      <div className="">
+        <div style={{height:"50px"}}></div>
         <div className="md:text-xl mx-4 mt-6 ">
-          <div className="flex items-center">
-            <div className="basis-1/2">
-              <SelectIndex
-                optionNames={optionNames}
-                // selectIndexValue={selectIndexValue}
-                setSelectIndexValue={setSelectIndexValue}
-              />
-              {/* Simple seperator line  */}
-              <div className="border-t-2 my-4 w-[60%] border-gray-300"></div>
-              <OptionsExpiry
-                expiryDateList={expiryDateList}
-                setSelectExpiryDate={setSelectExpiryDate}
-              />
-            </div>
-            <div className="basis-1/2">
-              <div className="flex justify-center">
-                {/* TODO: Add essential tag prices here */}
-                <OptionLabels spotPrice={equityPrice} />
-              </div>
-            </div>
-          </div>
+          <Container fluid>
+            <Row>
+              <Col xs={12} md={8}>
+                <SelectIndex
+                  optionNames={optionNames}
+                  // selectIndexValue={selectIndexValue}
+                  setSelectIndexValue={setSelectIndexValue}
+                />
+                {/* Simple seperator line  */}
+                <div className="border-t-2 my-4 w-[60%] border-gray-300"></div>
+                <OptionsExpiry
+                  expiryDateList={expiryDateList}
+                  setSelectExpiryDate={setSelectExpiryDate}
+                />
+              </Col>
+              <Col className="basis-1/2">
+                <div className="flex justify-center">
+                  {/* TODO: Add essential tag prices here */}
+                  <OptionLabels spotPrice={equityPrice} />
+                </div>
+              </Col>
+            </Row>
+          </Container>
+
           {/* Simple seperator line  */}
           <div className="border-t-2 my-4 border-gray-300"></div>
           <OptionsStartPayoff
@@ -307,6 +311,8 @@ const OptionsAnalyzer = () => {
                 setSimulatorDate={setSimulatorDate}
               />
               <div className="md:flex">
+              <Row>
+                <Col>
                 <div className="basis-1/2 p-2">
                   <TabContext value={tabValue1}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -353,6 +359,8 @@ const OptionsAnalyzer = () => {
                     </TabPanel>
                   </TabContext>
                 </div>
+                </Col>
+                <Col>
                 <div className="basis-1/2 p-2 h-[70vh]">
                   <TabContext value={tabValue2}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -376,7 +384,9 @@ const OptionsAnalyzer = () => {
                     </TabPanel>
                   </TabContext>
                 </div>
+                </Col>
                 {/* End of Flex */}
+              </Row>
               </div>
               <OptionsTable
                 data={optionTableData}
@@ -386,7 +396,7 @@ const OptionsAnalyzer = () => {
             </>
           )}
           {/* Footer Padding */}
-          <div className="h-16"></div>
+          <div style={{height:"20px"}}></div>
         </div>
       </div>
     </LocalizationProvider>

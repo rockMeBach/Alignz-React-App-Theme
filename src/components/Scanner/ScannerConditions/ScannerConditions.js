@@ -65,7 +65,7 @@ const ScannerConditions = () => {
         { name: "Length", value: 14 },
         {
           name: "Source",
-          options: ["Open", "High", "Low", "Close", "SAR", "SMA", "WMA"],
+          options: ["Open", "High", "Low", "Close"],
           value: "Close",
         },
         ...curSett
