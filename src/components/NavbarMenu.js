@@ -8,12 +8,15 @@ import bell from "../assets/icons/bell-icon.png"
 import io from 'socket.io-client';
 import BACKEND_URL_LIVE_TRADE from "../Backend_live_feed_url";
 import BACKEND_URL from "../Backend_url";
+import parse from 'html-react-parser';
 
 const NavbarMenu = () => {
+  const [hasNewNotif, setHasNewNotif] = useState(false);
   const auth = useSelector((state) => state.auth);
   const [notifications, setNotifications] = useState([]);
   const notificationRef = useRef([])
   const [badge, setBadge] = useState(false)
+
   useEffect(() => {
     if (auth) {
       axios.get(`http://${BACKEND_URL}/api/notifications/getNotifications`, {
@@ -39,9 +42,35 @@ const NavbarMenu = () => {
           setBadge(true)
         })
       })
+
+      let query = {
+        userID: auth.user._id
+      };
+    
+      /*axios.get(`http://${BACKEND_URL}/api/notifications/getUnreadNotifications`, {
+        params: query,
+      }).then((res)=>{
+        if(res.data.length > 0){
+          setHasNewNotif(true)
+        }
+      }).catch((err)=>{
+        console.log(err)
+      })*/
+  
+      //console.log(auth)
+  
+      if(auth.user._id !== undefined){
+        const socket = io("http://"+BACKEND_URL, { transports : ['websocket'], query: {userID: auth.user._id} })
+        socket.emit("setSocketId", auth.user._id)
+        socket.on("new-notification", function(data){
+          getAllNotifications(query);
+          setBadge(true)
+        })
+      }
     }
 
   }, [auth]);
+
   const readNotifications = () => {
     axios.post(`http://${BACKEND_URL}/api/notifications/readNotifications`, {
       data: {
@@ -53,6 +82,36 @@ const NavbarMenu = () => {
       }
     })
   }
+
+  const getAllNotifications = (query) => {
+    axios.get(`http://${BACKEND_URL}/api/notifications/getNotifications`, {
+      params: query,
+    }).then((res)=>{
+      setNotifications(res.data)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  const hideNotificationDot = () => {
+    setHasNewNotif(false)
+  }
+
+  const setAllNotificationsRead = () => {
+    if(hasNewNotif){
+      let query = {
+        userID: auth.user._id
+      };
+
+      axios.post(`http://${BACKEND_URL}/api/notifications/setAllNotificationsRead`, query).then((res)=>{
+        console.log(res)
+        hideNotificationDot();
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
+  }
+
   return (
     <div>
       <nav
@@ -109,7 +168,7 @@ const NavbarMenu = () => {
                     notifications.map(notification => {
                       return (
                         <li class="dropdown-item text-wrap  border-bottom">
-                          {notification.content}
+                          {parse(notification.content)}
                         </li>
                       )
                     })

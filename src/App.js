@@ -126,34 +126,6 @@ const App = () => {
     }
   }, [token, dispatch]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (window.localStorage.getItem("url_status") !== null) {
-        //console.log("checking url...");
-        const owner = auth.user._id;
-        const res = await axios
-          .post(`http://${BACKEND_URL}/api/checkUrl/`, {
-            owner: owner
-          })
-          .then((res) => {
-            if (res.data === "found") {
-              new Notification("Your URL was generated!");
-              window.localStorage.removeItem("url_status");
-            }
-            return res;
-          })
-          .catch((err) => {
-            console.log(err)
-            window.localStorage.removeItem("url_status");
-          });
-
-        return res;
-      }
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [auth.user._id]);
-
   var res = window.location.pathname;
   var baseUrl = process.env.PUBLIC_URL;
   baseUrl = baseUrl.split("/");
