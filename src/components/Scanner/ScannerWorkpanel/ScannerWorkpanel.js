@@ -304,7 +304,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
       //setApiResults(results);
 
       alert("Your results will be generated soon and you will be notified, please wait...");
-
+      
       //new logic here
       let starttime =
         document.getElementById("scanner-start-time").childNodes[1].value;
@@ -318,6 +318,7 @@ const ScannerWorkpanel = ({ scannerResultDisplay }) => {
         satisfy: document.getElementById('satisfy').checked,
         segment: document.getElementById("scanner-segment").value,
         segment1a: document.getElementById("scanner-segment-1a").value,
+        segment2a: document.getElementById("scanner-segment-2a").value,
         timeframe: document.getElementById("scanner-timeframe").value,
         expression: scannerSettArr,
         user: auth.user
