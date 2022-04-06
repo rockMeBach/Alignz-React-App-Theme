@@ -81,6 +81,7 @@ import HistoricPositions from "./screens/HistoricPositions/historicPositions";
 import HistoricHoldings from "./screens/HistoricHoldings/historicHoldings";
 import HistoricOrders from "./screens/HistoricOrders/historicOrders";
 import CryptoOrders from "./screens/CryptoOrders/orders";
+import CryptoPositions from "./screens/CryptoPositions/cryptoPositions";
 import BACKEND_URL from "./Backend_url";
 import axios from "axios";
 import {
@@ -306,6 +307,11 @@ const App = () => {
                 exact
                 path={`${process.env.PUBLIC_URL}/cryptoorders`}
                 component={CryptoOrders}
+              />
+              <Route
+                exact
+                path={`${process.env.PUBLIC_URL}/cryptopositions`}
+                component={CryptoPositions}
               />
               <Route
                 exact

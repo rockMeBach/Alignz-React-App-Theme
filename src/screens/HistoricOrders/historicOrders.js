@@ -14,7 +14,7 @@ import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import io from 'socket.io-client';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-// import EditModal from "./editModal"
+import EditModal from "./editModal"
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -47,6 +47,7 @@ const HistoricOrders = () => {
                     userID: auth.user._id
                 }
             }).then(data => {
+                console.log("Historic Orders", data)
                 ordersRef.current = data.data.map(order => {
                     if (order.market)
                         order.order = "Market"
@@ -82,7 +83,7 @@ const HistoricOrders = () => {
                         })
 
                         const openData = todaysData.filter(order => {
-                            if (order.orderType == 'open' || order.orderType == 'trigger pending')
+                            if (!order.executedTime)
                                 return order;
                             else if (new Date(order.executedTime).getTime() > new Date(currentDateTime).getTime()) {
 
@@ -198,10 +199,11 @@ const HistoricOrders = () => {
         setLoader(true)
         axios.post(`http://${BACKEND_URL}/api/historicTrading/getHistoricFeed`, { time, userID: auth.user._id, prevDateTime: prevDateTime.current }).then(data => {
             setLoader(false)
+            console.log(data)
             const val = data.data.forEach((feed, index) => {
                 if (feed && document.getElementsByClassName(feed.instrument_token)) {
                     var elements = document.getElementsByClassName(feed.instrument_token)
-                    var data = feed.open.toFixed(2)
+                    var data = parseFloat(feed.open).toFixed(2)
                     Array.from(elements).forEach(element => {
                         element.innerHTML = data
                     });
@@ -366,7 +368,7 @@ const HistoricOrders = () => {
                                                 </span>
                                             </td>
                                             <td>
-                                                <EditOutlinedIcon onClick={() => { setOpenEditModal(true); setEditOrderDetail(order) }} />
+                                                <EditOutlinedIcon onClick={() => { setOpenEditModal(true); setEditOrderDetail({ ...order, currentPrice: parseFloat(document.getElementsByClassName(`${order.instrument_token}`)[0].innerHTML) }) }} />
                                                 <DeleteOutlineOutlinedIcon onClick={() => { setDeleteOrderID(order._id); setDeleteModal(true); }} />
                                             </td>
                                         </tr>
@@ -448,11 +450,11 @@ const HistoricOrders = () => {
                 </div>
             </div>
             <ToastContainer />
-            {/* <EditModal show={openEditModal}
+            <EditModal show={openEditModal}
                 setShow={setOpenEditModal}
                 onClose={() => setOpenEditModal(false)}
                 order={editOrderDetail}
-            /> */}
+            />
             <UIModal show={deleteModal}
                 title={<h4>Delete Order</h4>}
                 bodyText={<h6>Are you sure?</h6>}

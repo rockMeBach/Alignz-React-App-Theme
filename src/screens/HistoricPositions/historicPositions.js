@@ -86,7 +86,7 @@ const HistoricPositions = () => {
             if (feed) {
                 const products = ["MIS", "NRML", "CNC"]
                 products.forEach(product => {
-                    updateColumns(feed.instrument_token + "-" + product, feed.close.toFixed(2))
+                    updateColumns(feed.instrument_token + "-" + product, parseFloat(feed.close).toFixed(2))
                 })
             }
         })
