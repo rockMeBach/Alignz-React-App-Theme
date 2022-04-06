@@ -6,52 +6,29 @@ import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { w3cwebsocket as W3CWebSocket } from "websocket"
 import BACKEND_URL_LIVE_TRADE from "../../Backend_live_feed_url";
 import io from 'socket.io-client';
 
-const BuyModal = ({ show, onClose, instrument, setShow }) => {
+const EditModal = ({ show, onClose, order, setShow }) => {
 
-    const [orderTypes, setOrderTypes] = useState('market')
-    const [qty, setQty] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [triggeredPrice, setTriggeredPrice] = useState(0)
+    const [orderTypes, setOrderTypes] = useState(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
+    const [qty, setQty] = useState(order.qty)
+    const [price, setPrice] = useState(order.price)
+    const [triggeredPrice, setTriggeredPrice] = useState(order.triggeredPrice)
     const [currentPrice, setCurrentPrice] = useState(-1)
-    const [product, setProduct] = useState('MIS')
     const [leverage, setLeverage] = useState(1)
     const [multiple, setMultiple] = useState(1)
+    const [product, setProduct] = useState('MIS')
 
 
 
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
-    const [socket, setSocket] = useState(null);
-    useEffect(() => {
-        setPrice(0)
-        setTriggeredPrice(0)
-        setCurrentPrice(-1)
-        if (show == true) {
-            setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
-
-        }
-        else {
-
-            if (socket) {
-                console.log("closed")
-                socket.disconnect()
-            }
-        }
-    }, [show])
 
     useEffect(() => {
-        if (socket) {
-            socket.on("futureData", futureLiveDataModal);
-            socket.on("equityData", equityLiveDataModal);
-            socket.on("optionData", optionLiveDataModal);
-        }
-    }, [socket])
-
-    useEffect(() => {
+        console.log(order)
         if (orderTypes == 'market') {
             setPrice(0);
             setTriggeredPrice(0)
@@ -64,35 +41,26 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
         }
     }, [orderTypes])
 
-    const futureLiveDataModal = (futureData) => {
-        if (instrument.instrument_token == futureData.instrument_token)
-            setCurrentPrice(futureData.last_price.toFixed(2))
-    }
-    const equityLiveDataModal = (equityData) => {
-        if (instrument.instrument_token == equityData.instrument_token)
-            setCurrentPrice(equityData.last_price.toFixed(2))
-    }
-    const optionLiveDataModal = (optionData) => {
-        if (instrument.instrument_token == optionData.instrument_token)
-            setCurrentPrice(optionData.last_price.toFixed(2))
-    }
+
     useEffect(() => {
-        console.log(instrument)
-        axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
-            params: {
-                market: instrument.market,
-                symbol: instrument.exchange + ":" + instrument.name
+        console.log(order)
+        if (order.instrument) {
+            setCurrentPrice(-1)
+            setOrderTypes(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
+            setQty(order.qty)
+            setPrice(order.slm ? 0 : order.price)
+            setTriggeredPrice(order.triggeredPrice)
+            setProduct(order.product)
+            var url = 'wss://stream.binance.com:9443/ws' + `/${order.instrument.toLowerCase()}@ticker`
+            const socket = W3CWebSocket(url);
+            socket.onmessage = (data) => {
+                data = JSON.parse(data.data)
+                setCurrentPrice(parseFloat(data.c))
             }
-        }).then(data => {
-            console.log(data)
-            console.log()
-            setLeverage(data.data.leverage || data.data['buy leverage'])
-            setMultiple(data.data.multiple)
-        })
-    }, [instrument])
+        }
+    }, [order])
 
-
-    const buy = () => {
+    const update = () => {
         if (qty % multiple != 0)
             return toast(`Quantity not multiple of ${multiple}`, {
                 position: "top-right",
@@ -106,27 +74,26 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
             });
         const data = {
             userID: auth.user._id,
-            type: 'buy',
-            instrument_token: instrument.instrument_token,
-            marketSearch: instrument.market, // Equity, future, Crypto....
+            orderID: order._id,
             qty,
             price,
+            type: order.type,
             triggeredPrice,
             market: false,
+            product: product,
             limit: false,
             slm: false,
-            name: instrument.name,
-            product: product,
-            exchange: instrument.exchange,
-            margin: qty * price / leverage,
-            currentPrice: currentPrice
+            margin: qty * price,
+            currentPrice: currentPrice,
+            instrument: order.instrument
         }
 
         data[orderTypes] = true;
         if (orderTypes == 'slm')
             data.margin = qty * triggeredPrice / leverage
 
-        axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`, data).then(data => {
+        axios.put(`http://${BACKEND_URL}/api/cryptoTrading/updateCryptoOrder`, data).then(data => {
+            setShow(false)
             toast(data.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -137,11 +104,23 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                 progress: undefined,
                 type: "success"
             });
-            return setTimeout(() => {
-                setShow(false)
-            }, 3000);
+
         }).catch(err => {
             console.log(err.response)
+            if (err.response.data == "Order can't be edited due to recent change in status") {
+                toast(err.response.data, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    type: "error"
+                });
+                setShow(false)
+
+            }
             return toast(err.response.data, {
                 position: "top-right",
                 autoClose: 5000,
@@ -161,12 +140,12 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                 size={'40%'}
                 title={
                     <div className="container">
-                        <h3 className="text-success">
-                            BUY
+                        <h3>
+                            Edit order
                         </h3>
                         <div className="row">
                             <div className="col-md-6">
-                                <h6>{instrument.name} X {qty} QTY</h6>
+                                <h6>{order.instrument} X {qty} QTY</h6>
                             </div>
                             <div className="col-md-6">
                                 <h6>{currentPrice == -1 ? 'Current Price Updating' : currentPrice}</h6>
@@ -175,23 +154,7 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                     </div>
                 } bodyText={
                     <div className="container">
-                        <div className="row">
-                            <div className="col-md-8">
-                                <div class="form-check d-flex justify-content-between">
-                                    <div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setProduct('MIS')} checked={product == 'MIS'} />
-                                        <label class="form-check-label text-success" for="intraday">
-                                            Intraday <span>MIS</span>
-                                        </label>
-                                    </div><div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setProduct(instrument.market == 'equity' ? 'CNC' : 'NRML')} checked={product == 'CNC' || product == 'NRML'} />
-                                        <label class="form-check-label text-success" for="longterm">
-                                            Longterm {instrument.market == 'equity' ? <span>CNC</span> : <span>NRML</span>}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <div className="row mt-2">
                             <div className="col-md-4">
                                 <label class="mb-2" for="qty">QTY</label>
@@ -244,31 +207,31 @@ const BuyModal = ({ show, onClose, instrument, setShow }) => {
                         Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
                         {
                             orderTypes == 'market' && <span>
-                                {qty * currentPrice / leverage}
+                                {qty * currentPrice}
                             </span>
                         }
                         {
                             orderTypes == 'limit' && <span>
-                                {qty * price / leverage}
+                                {qty * price}
                             </span>
                         }
                         {
                             orderTypes == 'slm' && <span>
-                                {qty * triggeredPrice / leverage}
+                                {qty * triggeredPrice}
                             </span>
                         }
                     </span>
                 }
                 onClose={onClose}
-                onSave={currentPrice == -1 ? null : buy}
-                closeButtonVariant="outline-success"
-                saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'success'}`}
+                onSave={currentPrice == -1 ? null : update}
+                closeButtonVariant="outline-primary"
+                saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'primary'}`}
                 closeButtonContent="Cancel"
-                saveButtonContent="BUY"
+                saveButtonContent="Update"
             />
             <ToastContainer />
         </>
     )
 }
 
-export default BuyModal
+export default EditModal

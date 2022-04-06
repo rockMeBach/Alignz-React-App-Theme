@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux"
 import UIModal from "../../components/UIElements/UIModal"
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import axios from "axios"
 import BACKEND_URL from "../../Backend_url";
+import { w3cwebsocket as W3CWebSocket } from "websocket"
+import { ToastContainer, toast } from 'react-toastify';
 
+const BuyModal = ({ show, onClose, instrument, setShow }) => {
 
-const BuyModal = ({ show, onClose, instrument }) => {
+    const auth = useSelector((state) => state.auth);
+
 
     const [market, setMarket] = useState('market')
     const [qty, setQty] = useState(0)
     const [price, setPrice] = useState()
     const [triggeredPrice, setTriggeredPrice] = useState()
+    const [currentPrice, setCurrentPrice] = useState(-1)
     const [tradeTerm, setTradeTerm] = useState('intraday')
     const [leverage, setLeverage] = useState(1)
     const [showToast, setShowToast] = useState(false)
@@ -26,19 +32,82 @@ const BuyModal = ({ show, onClose, instrument }) => {
     })
 
     useEffect(() => {
-        console.log(instrument.instrument_token)
-        axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
-            params: {
-                market: instrument.market,
-                instrument_token: instrument.instrument_token
-            }
-        }).then(data => {
-            console.log(data)
-            setInstrumentData(data.data)
-            setPrice(data.data.minutes.close)
-            setTriggeredPrice(data.data.minutes.close)
-        })
+        var url = 'wss://stream.binance.com:9443/ws' + `/${instrument.toLowerCase()}@ticker`
+        const socket = W3CWebSocket(url);
+        socket.onmessage = (data) => {
+            data = JSON.parse(data.data)
+            setCurrentPrice(parseFloat(data.c))
+        }
     }, [instrument])
+
+
+    useEffect(() => {
+        console.log(market)
+        if (market == 'market') {
+            setPrice(0);
+            setTriggeredPrice(0)
+        }
+        if (market == 'limit') {
+            setTriggeredPrice(0)
+        }
+        if (market == 'slm') {
+            setPrice(0)
+        }
+    }, [market])
+
+    const buy = () => {
+        const data = {
+            type: 'buy',
+            userID: auth.user._id,
+            type: 'buy',
+            instrument: instrument,
+            qty,
+            price,
+            triggeredPrice,
+            market: false,
+            limit: false,
+            slm: false,
+            product: 'NRML',
+            margin: qty * price,
+            currentPrice: currentPrice
+        }
+
+        data[market] = true;
+        if (market == 'slm')
+            data.margin = qty * triggeredPrice / leverage
+
+        axios.post(`http://${BACKEND_URL}/api/cryptoTrading/setCryptoTradeBuySell`, data).then(data => {
+            toast(data.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "success"
+            });
+            return setTimeout(() => {
+                setShow(false)
+            }, 3000);
+
+
+
+        }).catch(err => {
+            console.log(err.response)
+            return toast(err.response.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "error"
+            });
+        })
+    }
+
 
     return (
         <>
@@ -50,31 +119,17 @@ const BuyModal = ({ show, onClose, instrument }) => {
                             BUY
                         </h3>
                         <div className="row">
-                            <div className="col-md-12">
-                                <h6>{instrumentData[instrument.market]} X {qty} QTY</h6>
+                            <div className="col-md-6">
+                                <h6>{instrument} X {qty} QTY</h6>
                             </div>
 
+                            <div className="col-md-6">
+                                <h6>{currentPrice == -1 ? 'Current Price Updating' : currentPrice}</h6>
+                            </div>
                         </div>
                     </div>
                 } bodyText={
                     <div className="container">
-                        <div className="row">
-                            <div className="col-md-8">
-                                <div class="form-check d-flex justify-content-between">
-                                    <div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="intraday" onChange={() => setTradeTerm('intraday')} checked={tradeTerm == 'intraday'} />
-                                        <label class="form-check-label text-success" for="intraday">
-                                            Intraday <span>MIS</span>
-                                        </label>
-                                    </div><div>
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="longterm" onChange={() => setTradeTerm('longterm')} />
-                                        <label class="form-check-label text-success" for="longterm">
-                                            Longterm <span>CNC</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div className="row mt-2">
                             <div className="col-md-4">
                                 <label class="mb-2" for="qty">QTY</label>
@@ -82,13 +137,13 @@ const BuyModal = ({ show, onClose, instrument }) => {
                             </div>
                             <div className="col-md-4">
                                 <label class="mb-2" for="price">Price</label>
-                                <input type="number" class="form-control" value={price} disabled={market == 'market' || market == 'sl-m'} id="price" onChange={(e) => setPrice(e.target.value)} step={0.05} />
+                                <input type="number" class="form-control" value={price} disabled={market == 'market' || market == 'slm'} id="price" onChange={(e) => setPrice(e.target.value)} step={0.05} />
                             </div>
                             <div className="col-md-4">
                                 <label class="mb-2" for="triggerPrice">Trigger Price</label>
                                 <input type="number" class="form-control" value={triggeredPrice} disabled={market == 'market' || market == 'limit'} id="triggerPrice"
                                     onChange={(e) => {
-                                            setTriggeredPrice(e.target.value)
+                                        setTriggeredPrice(e.target.value)
                                     }} step={0.05} />
                             </div>
                         </div>
@@ -102,12 +157,12 @@ const BuyModal = ({ show, onClose, instrument }) => {
                                         </label>
                                     </div>
                                     <div >
-                                        <input class="form-check-input" type="radio" name="stoploss" id="limit" onChange={() => setMarket('limit')} />
+                                        <input class="form-check-input" type="radio" name="stoploss" id="limit" onChange={() => setMarket('limit')} checked={market == 'limit'} />
                                         <label class="market-label-trading text-success" for="limit" >
                                             Limit
                                         </label>
                                     </div><div >
-                                        <input class="form-check-input" type="radio" name="stoploss" id="sl-m" onChange={() => setMarket('sl-m')} />
+                                        <input class="form-check-input" type="radio" name="stoploss" id="sl-m" onChange={() => setMarket('slm')} checked={market == 'slm'} />
                                         <label class="market-label-trading text-success" for="sl-m">
                                             SL-M
                                         </label>
@@ -122,27 +177,29 @@ const BuyModal = ({ show, onClose, instrument }) => {
                         Margin Required <InfoOutlinedIcon className="text-success" /> &#8377;
                         {
                             market == 'market' && <span>
-                                {qty * price / leverage}
+                                {qty * price}
                             </span>
                         }
                         {
                             market == 'limit' && <span>
-                                {qty * price / leverage}
+                                {qty * price}
                             </span>
                         }
                         {
-                            market == 'sl-m' && <span>
-                                {qty * triggeredPrice / leverage}
+                            market == 'slm' && <span>
+                                {qty * triggeredPrice}
                             </span>
                         }
                     </span>
                 }
                 onClose={onClose}
+                onSave={currentPrice == -1 ? null : buy}
                 closeButtonVariant="outline-success"
-                saveButtonVariant="success"
+                saveButtonVariant={`${currentPrice == -1 ? 'secondary' : 'success'}`}
                 closeButtonContent="Cancel"
                 saveButtonContent="BUY"
             />
+            <ToastContainer />
         </>
     )
 }

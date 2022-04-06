@@ -23,6 +23,7 @@ const NavbarMenu = () => {
       }).then((res) => {
         console.log(res)
         if (res) {
+          console.log(res)
           setNotifications(res.data)
           notificationRef.current = res.data
           res.data.forEach(element => {
@@ -43,10 +44,8 @@ const NavbarMenu = () => {
 
   }, [auth]);
   const readNotifications = () => {
-    axios.post(`http://${BACKEND_URL}/api/notifications/readNotifications`, {
-      data: {
-        userID: auth.user._id
-      }
+    axios.post(`http://${BACKEND_URL}/api/notifications/setAllNotificationsRead`, {
+      userID: auth.user._id
     }).then(data => {
       if (data) {
         setBadge(false)
@@ -313,7 +312,7 @@ const NavbarMenu = () => {
                   <a class="dropdown-item" href="/cryptotrading" style={{ color: "black" }}>
                     Tradings
                   </a>
-                  <a class="dropdown-item" href="/cryptoOrders" style={{ color: "black" }}>
+                  <a class="dropdown-item" href="/cryptoorders" style={{ color: "black" }}>
                     Orders
                   </a>
                   <a class="dropdown-item" href="/cryptoholdings" style={{ color: "black" }}>

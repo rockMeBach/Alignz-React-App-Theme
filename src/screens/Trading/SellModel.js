@@ -125,8 +125,7 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
             data.margin = instrument.market == 'option' ? qty * leverage : qty * triggeredPrice / leverage
 
         axios.post(`http://${BACKEND_URL}/api/trading/setTradeBuySell`, data).then(data => {
-            setShow(false)
-            return toast(data.data, {
+            toast(data.data, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -136,6 +135,9 @@ const SellModal = ({ show, onClose, instrument, setShow }) => {
                 progress: undefined,
                 type: "success"
             });
+            return setTimeout(() => {
+                setShow(false)
+            }, 3000);
         }).catch(err => {
             console.log(err.response)
             return toast(err.response.data, {

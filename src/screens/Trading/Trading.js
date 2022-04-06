@@ -230,16 +230,16 @@ const Trading = () => {
 
                 </div>
             </div>
-            <BuyModel show={buyModelOpen}
+            {buyModelOpen && <BuyModel show={buyModelOpen}
                 setShow={setBuyModelOpen}
                 onClose={() => setBuyModelOpen(false)}
                 instrument={buyInstrument}
-            />
-            <SellModel show={sellModelOpen}
+            />}
+            {sellModelOpen && <SellModel show={sellModelOpen}
                 setShow={setSellModelOpen}
                 onClose={() => setSellModelOpen(false)}
                 instrument={sellInstrument}
-            />
+            />}
         </div >
     )
 }
