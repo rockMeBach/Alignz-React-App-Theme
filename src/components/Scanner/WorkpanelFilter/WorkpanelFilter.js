@@ -81,7 +81,7 @@ const WorkpanelFilter = () => {
         document.getElementById("duplicate-switch").checked = currScanner.state.duplicate;
         document.getElementById("scanner-start-time").childNodes[1].value = currScanner.state.starttime;
         document.getElementById("scanner-end-time").childNodes[1].value = currScanner.state.endtime;
-        setSegment(currScanner.state.segment);
+        setSegment(parseInt(currScanner.state.segment));
         setSegment1a(currScanner.state.segment1a);
         setSegment2a(currScanner.state.segment2a);
         document.getElementById("satisfy").checked = currScanner.state.satisfy;
@@ -132,10 +132,17 @@ const WorkpanelFilter = () => {
         setSegment2a("Expiry");
       }
     }else if(segment===2){
-      setSegment1aArr(["All",
-        "Nifty 50",
-        "Particular Option",
-      ])
+      axios.get(`http://${BACKEND_URL}/api/getAllOptions`)
+      .then((res) => {
+        setSegment1aArr(["All",
+          "Nifty 50",
+          ...res.data
+        ])
+
+        console.log(segment2a)
+      })
+      .catch((err) => console.log(err));
+
       setSegment2aArr([
         "Expiry",
         "Type",
@@ -143,10 +150,13 @@ const WorkpanelFilter = () => {
         "PE",
         "Strike"
       ])
+
       if(currScanner.state===undefined) {
         setSegment1a("All");
         setSegment2a("Expiry");
       }
+
+      document.getElementById("scanner-segment-2a").value = segment2a;
     }else if(segment===3){
       setSegment1aArr(["All",
         "Nifty 50",
@@ -257,6 +267,7 @@ const WorkpanelFilter = () => {
           name="scanner-segment-2a"
           displayValue="key"
           groupBy="cat"
+          selectedValues={segment2a}
           onSelect={function onSelect(e){
             const canBeAdded = e.filter((obj)=>{return obj.cat===e[e.length-1].cat && obj.key!==e[e.length-1].key}).length
             ===0;
@@ -264,6 +275,8 @@ const WorkpanelFilter = () => {
             if(!canBeAdded){
               e.pop();
             }
+
+            document.getElementById("scanner-segment-2a").value = e;
           }}
           selectionLimit={2}
           options={[
