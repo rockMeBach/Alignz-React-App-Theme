@@ -29,8 +29,10 @@ const CryptoPositions = () => {
             }
         }).then(data => {
             console.log(data.data)
-            setPositions(data.data)
-            positionsRef.current = data.data
+            if (data.data && data.data.length) {
+                setPositions(data.data)
+                positionsRef.current = data.data
+            }
         })
     }, [auth])
 
