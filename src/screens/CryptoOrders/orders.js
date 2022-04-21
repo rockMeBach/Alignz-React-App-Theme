@@ -44,6 +44,7 @@ const CryptoOrders = () => {
                     userID: auth.user._id
                 }
             }).then(data => {
+                console.log(data)
                 ordersRef.current = data.data.map(order => {
                     order.orderTime = moment(order.orderTime).format("YYYY-MM-DDTHH:mm:ss")
                     if (order.market)

@@ -97,7 +97,8 @@ const EditModal = ({ show, onClose, order, setShow }) => {
             slm: false,
             margin: qty * price / leverage,
             currentPrice: currentPrice,
-            instrument_token: order.instrument_token
+            instrument_token: order.instrument_token,
+            currentTime: order.orderTime
         }
 
         data[orderTypes] = true;

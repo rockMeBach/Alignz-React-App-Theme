@@ -368,7 +368,7 @@ const HistoricOrders = () => {
                                                 </span>
                                             </td>
                                             <td>
-                                                <EditOutlinedIcon onClick={() => { setOpenEditModal(true); setEditOrderDetail({ ...order, currentPrice: parseFloat(document.getElementsByClassName(`${order.instrument_token}`)[0].innerHTML) }) }} />
+                                                <EditOutlinedIcon onClick={() => { setOpenEditModal(true); setEditOrderDetail({ ...order, currentTime: order.orderTime, currentPrice: parseFloat(document.getElementsByClassName(`${order.instrument_token}`)[0].innerHTML) }) }} />
                                                 <DeleteOutlineOutlinedIcon onClick={() => { setDeleteOrderID(order._id); setDeleteModal(true); }} />
                                             </td>
                                         </tr>
