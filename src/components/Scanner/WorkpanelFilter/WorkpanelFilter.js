@@ -5,20 +5,25 @@ import ScannerConditions from "../ScannerConditions/ScannerConditions";
 import axios from "axios";
 import BACKEND_URL from "../../../Backend_url";
 import { DragContext } from "../../../contexts/DragContexts";
-import {Col, Form} from "react-bootstrap"
+import {Row, Col, Form} from "react-bootstrap"
 import Multiselect from 'multiselect-react-dropdown';
+import ATMModal from "../ATMModal/ATMModal";
+import PremiumModal from "../PremiumModal/PremiumModal";
 
 const WorkpanelFilter = () => {
   const [indicators, setIndicators] = useState([]);
   const [searchedIndicators, setSearchedIndicators] = useState([]);
   const [searchedText, setSearchedText] = useState("");
-  const [segment, setSegment] = useState(0);
+  const [segment, setSegment] = useState(-1);
   const [segment1a, setSegment1a] = useState("");
-  const [segment2a, setSegment2a] = useState("");
+  const [segment2a, setSegment2a] = useState([]);
   const [segment1aArr, setSegment1aArr] = useState([]);
   const [segment2aArr, setSegment2aArr] = useState([]);
   const {setCurElemId} = useContext(DragContext);
   const {setAllIndicators} = useContext(DragContext);
+  const [segment2aOptions, setS2ao] = useState([]);
+  const [atmModalOpen, setAtmModalOpen] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const currScanner = useLocation();
 
   const disableCrossIcons = () => {
@@ -44,6 +49,44 @@ const WorkpanelFilter = () => {
     setCurElemId(e.target.id)
   }
 
+  const closeATMModal = (data) => {
+    const tmp = segment2a;
+    const atmObj = {
+      cat: 'Strike',
+      key: 'ATM',
+      value: data
+    }
+
+    console.log("ATM VALUE:", data)
+
+    tmp.push(atmObj)
+    setSegment2a(tmp);
+
+    setAtmModalOpen(false)
+  }
+
+  const closePremiumModal = (data) => {
+    const tmp = segment2a;
+    const premiumObj = {
+      cat: 'Strike',
+      key: 'Closest to '+data.closest+', Min '+data.min+', Max '+data.max,
+      value: data
+    }
+
+    console.log("PREMIUM VALUE:", data)
+
+    tmp.push(premiumObj)
+    setSegment2a(tmp);
+
+    setPremiumModalOpen(false)
+  }
+
+  const getTypesSelected = () => {
+    return segment2a.filter((prop)=>{
+      return prop.cat === "Type";
+    })
+  }
+
   useEffect(() => {
     window.localStorage.setItem("scannerLoaded", true)
     axios
@@ -56,6 +99,57 @@ const WorkpanelFilter = () => {
       .catch((err) => console.log(err));
 
     document.getElementById("satisfy").checked = true;
+
+    setS2ao([
+      {
+        cat: 'Type',
+        key: 'CE'
+      },
+      {
+        cat: 'Type',
+        key: 'PE'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Current Week'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Current Week +1'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Current Week +2'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Current Week +3'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Current Month'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Next Month'
+      },
+      {
+        cat: 'Expiry',
+        key: 'Far Month'
+      },
+      {
+        cat: 'Strike',
+        key: 'Number'
+      },
+      {
+        cat: 'Strike',
+        key: 'ATM'
+      },
+      {
+        cat: 'Strike',
+        key: 'Min/Max Premium, Closest to'
+      },
+    ])
   }, []);
 
   useEffect(() => {
@@ -84,20 +178,24 @@ const WorkpanelFilter = () => {
         setSegment(parseInt(currScanner.state.segment));
         setSegment1a(currScanner.state.segment1a);
         setSegment2a(currScanner.state.segment2a);
+        //setAtmModalOpen(true)
         document.getElementById("satisfy").checked = currScanner.state.satisfy;
         document.getElementById("not-satisfy").checked = !currScanner.state.satisfy;
       }catch(err){
         console.log("Something was probably undefined: "+err)
       }
+    }else{
+      setSegment(0)
     }
   }, [currScanner.state]);
 
   useEffect(()=>{
+    console.log(segment)
+
     if(segment===0){
       axios.get(`http://${BACKEND_URL}/api/getAllEquities`)
       .then((res) => {
-        setSegment1aArr(["All",
-          "Nifty 50",
+        setSegment1aArr(["Nifty 50",
           "Nifty 100",
           "Nifty 200",
           "Nifty 500",
@@ -111,57 +209,44 @@ const WorkpanelFilter = () => {
       ])
 
       if(currScanner.state===undefined) {
-        setSegment1a("All");
+        setSegment1a("Nifty 50");
         setSegment2a("X");
       }
     }else if(segment===1){
-      setSegment1aArr(["Index Spot",
-        "Index Future",
-        "Nifty Spot",
-        "Nifty Future",
-        "Banknifty Spot",
-        "Banknifty Future"
+      setSegment1aArr(["Nifty Spot",
+        "Banknifty Spot"
       ])
 
       setSegment2aArr([
-        "Expiry"
+        "X"
       ])
 
       if(currScanner.state===undefined) {
         setSegment1a("Index Spot");
-        setSegment2a("Expiry");
+        setSegment2a("X");
       }
     }else if(segment===2){
       axios.get(`http://${BACKEND_URL}/api/getAllOptions`)
       .then((res) => {
-        setSegment1aArr(["All",
-          "Nifty 50",
+        setSegment1aArr(["Nifty 50",
           ...res.data
         ])
-
-        console.log(segment2a)
       })
       .catch((err) => console.log(err));
 
-      setSegment2aArr([
-        "Expiry",
-        "Type",
-        "CE",
-        "PE",
-        "Strike"
-      ])
-
       if(currScanner.state===undefined) {
-        setSegment1a("All");
-        setSegment2a("Expiry");
+        setSegment1a("Nifty 50");
+        setSegment2a("");
       }
 
       document.getElementById("scanner-segment-2a").value = segment2a;
     }else if(segment===3){
-      setSegment1aArr(["All",
-        "Nifty 50",
-        "Particular Future"
-      ])
+      axios.get(`http://${BACKEND_URL}/api/getAllFutures`)
+      .then((res) => {
+        setSegment1aArr(["Nifty 50", ...res.data])
+      })
+      .catch((err) => console.log(err));
+
       setSegment2aArr([
         "Expiry",
         "1 (Current)",
@@ -169,16 +254,27 @@ const WorkpanelFilter = () => {
         "3 (Far)"
       ])
       if(currScanner.state===undefined) {
-        setSegment1a("All");
+        setSegment1a("Nifty 50");
         setSegment2a("Expiry");
       }
     }
   }, [segment]);
 
+  useEffect(()=>{
+    try{
+      console.log("segment2a:", segment2a)
+    }catch(err){
+      console.log("New scanner")
+    }
+  }, [segment2a]);
+
   return (
     <div className="scanner-filter-component">
+      {atmModalOpen && <ATMModal closeModal={closeATMModal} getTypesSelected={getTypesSelected} />}
+      {premiumModalOpen && <PremiumModal closeModal={closePremiumModal} />}
+
       <div className="scanner-indicator-component">
-        <form id="navbar-search" className="navbar-form search-form">
+        <form id="navbar-search" className="navbar-form search-form" style={{height:"10%"}}>
           <input
             className="form-control scanner-indicator-search"
             placeholder="Search"
@@ -191,7 +287,7 @@ const WorkpanelFilter = () => {
           </button>
         </form>
         <hr />
-        <div style={{ height: "18.2rem", overflow: "auto" }}>
+        <div style={{height:"80%", overflow:"auto"}}>
           {searchedIndicators.map((indicator) => (
               <div
                 className="scanner-indicator-name"
@@ -269,54 +365,59 @@ const WorkpanelFilter = () => {
           groupBy="cat"
           selectedValues={segment2a}
           onSelect={function onSelect(e){
-            const canBeAdded = e.filter((obj)=>{return obj.cat===e[e.length-1].cat && obj.key!==e[e.length-1].key}).length
-            ===0;
+            //don't allow multiple value selection in strike
+            const segmentComp = document.getElementById("scanner-segment-2a");
+            const canBeAdded = e[e.length-1].cat==="Strike"? e.filter((obj)=>{return obj.cat==="Strike"}).length===1:true;
 
             if(!canBeAdded){
               e.pop();
+            }else{
+              const latestAdded = e[e.length-1];
+
+              if(latestAdded.cat==="Strike"){
+                //we show a modal or a prompt
+                if(latestAdded.key.startsWith("Number")){
+                  //Number Strike
+                  let number = prompt("Select a number", 0);
+                  if(number!==null && number.trim()!=="" && !isNaN(number)){
+                    latestAdded.key = "Number: " +number;
+                    latestAdded.value = number;
+                    e[e.length-1] = latestAdded;
+                  }else{
+                    e.pop();
+                  }
+                }else if(latestAdded.key.startsWith("ATM")){
+                  //ATM Strike
+                  //open a modal
+                  const typesSelected = getTypesSelected();
+                  e.pop();
+                  if(typesSelected.length>0){
+                    console.log("adding")
+                    setAtmModalOpen(true);
+                  }
+                }else if(latestAdded.key.indexOf("Premium")!==-1){
+                  //Premium Strike
+                  e.pop();
+                  setPremiumModalOpen(true);
+                }
+              }
+
             }
 
-            document.getElementById("scanner-segment-2a").value = e;
+            //update the value of segment2a
+            segmentComp.value = e;
+            setSegment2a(e)
+
+            console.log(e)
           }}
-          selectionLimit={2}
-          options={[
-            {
-              cat: 'Type',
-              key: 'CE'
-            },
-            {
-              cat: 'Type',
-              key: 'PE'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Current Week'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Current Week +1'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Current Week +2'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Current Week +3'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Current Month'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Next Month'
-            },
-            {
-              cat: 'Expiry',
-              key: 'Far Month'
-            },
-          ]}
+          onRemove={(e)=>{
+            //update the value of segment2a
+            const segmentComp = document.getElementById("scanner-segment-2a");
+            segmentComp.value = e;
+            setSegment2a(e)
+          }}
+          selectionLimit={10}
+          options={segment2aOptions}
           showCheckbox
         />}
       </div>
@@ -353,7 +454,7 @@ const WorkpanelFilter = () => {
           </div>
 
           <div className="scanner-satisfy">
-            <span style={{ width: "6rem", marginTop: "10px" }}>
+            <span>
               which satisfy{" "}
             </span>
             <div className="scanner-satisfy-not-satisfy">
@@ -378,27 +479,29 @@ const WorkpanelFilter = () => {
           </div>
 
           <div className="scanner-duplicate-timeframe">
-              <div className="form-check form-switch" style={{margin: '1rem', paddingLeft:'0', width:'40%'}}>
-                <label className="form-check-label" for="alert-switch">
-                  Duplicate results
-                </label>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="duplicate-switch"
-                  style={{marginTop: '0.3rem'}}
-                />
+              <div className="form-check form-switch" style={{margin: '1rem', paddingLeft:'0', width:'50%'}}>
+                <Row>
+                  <Col md={10}>
+                  <label className="form-check-label" for="alert-switch">
+                    Duplicate Results
+                  </label>
+                  </Col>
+                  <Col>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="duplicate-switch"
+                    />
+                  </Col>
+                </Row>
               </div>
-              <div className="form-check form-switch" style={{margin: '1rem', paddingLeft:'0', width:'100%'}}>
-                <label className="form-check-label">
-                  Timeframe
-                </label>
+              <div className="form-check form-switch" style={{margin: '1rem', paddingLeft:'0', width:'50%'}}>
                 <select
-                  style={{width: '60%', display: 'inline-block', marginLeft: '1rem'}}
                   className="form-control scanner-condition-option"
                   name="candelstick-timeframe"
                   id="scanner-timeframe"
                 >
+                  <option value="timeframe">Timeframe</option>
                   <option value="1-min">1 min</option>
                   <option value="2-min">2 min</option>
                   <option value="3-min">3 min</option>
@@ -519,6 +622,8 @@ const WorkpanelFilter = () => {
             >
               <strong style={{pointerEvents:'none'}}>&lt;&#61;</strong>
             </div>
+
+            <br/>
 
             <div
               className="scanner-binary-operation-icons"

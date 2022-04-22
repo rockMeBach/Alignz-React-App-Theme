@@ -1,3 +1,7 @@
+#duplicate-switch{
+  float: right;
+}
+
 .scanner-filter-component {
   display: flex;
   // display: inline-block;
@@ -5,8 +9,8 @@
 
 .scanner-indicator-component {
   // width: max-content;
+  height: 400px;
   width: 40%;
-  min-width: 15rem;
   display: inline-block;
   padding: 1rem 0;
   border: 2px solid #d5d5d5;
@@ -29,10 +33,10 @@
   padding-left: 0px;
 }
 
-.scanner-filter {
+/*.scanner-filter {
   // width: max-content;
   display: inline-block;
-}
+}*/
 
 .segment-2-div {
   padding: 0 15px;
@@ -48,7 +52,7 @@
 }
 
 .scanner-filter-operation {
-  // width: max-content;
+  width: max-content;
   width: 35rem;
   display: inline-block;
 }
@@ -83,7 +87,7 @@
 }
 
 .scanner-time-and-lot-size {
-  padding: 1rem;
+  padding-top: 0.5rem;
   display: flex;
 }
 
@@ -120,6 +124,7 @@
   border-radius: 7px;
   padding: 0.5rem 0;
   margin: 0 0.5rem;
+  width:100%;
 }
 .hovertext {
   position: relative;
@@ -154,4 +159,10 @@
 .scanner-duplicate-timeframe{
   display: flex;
   flex-direction: row;
+}
+
+#scanner-segment-2a > .search-wrapper{
+  max-width: 450px;
+  max-height: 50px;
+  overflow-y: scroll;
 }
