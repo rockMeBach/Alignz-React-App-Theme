@@ -26,34 +26,6 @@ const EditModal = ({ show, onClose, order, setShow }) => {
     const token = useSelector((state) => state.token);
     const auth = useSelector((state) => state.auth);
 
-    const [socket, setSocket] = useState(null);
-    useEffect(() => {
-        console.log(order)
-        setCurrentPrice(-1)
-        setOrderTypes(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
-        setQty(order.qty)
-        setPrice(order.slm ? 0 : order.price)
-        setTriggeredPrice(order.triggeredPrice)
-        setProduct(order.product)
-        if (show == true) {
-            setSocket(io(`http://${BACKEND_URL_LIVE_TRADE}`));
-        }
-        else {
-
-            if (socket) {
-                console.log("closed")
-                socket.disconnect()
-            }
-        }
-    }, [show])
-
-    useEffect(() => {
-        if (socket) {
-            socket.on("futureData", futureLiveDataModal);
-            socket.on("equityData", equityLiveDataModal);
-            socket.on("optionData", optionLiveDataModal);
-        }
-    }, [socket])
 
     useEffect(() => {
         console.log(order)
@@ -69,21 +41,11 @@ const EditModal = ({ show, onClose, order, setShow }) => {
         }
     }, [orderTypes])
 
-    const futureLiveDataModal = (futureData) => {
-        if (order.instrument_token == futureData.instrument_token)
-            setCurrentPrice(futureData.last_price.toFixed(2))
 
-    }
-    const equityLiveDataModal = (equityData) => {
-        if (order.instrument_token == equityData.instrument_token)
-            setCurrentPrice(equityData.last_price.toFixed(2))
 
-    }
-    const optionLiveDataModal = (optionData) => {
-        if (order.instrument_token == optionData.instrument_token)
-            setCurrentPrice(optionData.last_price.toFixed(2))
-    }
+
     useEffect(() => {
+        console.log(order)
         if (show)
             axios.get(`http://${BACKEND_URL}/api/trading/getInstrumentData`, {
                 params: {
@@ -101,6 +63,12 @@ const EditModal = ({ show, onClose, order, setShow }) => {
                         setLeverage(data.data['sell leverage'])
                 }
                 setMultiple(data.data.multiple)
+                setCurrentPrice(order.currentPrice)
+                setOrderTypes(order['market'] ? 'market' : order['limit'] ? 'limit' : 'slm')
+                setQty(order.qty)
+                setPrice(order.slm ? 0 : order.price)
+                setTriggeredPrice(order.triggeredPrice)
+                setProduct(order.product)
             })
     }, [show])
 
@@ -129,16 +97,18 @@ const EditModal = ({ show, onClose, order, setShow }) => {
             slm: false,
             margin: qty * price / leverage,
             currentPrice: currentPrice,
-            instrument_token: order.instrument_token
+            instrument_token: order.instrument_token,
+            currentTime: order.orderTime
         }
 
         data[orderTypes] = true;
         if (orderTypes == 'slm')
             data.margin = qty * triggeredPrice / leverage
 
-        axios.put(`http://${BACKEND_URL}/api/trading/updateOrder`, data).then(data => {
+        axios.put(`http://${BACKEND_URL}/api/historicTrading/updateHistoricOrder`, data).then(data => {
+            console.log(data)
             setShow(false)
-            toast(data.data, {
+            return toast(data.data, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,

@@ -47,7 +47,7 @@ const NavbarMenu = () => {
       let query = {
         userID: auth.user._id
       };
-    
+
       /*axios.get(`http://${BACKEND_URL}/api/notifications/getUnreadNotifications`, {
         params: query,
       }).then((res)=>{
@@ -57,13 +57,13 @@ const NavbarMenu = () => {
       }).catch((err)=>{
         console.log(err)
       })*/
-  
+
       //console.log(auth)
-  
-      if(auth.user._id !== undefined){
-        const socket = io("http://"+BACKEND_URL, { transports : ['websocket'], query: {userID: auth.user._id} })
+
+      if (auth.user._id !== undefined) {
+        const socket = io("http://" + BACKEND_URL, { transports: ['websocket'], query: { userID: auth.user._id } })
         socket.emit("setSocketId", auth.user._id)
-        socket.on("new-notification", function(data){
+        socket.on("new-notification", function (data) {
           getAllNotifications(query);
           setBadge(true)
         })
@@ -85,9 +85,9 @@ const NavbarMenu = () => {
   const getAllNotifications = (query) => {
     axios.get(`http://${BACKEND_URL}/api/notifications/getNotifications`, {
       params: query,
-    }).then((res)=>{
+    }).then((res) => {
       setNotifications(res.data)
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err)
     })
   }
@@ -97,15 +97,15 @@ const NavbarMenu = () => {
   }
 
   const setAllNotificationsRead = () => {
-    if(hasNewNotif){
+    if (hasNewNotif) {
       let query = {
         userID: auth.user._id
       };
 
-      axios.post(`http://${BACKEND_URL}/api/notifications/setAllNotificationsRead`, query).then((res)=>{
+      axios.post(`http://${BACKEND_URL}/api/notifications/setAllNotificationsRead`, query).then((res) => {
         console.log(res)
         hideNotificationDot();
-      }).catch((err)=>{
+      }).catch((err) => {
         console.log(err)
       })
     }
@@ -373,9 +373,6 @@ const NavbarMenu = () => {
                   </a>
                   <a class="dropdown-item" href="/cryptoorders" style={{ color: "black" }}>
                     Orders
-                  </a>
-                  <a class="dropdown-item" href="/cryptoholdings" style={{ color: "black" }}>
-                    Holdings
                   </a>
                   <a class="dropdown-item" href="/cryptopositions" style={{ color: "black" }}>
                     Positions

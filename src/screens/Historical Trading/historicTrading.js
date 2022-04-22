@@ -270,31 +270,35 @@ const Trading = () => {
                                         <div className="row col-md-9 offset-3 exchange-row-trade">
                                             <div className="row justify-content-evenly p-2">
                                                 <div className="col-3  d-flex align-items-center">
-                                                    <Button variant="success" onClick={() => {
-                                                        setBuyInstrument({
-                                                            instrument_token: tradeWatchItem.instrument_token,
-                                                            market: tradeWatchItem.marketType,
-                                                            name: tradeWatchItem.name,
-                                                            exchange: tradeWatchItem.exch,
-                                                            price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
-                                                        });
-                                                        setBuyModelOpen(true)
-                                                    }}>BUY</Button>
+                                                    <Button variant="success"
+                                                        disabled={loader}
+                                                        onClick={() => {
+                                                            setBuyInstrument({
+                                                                instrument_token: tradeWatchItem.instrument_token,
+                                                                market: tradeWatchItem.marketType,
+                                                                name: tradeWatchItem.name,
+                                                                exchange: tradeWatchItem.exch,
+                                                                price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
+                                                            });
+                                                            setBuyModelOpen(true)
+                                                        }}>BUY</Button>
                                                 </div>
                                                 <div className="col-3  d-flex align-items-center">
-                                                    <Button variant="danger" onClick={() => {
-                                                        setSellInstrument({
-                                                            instrument_token: tradeWatchItem.instrument_token,
-                                                            market: tradeWatchItem.marketType,
-                                                            name: tradeWatchItem.name,
-                                                            exchange: tradeWatchItem.exch,
-                                                            price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
-                                                        });
-                                                        setSellModelOpen(true)
-                                                    }}>SELL</Button>
+                                                    <Button variant="danger"
+                                                        disabled={loader}
+                                                        onClick={() => {
+                                                            setSellInstrument({
+                                                                instrument_token: tradeWatchItem.instrument_token,
+                                                                market: tradeWatchItem.marketType,
+                                                                name: tradeWatchItem.name,
+                                                                exchange: tradeWatchItem.exch,
+                                                                price: parseFloat(document.getElementById(tradeWatchItem.instrument_token).innerText),
+                                                            });
+                                                            setSellModelOpen(true)
+                                                        }}>SELL</Button>
                                                 </div>
                                                 <div className="col-3  d-flex align-items-center">
-                                                    <Button variant="dark" index={index} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
+                                                    <Button variant="dark" index={index} disabled={loader} onClick={() => deleteTrade(tradeWatchItem.instrument_token)}><DeleteIcon /></Button>
                                                 </div>
                                             </div>
                                         </div>
